@@ -250,7 +250,8 @@ body.home {
     z-index: 1000;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 30px;
     box-shadow: 0 4px 20px rgba(139, 0, 0, 0.5);
     transition: box-shadow var(--transition-normal), background var(--transition-normal);
     animation: slideInDown 0.6s ease-out;
@@ -274,9 +275,10 @@ body.home {
 }
 
 .header-content {
-    max-width: 1140px;
     flex: 1 1 auto;
-    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .menu strong {
