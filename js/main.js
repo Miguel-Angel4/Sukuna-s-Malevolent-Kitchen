@@ -1,4 +1,4 @@
-﻿// ========================================
+// ========================================
 // Sukuna's Malevolent Kitchen - Main JavaScript
 // ========================================
 
@@ -178,4 +178,34 @@ document.querySelectorAll('a[href="#empleos"], a[href="#reserva"], a[href="#logi
         console.log(`Link clicked: ${link.textContent.trim()}`);
         alert(`Funcionalidad "${link.textContent.trim()}" prÃ³ximamente disponible`);
     });
+});
+
+// --- DOMAIN EXPANSION ENTRANCE ---
+document.addEventListener('DOMContentLoaded', () => {
+    const domainOverlay = document.getElementById('domain-overlay');
+    const enterButton = document.getElementById('enter-domain');
+    const sukunaAudio = document.getElementById('sukuna-audio');
+
+    if (domainOverlay && enterButton && sukunaAudio) {
+        // Prevent scrolling while in "pre-domain" state
+        document.body.style.overflow = 'hidden';
+
+        enterButton.addEventListener('click', () => {
+            // Play Ryomen Sukuna's Domain Expansion audio
+            sukunaAudio.volume = 0.8;
+            sukunaAudio.play().catch(e => {
+                console.warn("Autoplay was prevented or audio failed:", e);
+            });
+
+            // Trigger the "cut" animation to open the repository
+            domainOverlay.classList.add('opened');
+
+            // Restore scrolling and remove overlay after animation completes
+            setTimeout(() => {
+                document.body.style.overflow = '';
+                // Optional: remove from DOM to keep it clean
+                // domainOverlay.remove();
+            }, 1200);
+        });
+    }
 });
