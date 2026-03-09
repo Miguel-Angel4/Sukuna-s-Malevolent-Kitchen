@@ -339,14 +339,14 @@ body.carta {
     animation: gradientShift 15s ease infinite;
     position: relative;
     z-index: 1;
-    padding-top: 160px; /* espacio para header + comidas nav */
+    padding-top: 185px; /* espacio para header (~100px) + comidas nav (~55px) + margen */
     color: var(--blanco);
 }
 
 /* BARRA DE CATEGORÍAS */
 .comidas {
     position: fixed;
-    top: 80px; /* justo debajo del header */
+    top: 100px; /* debajo del header (~100px de alto) */
     left: 0;
     width: 100vw;
     background: linear-gradient(135deg, rgba(10,10,10,0.97), rgba(74,0,0,0.97));
@@ -357,7 +357,7 @@ body.carta {
     font-size: 1em;
     font-weight: 600;
     line-height: 1em;
-    z-index: 999;
+    z-index: 1001; /* encima del header */
     display: flex;
     align-items: center;
     justify-content: center;
