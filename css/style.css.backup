@@ -1,0 +1,527 @@
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+:root {
+    /* Color Theme Swatches in Hex */
+    --rosa-palo: #f0404e;
+    --rosa-pelo: #F285A2;
+    --rojo-fuga: #ff0000;
+    --blanco: #ffffff;
+    --azul-agua: #415F78;
+    --negro-tatuajes: #272420;
+    --oro-kamutoke: #f1dc1e;
+
+    /* Transition Variables */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+
+    /* Shadow Variables */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+    --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.25);
+
+    /* Glass Effect */
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+}
+
+/* Global Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Base Typography */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+strong {
+    font-family: 'Outfit', 'Inter', sans-serif;
+}
+
+/* Utility Classes */
+.glass-effect {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+}
+
+.hover-lift {
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.smooth-transition {
+    transition: all var(--transition-normal);
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, var(--oro-kamutoke), var(--azul-agua));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Keyframe Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+
+body.home {
+    margin: 0;
+    overflow-x: hidden;
+    background-color: var(--rosa-palo);
+    position: relative;
+    z-index: 1;
+    padding-top: 80px;
+    /* Ajusta según la altura real del header */
+}
+
+
+.circle-overlay {
+    position: fixed;
+    /* Cambiar a fixed para que se quede fijo en el fondo */
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, var(--rosa-palo), var(--rosa-pelo));
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    /* Asegura que esté detrás de todo */
+    pointer-events: none;
+    animation: expandCircleLoop 8s ease-in-out infinite forwards;
+}
+
+/* Hacemos un loop con pausa de 15s entre animaciones */
+@keyframes expandCircleLoop {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+    }
+
+    5% {
+        width: 300vmax;
+        height: 300vmax;
+        opacity: 1;
+    }
+
+    10% {
+        width: 300vmax;
+        height: 300vmax;
+        opacity: 0;
+    }
+
+    100% {
+        width: 0;
+        height: 0;
+        opacity: 0;
+    }
+}
+
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    background: rgba(240, 64, 78, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 2vh 20px;
+    color: var(--blanco);
+    font-size: 1.5em;
+    font-weight: 200;
+    line-height: 1em;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-md);
+    transition: box-shadow var(--transition-normal), background var(--transition-normal);
+    animation: slideInDown 0.6s ease-out;
+}
+
+.header:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.header-content {
+    max-width: 1140px;
+    flex: 1 1 auto;
+    text-align: right;
+}
+
+.menu strong {
+    padding-left: 20px;
+    cursor: pointer;
+    position: relative;
+    transition: color var(--transition-fast);
+}
+
+.menu strong::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--oro-kamutoke), var(--azul-agua));
+    transition: width var(--transition-normal);
+}
+
+.menu strong:hover {
+    color: var(--oro-kamutoke);
+}
+
+.menu strong:hover::after {
+    width: 100%;
+}
+
+.logo {
+    flex: 0 0 auto;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.logo img {
+    max-width: 80px;
+    height: auto;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    background-color: var(--rosa-palo);
+    padding: 2vh 20px;
+    color: var(--blanco);
+    font-size: 1em;
+    font-weight: 100;
+    line-height: 1em;
+    z-index: 1000;
+    /* Asegura que esté encima de todo */
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 6px var(--negro-tatuajes);
+    /* sombra opcional para destacar */
+}
+
+.footer-content {
+    max-width: 1600px;
+    flex: 1 1 auto;
+    text-align: center;
+    margin-left: 150px;
+
+}
+
+
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+
+/* CARTA */
+
+body.carta {
+    margin: 0;
+    overflow-x: hidden;
+    background-color: var(--rosa-pelo);
+    position: relative;
+    z-index: 1;
+    padding-top: 80px;
+    /* Ajusta según la altura real del header */
+}
+
+.circle-overlay-carta {
+    position: fixed;
+    /* Cambiar a fixed para que se quede fijo en el fondo */
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, var(--rosa-pelo), var(--rosa-palo));
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    /* Asegura que esté detrás de todo */
+    pointer-events: none;
+    animation: expandCircleLoop 8s ease-in-out infinite forwards;
+}
+
+
+.comidas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    background-color: var(--azul-agua);
+    padding: 2vh 20px;
+    color: var(--oro-kamutoke);
+    font-size: 1.3em;
+    font-weight: 200;
+    line-height: 1em;
+    z-index: 1000;
+    /* Asegura que esté encima de todo */
+
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 6px var(--negro-tatuajes);
+    /* sombra opcional para destacar */
+    margin-top: 37px;
+    text-align: center;
+    padding-left: 250px;
+    margin-top: 110px;
+}
+
+.frase-carta {
+    padding-top: 100px;
+    font-size: 2.5em;
+    padding-left: 700px;
+}
+
+.bebidas {
+    background-image: url(../img/bebida_temporal.jpg);
+    background-size: contain;
+    /* La imagen se ve completa */
+    background-repeat: no-repeat;
+    /* No se repite */
+    background-position: center;
+    /* Se centra */
+    width: 30vw;
+    height: 30vh;
+    display: flex;
+    color: var(--blanco);
+    padding-left: 100px;
+    font-size: 2em;
+}
+
+.entrantes {
+    background-image: url(../img/entrantes_temporal.png);
+    background-size: contain;
+    /* La imagen se ve completa */
+    background-repeat: no-repeat;
+    /* No se repite */
+    background-position: center;
+    /* Se centra */
+    width: 30vw;
+    height: 30vh;
+    display: flex;
+    color: var(--blanco);
+    padding-left: 100px;
+    font-size: 2em;
+}
+
+
+.carnes {
+    background-image: url(../img/carne_temporal.png);
+    background-size: contain;
+    /* La imagen se ve completa */
+    background-repeat: no-repeat;
+    /* No se repite */
+    background-position: center;
+    /* Se centra */
+    width: 30vw;
+    height: 30vh;
+    display: flex;
+    color: var(--blanco);
+    padding-left: 100px;
+    font-size: 2em;
+}
+
+
+.vegetales {
+    background-image: url(../img/vegetales_temporal.jpg);
+    background-size: contain;
+    /* La imagen se ve completa */
+    background-repeat: no-repeat;
+    /* No se repite */
+    background-position: center;
+    /* Se centra */
+    width: 30vw;
+    height: 30vh;
+    display: flex;
+    color: var(--blanco);
+    padding-left: 100px;
+    font-size: 2em;
+}
+
+
+.pescados {
+    background-image: url(../img/pescado_temporal.jpg);
+    background-size: contain;
+    /* La imagen se ve completa */
+    background-repeat: no-repeat;
+    /* No se repite */
+    background-position: center;
+    /* Se centra */
+    width: 30vw;
+    height: 30vh;
+    display: flex;
+    color: var(--blanco);
+    padding-left: 100px;
+    font-size: 2em;
+}
+
+
+.pastas {
+    background-image: url(../img/pasta_temporal.jpg);
+    background-size: contain;
+    /* La imagen se ve completa */
+    background-repeat: no-repeat;
+    /* No se repite */
+    background-position: center;
+    /* Se centra */
+    width: 30vw;
+    height: 30vh;
+    display: flex;
+    color: var(--blanco);
+    padding-left: 100px;
+    font-size: 2em;
+}
+
+
+.postres {
+    background-image: url(../img/postre_temporal.jpg);
+    background-size: contain;
+    /* La imagen se ve completa */
+    background-repeat: no-repeat;
+    /* No se repite */
+    background-position: center;
+    /* Se centra */
+    width: 30vw;
+    height: 27vh;
+    display: flex;
+    color: var(--blanco);
+    padding-left: 100px;
+    font-size: 2em;
+}
+
+
+.menus {
+    background-image: url(../img/menu_temporal.png);
+    background-size: contain;
+    /* La imagen se ve completa */
+    background-repeat: no-repeat;
+    /* No se repite */
+    background-position: center;
+    /* Se centra */
+    width: 30vw;
+    height: 27vh;
+    display: flex;
+    color: var(--blanco);
+    padding-left: 100px;
+    font-size: 2em;
+}
+
+
+.retos {
+    background-image: url(../img/reto_temporal.jpg);
+    background-size: contain;
+    /* La imagen se ve completa */
+    background-repeat: no-repeat;
+    /* No se repite */
+    background-position: center;
+    /* Se centra */
+    width: 30vw;
+    height: 30vh;
+    display: flex;
+    color: var(--blanco);
+    padding-left: 100px;
+    font-size: 2em;
+}

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Sukuna's Malevolent Kitchen - Restaurante temático de Jujutsu Kaisen en Viladecans. Disfruta de comida excepcional en un ambiente único inspirado en el anime.">
+  <title>Sukuna's Malevolent Kitchen - Web Oficial</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/icono.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="home">
+
+  <!-- ZONA DEL HEADER -->
+  <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------  -->
+  <header class="header" id="header">
+    <a href="home.html" class="logo" aria-label="Volver al inicio">
+      <img src="img/logo.png" alt="Logo Sukuna's Malevolent Kitchen" />
+    </a>
+    <div class="header-content">
+      <nav class="menu" style="text-align: right;">
+        <a href="#empleos" class="nav-link"><strong>¿Quieres trabajar para nosotros?</strong></a>
+        <a href="#reserva" class="nav-link"><strong>Reserva</strong></a>
+        <a href="#login" class="nav-link"><strong>Iniciar sesión</strong></a>
+      </nav>
+    </div>
+  </header>
+  <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------  -->
+
+
+
+
+  <!-- MEJORA DEL FONDO -->
+  <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------  -->
+
+  <div class="circle-overlay"></div>
+  <div class="blood-particles" id="bloodParticles"></div>
+  <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------  -->
+
+
+
+  <!-- SECCION DE PRESENTACION -->
+  <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------  -->
+  <main>
+    <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------  -->
+
+
+
+
+    <!-- TRABAJADORES Y FRASE -->
+    <section class="cosplay" id="nosotros">
+      <div class="container">
+        <!-- Imagen Centro Integrada -->
+        <div class="row justify-content-center text-center mb-4">
+          <div class="col-lg-8">
+            <img src="img/Centro.png" alt="Sukuna's Malevolent Kitchen" class="img-fluid fade-in"
+              style="max-height: 200px; filter: drop-shadow(0 0 10px rgba(139, 0, 0, 0.5));">
+          </div>
+        </div>
+
+        <!-- Título principal -->
+        <div class="row justify-content-center text-center mb-5">
+          <div class="col-lg-10">
+            <h3 class="titulo-trabajadores">NUESTROS TRABAJADORES</h3>
+          </div>
+        </div>
+
+        <!-- Descripción -->
+        <div class="row justify-content-center text-center mb-5">
+          <div class="col-lg-10">
+            <h2 class="descripcion-restaurant">
+              Sukuna's Malevolent Kitchen es un templo de alimentos ubicado en Viladecans que proporciona la comida para
+              satisfacer incluso a un rey
+            </h2>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SLIDER DE TRABAJADORES -->
+    <div class="slider-container">
+      <div class="slider-frame">
+        <ul id="sliderUl">
+          <li><img src="img/sukuna.png" alt="Ryomen Sukuna - Jefe de Cocina"></li>
+          <li><img src="img/toji.jpg" alt="Toji Fushiguro - Sous Chef"></li>
+          <li><img src="img/maki.jpeg" alt="Maki Zen'in - Sommelier"></li>
+          <li><img src="img/inumaki.png" alt="Toge Inumaki - Chef de Partida"></li>
+          <li><img src="img/gojo.jpg" alt="Satoru Gojo - Chef Pastelero"></li>
+        </ul>
+      </div>
+      <div class="slider-controls">
+        <button onclick="goToSlide(0)" id="dot-0"></button>
+        <button onclick="goToSlide(1)" id="dot-1"></button>
+        <button onclick="goToSlide(2)" id="dot-2"></button>
+        <button onclick="goToSlide(3)" id="dot-3"></button>
+        <button onclick="goToSlide(4)" id="dot-4"></button>
+      </div>
+    </div>
+
+    <!-- BOTONES CTA -->
+    <div class="botones-cta slide-in-right">
+      <a href="carta.html" class="botoncarta hover-lift">Nuestra Carta</a>
+      <a href="#empleados" class="botonempleado hover-lift">Nuestros Empleados</a>
+    </div>
+
+
+
+    <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------  -->
+
+
+
+
+    <!-- LOCALIZACIÓN -->
+    <section class="localizacion fade-in" id="localizacion">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-5 col-md-12 mb-4">
+            <h2 class="frase-ingredientes">
+              En Sukuna's Malevolent Kitchen utilizamos ingredientes frescos y naturales dejando un buen sabor de boca
+              por mil años
+            </h2>
+          </div>
+          <div class="col-lg-6 col-md-12 info-contacto">
+            <div class="contacto-item">
+              <strong>Dirección</strong>
+              <p>Avenida Siglo XXI, 6, 08840, Viladecans, Barcelona</p>
+            </div>
+
+            <div class="contacto-item">
+              <strong>Teléfono</strong>
+              <p>690 06 40 39</p>
+            </div>
+
+            <div class="contacto-item">
+              <strong>Email</strong>
+              <p>sukunaamalevolentkitchen@gmail.com</p>
+            </div>
+
+            <div class="contacto-item">
+              <strong>Horario</strong>
+              <p>Todos los días de 09:00 a 16:00 / 20:00 a 00:00</p>
+            </div>
+
+            <div class="contacto-item">
+              <strong>Servicios</strong>
+              <p>Zona climatizada y tematizada como el anime Jujutsu Kaisen. Zonas privadas como los dominios de los
+                personajes</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------  -->
+
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-content">
+        <nav class="menu" style="text-align: center;">
+          <a href="#faq" class="footer-link"><strong>Preguntas Frecuentes</strong></a>
+          <a href="#contacto" class="footer-link"><strong>Contáctanos</strong></a>
+          <a href="#cookies" class="footer-link"><strong>Configuración de cookies</strong></a>
+          <a href="#legal" class="footer-link"><strong>Aviso legal</strong></a>
+          <a href="#derechos" class="footer-link"><strong>Derechos Reservados</strong></a>
+          <a href="#privacidad" class="footer-link"><strong>Política de Privacidad</strong></a>
+        </nav>
+      </div>
+    </footer>
+  </main>
+
+  <script src="js/main.js"></script>
+</body>
+
+</html>

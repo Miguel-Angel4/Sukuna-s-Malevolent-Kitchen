@@ -1,0 +1,1455 @@
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+:root {
+    /* Sukuna's Dark Theme */
+    --sukuna-red: #8B0000;
+    --sukuna-crimson: #DC143C;
+    --sukuna-black: #0a0a0a;
+    --sukuna-dark-red: #4a0000;
+    --blanco: #ffffff;
+    --sukuna-shadow: #1a0000;
+    --oro-kamutoke: #f1dc1e;
+    --sukuna-blood: #cc0000;
+
+    /* Transition Variables */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+
+    /* Shadow Variables */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+    --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.25);
+
+    /* Glass Effect */
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+}
+
+/* Global Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 150px;
+}
+
+/* Base Typography */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+strong {
+    font-family: 'Outfit', 'Inter', sans-serif;
+}
+
+/* Utility Classes */
+.glass-effect {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+}
+
+.hover-lift {
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.smooth-transition {
+    transition: all var(--transition-normal);
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, var(--oro-kamutoke), var(--azul-agua));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Keyframe Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+body.home {
+    margin: 0;
+    overflow-x: hidden;
+    background: linear-gradient(135deg, #1a0000 0%, #4a0000 25%, #8B0000 50%, #4a0000 75%, #1a0000 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    position: relative;
+    z-index: 1;
+    padding-top: 80px;
+    color: var(--blanco);
+}
+
+.circle-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, transparent 0%, rgba(220, 20, 60, 0.15) 40%, rgba(139, 0, 0, 0.1) 70%, transparent 100%);
+    transform: translate(-50%, -50%) scale(1);
+    z-index: -1;
+    pointer-events: none;
+    animation: pulseGlow 4s ease-in-out infinite;
+    opacity: 0.6;
+}
+
+@keyframes pulseGlow {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.3;
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.5;
+    }
+}
+
+/* Floating blood particles effect */
+.blood-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.blood-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--sukuna-crimson);
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: float-particle 20s linear infinite;
+}
+
+@keyframes float-particle {
+    0% {
+        transform: translateY(100vh) translateX(0) rotate(0deg);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.6;
+    }
+
+    90% {
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: translateY(-100px) translateX(100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    background: linear-gradient(135deg, rgba(10, 10, 10, 0.95), rgba(139, 0, 0, 0.95));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 2vh 20px;
+    color: var(--blanco);
+    font-size: 1.5em;
+    font-weight: 200;
+    line-height: 1em;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(139, 0, 0, 0.5);
+    transition: box-shadow var(--transition-normal), background var(--transition-normal);
+    animation: slideInDown 0.6s ease-out;
+    border-bottom: 2px solid var(--sukuna-blood);
+}
+
+.header:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.header-content {
+    max-width: 1140px;
+    flex: 1 1 auto;
+    text-align: right;
+}
+
+.menu strong {
+    padding-left: 20px;
+    cursor: pointer;
+    position: relative;
+    transition: color var(--transition-fast);
+}
+
+.menu strong::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--oro-kamutoke), var(--azul-agua));
+    transition: width var(--transition-normal);
+}
+
+.menu strong:hover {
+    color: var(--oro-kamutoke);
+}
+
+.menu strong:hover::after {
+    width: 100%;
+}
+
+.logo {
+    flex: 0 0 auto;
+    animation: fadeInUp 0.8s ease-out;
+    text-decoration: none;
+}
+
+.logo img {
+    max-width: 80px;
+    height: auto;
+    display: block;
+    filter: brightness(0) invert(1);
+    transition: filter var(--transition-normal);
+}
+
+
+
+.footer-content {
+    max-width: 1600px;
+    flex: 1 1 auto;
+    text-align: center;
+    margin-left: 150px;
+}
+
+/* CARTA */
+body.carta {
+    margin: 0;
+    overflow-x: hidden;
+    background-color: var(--rosa-pelo);
+    position: relative;
+    z-index: 1;
+    padding-top: 80px;
+}
+
+.circle-overlay-carta {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, var(--rosa-pelo), var(--rosa-palo));
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
+    animation: expandCircleLoop 8s ease-in-out infinite forwards;
+}
+
+.comidas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    background-color: var(--azul-agua);
+    padding: 2vh 20px;
+    color: var(--oro-kamutoke);
+    font-size: 1.3em;
+    font-weight: 200;
+    line-height: 1em;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 6px var(--negro-tatuajes);
+    margin-top: 37px;
+    text-align: center;
+    padding-left: 250px;
+    margin-top: 110px;
+}
+
+.frase-carta {
+    padding-top: 100px;
+    font-size: 2.5em;
+    padding-left: 700px;
+}
+
+.bebidas {
+    background-image: url(../img/bebida_temporal.jpg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 30vw;
+    height: 30vh;
+    display: flex;
+    color: var(--blanco);
+    padding-left: 100px;
+    font-size: 2em;
+}
+
+.entrantes {
+    background-image: url(../img/entrantes_temporal.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 30vw;
+    height: 30vh;
+    display: flex;
+    color: var(--blanco);
+    padding-left: 100px;
+    font-size: 2em;
+}
+
+.carnes {
+    background-image: url(../img/carne_temporal.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 30vw;
+    height: 30vh;
+    display: flex;
+    color: var(--blanco);
+    padding-left: 100px;
+    font-size: 2em;
+}
+
+.vegetales {
+    background-image: url(../img/vegetales_temporal.jpg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 30vw;
+    height: 30vh;
+    display: flex;
+    color: var(--blanco);
+    padding-left: 100px;
+    font-size: 2em;
+}
+
+.pescados {
+    background-image: url(../img/pescado_temporal.jpg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 30vw;
+    height: 30vh;
+    display: flex;
+    color: var(--blanco);
+    padding-left: 100px;
+    font-size: 2em;
+}
+
+.pastas {
+    background-image: url(../img/pasta_temporal.jpg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 30vw;
+    height: 30vh;
+    display: flex;
+    color: var(--blanco);
+    padding-left: 100px;
+    font-size: 2em;
+}
+
+.postres {
+    background-image: url(../img/postre_temporal.jpg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 30vw;
+    height: 27vh;
+    display: flex;
+    color: var(--blanco);
+    padding-left: 100px;
+    font-size: 2em;
+}
+
+.menus {
+    background-image: url(../img/menu_temporal.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 30vw;
+    height: 27vh;
+    display: flex;
+    color: var(--blanco);
+    padding-left: 100px;
+    font-size: 2em;
+}
+
+.retos {
+    background-image: url(../img/reto_temporal.jpg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 30vw;
+    height: 30vh;
+    display: flex;
+    color: var(--blanco);
+    padding-left: 100px;
+    font-size: 2em;
+}
+
+/* ================================================
+   NUEVAS MEJORAS - BOTONES Y ENLACES
+   ================================================ */
+
+.botones-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-left: 1100px;
+    margin-top: 30px;
+}
+
+.botoncarta,
+.botonempleado {
+    padding: 18px 45px;
+    font-size: 1.2em;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--blanco);
+    background: linear-gradient(135deg, var(--azul-agua), var(--rosa-palo));
+    background-size: 200% 200%;
+    border: 2px solid var(--oro-kamutoke);
+    border-radius: 15px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+    display: inline-block;
+}
+
+.botoncarta::before,
+.botonempleado::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.botoncarta:hover::before,
+.botonempleado:hover::before {
+    width: 400px;
+    height: 400px;
+}
+
+.botoncarta:hover,
+.botonempleado:hover {
+    background-position: 100% 50%;
+    box-shadow: var(--shadow-xl);
+    border-color: var(--blanco);
+    transform: translateY(-3px);
+}
+
+.botoncarta:active,
+.botonempleado:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-md);
+}
+
+.nav-link {
+    color: var(--blanco);
+    text-decoration: none;
+    position: relative;
+    display: inline-block;
+    transition: color var(--transition-fast);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--oro-kamutoke), var(--azul-agua));
+    transition: width var(--transition-normal);
+}
+
+.nav-link:hover {
+    color: var(--oro-kamutoke);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.footer-link {
+    color: var(--blanco);
+    text-decoration: none;
+    position: relative;
+    transition: color var(--transition-fast);
+}
+
+.footer-link:hover {
+    color: var(--oro-kamutoke);
+}
+
+/* ================================================
+   MEJORAS DE CARDS DE COMIDA
+   ================================================ */
+
+.card-comida {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    transition: all var(--transition-normal);
+    cursor: pointer;
+}
+
+.card-comida::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(240, 64, 78, 0.3), rgba(65, 95, 120, 0.3));
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    z-index: 1;
+}
+
+.card-comida:hover::before {
+    opacity: 1;
+}
+
+.card-comida strong {
+    position: relative;
+    z-index: 2;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    transition: transform var(--transition-normal);
+}
+
+.card-comida:hover strong {
+    transform: scale(1.1);
+}
+
+.card-comida:hover {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--oro-kamutoke);
+}
+
+.categoria-link {
+    color: var(--oro-kamutoke);
+    text-decoration: none;
+    position: relative;
+    transition: all var(--transition-fast);
+    padding: 5px 10px;
+    border-radius: 8px;
+}
+
+.categoria-link:hover {
+    color: var(--blanco);
+    background: rgba(241, 220, 30, 0.2);
+    transform: translateY(-2px);
+}
+
+.categoria-link.active {
+    background: rgba(241, 220, 30, 0.3);
+    color: var(--blanco);
+}
+
+/* ================================================
+   SECCIONES Y ANIMACIONES
+   ================================================ */
+
+.seccion-comida {
+    padding-top: 50px;
+}
+
+.fade-in {
+    animation: fadeInUp 0.8s ease-out forwards;
+    opacity: 0;
+}
+
+.fade-in:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.fade-in:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.fade-in:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.fade-in:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.8s ease-out forwards;
+    opacity: 0;
+}
+
+.slide-in-right {
+    animation: slideInRight 0.8s ease-out forwards;
+    opacity: 0;
+}
+
+/* ================================================
+   MEJORAS DE HOME
+   ================================================ */
+
+.descripcion-restaurant {
+    position: relative;
+    top: 250px;
+    font-size: 25px;
+}
+
+.titulo-trabajadores {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+
+
+.frase-ingredientes {
+    font-size: 30px;
+}
+
+.info-contacto {
+    margin-left: 110px;
+    margin-top: 100px;
+    padding-left: 250px;
+}
+
+.contacto-item {
+    margin-bottom: 25px;
+}
+
+.contacto-item strong {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--oro-kamutoke);
+}
+
+.contacto-item p {
+    margin: 0;
+}
+
+/* ================================================
+   RESPONSIVE DESIGN
+   ================================================ */
+
+@media (max-width: 1400px) {
+    .botones-cta {
+        margin-left: 800px;
+    }
+
+
+}
+
+@media (max-width: 1200px) {
+    .botones-cta {
+        margin-left: 600px;
+    }
+
+
+
+    .info-contacto {
+        padding-left: 100px;
+    }
+}
+
+@media (max-width: 992px) {
+    .header {
+        padding: 15px;
+    }
+
+    .menu {
+        font-size: 0.9em;
+    }
+
+    .menu strong {
+        padding-left: 10px;
+    }
+
+    .botones-cta {
+        margin-left: 50%;
+        transform: translateX(-50%);
+        align-items: center;
+        margin-top: 50px;
+    }
+
+
+
+    .descripcion-restaurant {
+        top: 50px;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .titulo-trabajadores {
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    .info-contacto {
+        margin-left: 0;
+        padding-left: 20px;
+        margin-top: 50px;
+    }
+
+    .frase-carta {
+        padding-left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+    }
+
+    .comidas {
+        font-size: 1em;
+        padding-left: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .comidas strong {
+        padding-right: 20px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .header-content {
+        text-align: center !important;
+    }
+
+    .menu {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        text-align: center !important;
+    }
+
+    .botoncarta,
+    .botonempleado {
+        font-size: 1em;
+        padding: 15px 30px;
+    }
+
+    .frase-ingredientes {
+        font-size: 22px;
+    }
+
+    .descripcion-restaurant {
+        font-size: 18px;
+    }
+
+    .card-comida {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .logo img {
+        max-width: 60px;
+    }
+
+    .frase-carta h1 {
+        font-size: 1.8em;
+    }
+
+    .botones-cta {
+        width: 90%;
+    }
+
+    body.home,
+    body.carta {
+        padding-top: 120px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+
+/* ================================================
+   NUEVAS MEJORAS - BOTONES Y ENLACES
+   ================================================ */
+
+.botones-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-left: 1100px;
+    margin-top: 30px;
+}
+
+.botoncarta,
+.botonempleado {
+    padding: 18px 45px;
+    font-size: 1.2em;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--blanco);
+    background: linear-gradient(135deg, var(--azul-agua), var(--rosa-palo));
+    background-size: 200% 200%;
+    border: 2px solid var(--oro-kamutoke);
+    border-radius: 15px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+    display: inline-block;
+}
+
+.botoncarta::before,
+.botonempleado::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.botoncarta:hover::before,
+.botonempleado:hover::before {
+    width: 400px;
+    height: 400px;
+}
+
+.botoncarta:hover,
+.botonempleado:hover {
+    background-position: 100% 50%;
+    box-shadow: var(--shadow-xl);
+    border-color: var(--blanco);
+    transform: translateY(-3px);
+}
+
+.nav-link {
+    color: var(--blanco);
+    text-decoration: none;
+    position: relative;
+    display: inline-block;
+    transition: color var(--transition-fast);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--oro-kamutoke), var(--azul-agua));
+    transition: width var(--transition-normal);
+}
+
+.nav-link:hover {
+    color: var(--oro-kamutoke);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.footer-link {
+    color: var(--blanco);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.footer-link:hover {
+    color: var(--oro-kamutoke);
+}
+
+/* Card Comida Mejoras */
+.card-comida {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    transition: all var(--transition-normal);
+    cursor: pointer;
+}
+
+.card-comida::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(240, 64, 78, 0.3), rgba(65, 95, 120, 0.3));
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    z-index: 1;
+}
+
+.card-comida:hover::before {
+    opacity: 1;
+}
+
+.card-comida strong {
+    position: relative;
+    z-index: 2;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    transition: transform var(--transition-normal);
+}
+
+.card-comida:hover strong {
+    transform: scale(1.1);
+}
+
+.card-comida:hover {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--oro-kamutoke);
+}
+
+.categoria-link {
+    color: var(--oro-kamutoke);
+    text-decoration: none;
+    position: relative;
+    transition: all var(--transition-fast);
+    padding: 5px 10px;
+    border-radius: 8px;
+}
+
+.categoria-link:hover {
+    color: var(--blanco);
+    background: rgba(241, 220, 30, 0.2);
+    transform: translateY(-2px);
+}
+
+.seccion-comida {
+    padding-top: 50px;
+}
+
+.fade-in {
+    animation: fadeInUp 0.8s ease-out forwards;
+    opacity: 0;
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.8s ease-out forwards;
+    opacity: 0;
+}
+
+.slide-in-right {
+    animation: slideInRight 0.8s ease-out forwards;
+    opacity: 0;
+}
+
+.descripcion-restaurant {
+    position: relative;
+    top: 250px;
+    font-size: 25px;
+}
+
+.titulo-trabajadores {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.frase-ingredientes {
+    font-size: 30px;
+}
+
+.info-contacto {
+    margin-left: 110px;
+    margin-top: 100px;
+    padding-left: 250px;
+}
+
+.contacto-item {
+    margin-bottom: 25px;
+}
+
+.contacto-item strong {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--oro-kamutoke);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .botones-cta {
+        margin-left: 50%;
+        transform: translateX(-50%);
+        align-items: center;
+    }
+
+    .descripcion-restaurant {
+        top: 50px;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .info-contacto {
+        margin-left: 0;
+        padding-left: 20px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+
+/* ================================================
+   SLIDER FUNCIONAL DE TRABAJADORES
+   ================================================ */
+
+.slider-container {
+    position: relative;
+    width: 350px;
+    margin: 30px auto;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(139, 0, 0, 0.6);
+    border: 3px solid var(--sukuna-blood);
+}
+
+.slider-frame {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+}
+
+.slider-frame ul {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    width: 500%;
+    height: 100%;
+    animation: slide 20s infinite ease-in-out;
+}
+
+.slider-frame ul li {
+    width: 20%;
+    height: 100%;
+    list-style: none;
+    position: relative;
+}
+
+.slider-frame ul li img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    filter: brightness(1.1) contrast(1.1);
+    transition: filter 0.3s;
+}
+
+.slider-frame ul li img:hover {
+    filter: brightness(1.3) contrast(1.15);
+}
+
+@keyframes slide {
+
+    0%,
+    18% {
+        margin-left: 0;
+    }
+
+    20%,
+    38% {
+        margin-left: -100%;
+    }
+
+    40%,
+    58% {
+        margin-left: -200%;
+    }
+
+    60%,
+    78% {
+        margin-left: -300%;
+    }
+
+    80%,
+    98% {
+        margin-left: -400%;
+    }
+
+    100% {
+        margin-left: 0;
+    }
+}
+
+.slider-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+
+.slider-controls button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--blanco);
+    background: var(--sukuna-blood);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.slider-controls button:hover {
+    background: var(--oro-kamutoke);
+    transform: scale(1.3);
+}
+
+.slider-controls button.active {
+    background: var(--oro-kamutoke);
+}
+
+/* Actualizar colores de botones para Sukuna theme */
+.botoncarta,
+.botonempleado {
+    background: linear-gradient(135deg, var(--sukuna-red), var(--sukuna-crimson));
+    background-size: 200% 200%;
+    border: 2px solid var(--oro-kamutoke);
+    box-shadow: 0 8px 25px rgba(139, 0, 0, 0.5);
+}
+
+.botoncarta:hover,
+.botonempleado:hover {
+    background: linear-gradient(135deg, var(--sukuna-crimson), var(--sukuna-blood));
+    box-shadow: 0 12px 40px rgba(220, 20, 60, 0.6);
+    border-color: var(--oro-kamutoke);
+}
+
+/* Footer dark theme */
+.footer {
+    background: linear-gradient(135deg, var(--sukuna-black), var(--sukuna-dark-red));
+    border-top: 2px solid var(--sukuna-blood);
+    box-shadow: 0 -4px 20px rgba(139, 0, 0, 0.5);
+}
+
+/* Mejorar visibilidad de textos */
+body.home strong,
+body.home h1,
+body.home h2,
+body.home h3,
+body.home p {
+    color: var(--blanco);
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.descripcion-restaurant {
+    position: static;
+    font-size: 25px;
+    color: var(--blanco);
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
+
+.titulo-trabajadores {
+    font-size: 2em;
+    margin-bottom: 40px;
+    color: var(--oro-kamutoke);
+    text-align: center;
+}
+
+.frase-ingredientes {
+    font-size: 28px;
+    color: var(--blanco);
+    line-height: 1.5;
+}
+
+/* Reorganizar layout */
+.cosplay {
+    padding: 60px 0;
+    margin-bottom: 40px;
+}
+
+.slider-container {
+    position: relative;
+    width: 350px;
+    margin: 40px auto 60px;
+}
+
+.botones-cta {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    justify-content: center;
+    margin: 40px auto;
+    max-width: 700px;
+}
+
+.contacto-item {
+    margin-bottom: 25px;
+}
+
+.contacto-item strong {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--oro-kamutoke);
+}
+
+.contacto-item p {
+    color: var(--blanco);
+    margin: 0;
+}
+
+.localizacion {
+    padding: 80px 0;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    margin: 40px 0;
+}
+
+.info-contacto {
+    margin-left: 0;
+    margin-top: 0;
+    padding-left: 60px;
+}
+
+/* --- SUKUNA CUT ANIMATIONS (HOME) --- */
+
+/* Keyframes for the slashes */
+@keyframes sukuna-slash-1 {
+    0% { transform: translate(-100%, -100%) rotate(-45deg) scaleX(0); opacity: 0; }
+    20% { opacity: 1; transform: translate(-50%, -50%) rotate(-45deg) scaleX(1.5); }
+    100% { transform: translate(100%, 100%) rotate(-45deg) scaleX(2); opacity: 0; }
+}
+
+@keyframes sukuna-slash-2 {
+    0% { transform: translate(100%, -100%) rotate(45deg) scaleX(0); opacity: 0; }
+    20% { opacity: 1; transform: translate(50%, -50%) rotate(45deg) scaleX(1.5); }
+    100% { transform: translate(-100%, 100%) rotate(45deg) scaleX(2); opacity: 0; }
+}
+
+@keyframes sukuna-glitch {
+    0% { clip-path: inset(0 0 0 0); transform: translate(0); }
+    20% { clip-path: inset(10% 0 40% 0); transform: translate(-5px, 2px); }
+    40% { clip-path: inset(50% 0 10% 0); transform: translate(5px, -2px); }
+    60% { clip-path: inset(30% 0 30% 0); transform: translate(-3px, 1px); }
+    80% { clip-path: inset(0 0 70% 0); transform: translate(3px, -1px); }
+    100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+}
+
+@keyframes fast-line-slash {
+    0% { transform: scaleX(0); opacity: 0; left: 0; }
+    30% { opacity: 1; transform: scaleX(1); }
+    100% { transform: scaleX(1.5); opacity: 0; left: 100%; }
+}
+
+/* Application to CTA Buttons (Carta/Empleados) on Home */
+body.home .botoncarta, 
+body.home .botonempleado {
+    position: relative;
+    overflow: hidden;
+}
+
+body.home .botoncarta::after, 
+body.home .botonempleado::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 4px;
+    background: var(--sukuna-crimson);
+    box-shadow: 0 0 15px var(--sukuna-blood), 0 0 5px var(--blanco);
+    pointer-events: none;
+    z-index: 15;
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+body.home .botoncarta:hover::after, 
+body.home .botonempleado:hover::after {
+    animation: sukuna-slash-1 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+/* Adding a second slash to buttons */
+body.home .botoncarta:hover::before, 
+body.home .botonempleado:hover::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 4px;
+    background: var(--sukuna-crimson);
+    box-shadow: 0 0 15px var(--sukuna-blood), 0 0 2px var(--blanco);
+    border-radius: 0;
+    opacity: 0;
+    z-index: 15;
+    transform: translate(-50%, -50%) rotate(45deg);
+    animation: sukuna-slash-2 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0.1s forwards;
+    transition: none;
+}
+
+body.home .botoncarta:hover, 
+body.home .botonempleado:hover {
+    animation: sukuna-glitch 0.3s ease-out;
+}
+
+/* Application to Header Links (Navigation) on Home */
+body.home .nav-link {
+    position: relative;
+}
+
+body.home .nav-link::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--sukuna-crimson);
+    box-shadow: 0 0 10px var(--sukuna-blood);
+    pointer-events: none;
+    z-index: 20;
+    opacity: 0;
+    transform-origin: left;
+    transform: rotate(-5deg);
+}
+
+body.home .nav-link:hover::before {
+    animation: fast-line-slash 0.4s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+body.home .nav-link:hover strong {
+    display: inline-block;
+    animation: sukuna-glitch 0.3s ease-out;
+    color: var(--sukuna-crimson);
+}
