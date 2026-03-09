@@ -330,173 +330,192 @@ body.home {
     margin-left: 150px;
 }
 
-/* CARTA */
+/* CARTA - TEMA SUKUNA */
 body.carta {
     margin: 0;
     overflow-x: hidden;
-    background-color: var(--rosa-pelo);
+    background: linear-gradient(135deg, #1a0000 0%, #4a0000 25%, #8B0000 50%, #4a0000 75%, #1a0000 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
     position: relative;
     z-index: 1;
-    padding-top: 80px;
+    padding-top: 160px; /* espacio para header + comidas nav */
+    color: var(--blanco);
 }
 
-.circle-overlay-carta {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 0;
-    height: 0;
-    background: radial-gradient(circle, var(--rosa-pelo), var(--rosa-palo));
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    z-index: -1;
-    pointer-events: none;
-    animation: expandCircleLoop 8s ease-in-out infinite forwards;
-}
-
+/* BARRA DE CATEGORÍAS */
 .comidas {
     position: fixed;
-    top: 0;
+    top: 80px; /* justo debajo del header */
     left: 0;
     width: 100vw;
-    background-color: var(--azul-agua);
-    padding: 2vh 20px;
+    background: linear-gradient(135deg, rgba(10,10,10,0.97), rgba(74,0,0,0.97));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 14px 30px;
     color: var(--oro-kamutoke);
-    font-size: 1.3em;
-    font-weight: 200;
+    font-size: 1em;
+    font-weight: 600;
     line-height: 1em;
-    z-index: 1000;
+    z-index: 999;
     display: flex;
     align-items: center;
-    box-shadow: 0 2px 6px var(--negro-tatuajes);
-    margin-top: 37px;
-    text-align: center;
-    padding-left: 250px;
-    margin-top: 110px;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    box-shadow: 0 4px 20px rgba(139, 0, 0, 0.6);
+    border-bottom: 2px solid var(--sukuna-blood);
+    margin-top: 0;
 }
 
+/* FRASE CARTA */
 .frase-carta {
-    padding-top: 100px;
-    font-size: 2.5em;
-    padding-left: 700px;
+    padding: 60px 20px 40px;
+    text-align: center;
+    font-size: 1em;
+    padding-left: 0;
 }
 
-.bebidas {
-    background-image: url(../img/bebida_temporal.jpg);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    width: 30vw;
-    height: 30vh;
-    display: flex;
-    color: var(--blanco);
-    padding-left: 100px;
-    font-size: 2em;
+.frase-carta h1 {
+    font-size: clamp(2em, 5vw, 4em);
+    font-weight: 800;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, var(--sukuna-crimson), var(--oro-kamutoke), var(--sukuna-crimson));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 4s ease infinite;
+    margin-bottom: 15px;
+    text-shadow: none;
+    filter: drop-shadow(0 0 15px rgba(220, 20, 60, 0.5));
 }
 
-.entrantes {
-    background-image: url(../img/entrantes_temporal.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    width: 30vw;
-    height: 30vh;
-    display: flex;
-    color: var(--blanco);
-    padding-left: 100px;
-    font-size: 2em;
+.frase-carta-subtitulo {
+    font-size: 1em;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 3px;
+    font-style: italic;
+    margin: 0;
 }
 
-.carnes {
-    background-image: url(../img/carne_temporal.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    width: 30vw;
-    height: 30vh;
-    display: flex;
-    color: var(--blanco);
-    padding-left: 100px;
-    font-size: 2em;
-}
-
-.vegetales {
-    background-image: url(../img/vegetales_temporal.jpg);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    width: 30vw;
-    height: 30vh;
-    display: flex;
-    color: var(--blanco);
-    padding-left: 100px;
-    font-size: 2em;
-}
-
-.pescados {
-    background-image: url(../img/pescado_temporal.jpg);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    width: 30vw;
-    height: 30vh;
-    display: flex;
-    color: var(--blanco);
-    padding-left: 100px;
-    font-size: 2em;
-}
-
-.pastas {
-    background-image: url(../img/pasta_temporal.jpg);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    width: 30vw;
-    height: 30vh;
-    display: flex;
-    color: var(--blanco);
-    padding-left: 100px;
-    font-size: 2em;
-}
-
-.postres {
-    background-image: url(../img/postre_temporal.jpg);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    width: 30vw;
-    height: 27vh;
-    display: flex;
-    color: var(--blanco);
-    padding-left: 100px;
-    font-size: 2em;
-}
-
-.menus {
-    background-image: url(../img/menu_temporal.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    width: 30vw;
-    height: 27vh;
-    display: flex;
-    color: var(--blanco);
-    padding-left: 100px;
-    font-size: 2em;
-}
-
+/* CARDS DE COMIDA — ESTILO SUKUNA */
+.bebidas,
+.entrantes,
+.carnes,
+.vegetales,
+.pescados,
+.pastas,
+.postres,
+.menus,
 .retos {
-    background-image: url(../img/reto_temporal.jpg);
-    background-size: contain;
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    width: 30vw;
-    height: 30vh;
+    width: 100%;
+    height: 35vh;
+    min-height: 220px;
     display: flex;
-    color: var(--blanco);
-    padding-left: 100px;
-    font-size: 2em;
+    align-items: flex-end;
+    padding: 20px 25px;
+    font-size: 1.5em;
+    border: 2px solid rgba(139,0,0,0.4);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
 }
+
+/* Overlay oscuro sobre las imágenes */
+.bebidas::before,
+.entrantes::before,
+.carnes::before,
+.vegetales::before,
+.pescados::before,
+.pastas::before,
+.postres::before,
+.menus::before,
+.retos::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(139,0,0,0.2) 60%, transparent 100%);
+    z-index: 1;
+    transition: background 0.3s ease;
+}
+
+/* Slash rojo en hover */
+.bebidas:hover::after,
+.entrantes:hover::after,
+.carnes:hover::after,
+.vegetales:hover::after,
+.pescados:hover::after,
+.pastas:hover::after,
+.postres:hover::after,
+.menus:hover::after,
+.retos:hover::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 3px;
+    background: var(--sukuna-crimson);
+    box-shadow: 0 0 20px var(--sukuna-blood);
+    transform: translate(-50%, -50%) rotate(-45deg);
+    z-index: 3;
+    animation: sukuna-slash-1 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+.bebidas strong,
+.entrantes strong,
+.carnes strong,
+.vegetales strong,
+.pescados strong,
+.pastas strong,
+.postres strong,
+.menus strong,
+.retos strong {
+    position: relative;
+    z-index: 2;
+    color: var(--blanco);
+    font-size: 1em;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-shadow: 0 0 15px rgba(220,20,60,0.7), 2px 2px 8px rgba(0,0,0,0.9);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    border-left: 3px solid var(--sukuna-crimson);
+    padding-left: 12px;
+}
+
+/* Imágenes individuales */
+.bebidas       { background-image: url(../img/bebida_temporal.jpg); }
+.entrantes     { background-image: url(../img/entrantes_temporal.png); }
+.carnes        { background-image: url(../img/carne_temporal.png); }
+.vegetales     { background-image: url(../img/vegetales_temporal.jpg); }
+.pescados      { background-image: url(../img/pescado_temporal.jpg); }
+.pastas        { background-image: url(../img/pasta_temporal.jpg); }
+.postres       { background-image: url(../img/postre_temporal.jpg); }
+.menus         { background-image: url(../img/menu_temporal.png); }
+.retos         { background-image: url(../img/reto_temporal.jpg); }
+
+/* Hover en las cards */
+.bebidas:hover,
+.entrantes:hover,
+.carnes:hover,
+.vegetales:hover,
+.pescados:hover,
+.pastas:hover,
+.postres:hover,
+.menus:hover,
+.retos:hover {
+    border-color: var(--sukuna-crimson);
+    box-shadow: 0 0 30px rgba(220, 20, 60, 0.5), 0 15px 35px rgba(0,0,0,0.5);
+    transform: translateY(-5px) scale(1.02);
+}
+
 
 /* ================================================
    NUEVAS MEJORAS - BOTONES Y ENLACES
