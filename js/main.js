@@ -171,7 +171,7 @@ window.addEventListener('load', () => {
 });
 
 // Prevent default behavior for placeholder links
-document.querySelectorAll('a[href="#empleos"], a[href="#reserva"], a[href="#login"], a[href="#faq"], a[href="#contacto"], a[href="#cookies"], a[href="#legal"], a[href="#derechos"], a[href="#privacidad"], a[href="#empleados"]').forEach(link => {
+document.querySelectorAll('a[href="#empleos"], a[href="#reserva"], a[href="#login"], a[href="#faq"], a[href="#contacto"], a[href="#cookies"], a[href="#legal"], a[href="#derechos"], a[href="#privacidad"], a[href="#empleados"], a[href="#descuentos"]').forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
         // Future: Add modal or redirect logic here
