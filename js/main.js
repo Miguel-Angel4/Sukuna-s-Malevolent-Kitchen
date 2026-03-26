@@ -71,34 +71,79 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Active category link highlighting in menu page
+// Category card click -> show detail section on carta page
 if (document.body.classList.contains('carta')) {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Remove active class from all links
-                document.querySelectorAll('.categoria-link').forEach(link => {
-                    link.classList.remove('active');
-                });
+    const cardButtons = document.querySelectorAll('.card-comida[data-category]');
+    const menuDisplay = document.getElementById('menu-display');
+    const btnVolver = document.getElementById('btn-volver');
+    const allCardSections = document.querySelectorAll('.seccion-comida');
+    const allCategories = document.querySelectorAll('#menu-display .menu-category');
 
-                // Add active class to current section's link
-                const id = entry.target.getAttribute('id');
-                const activeLink = document.querySelector(`.categoria-link[href="#${id}"]`);
-                if (activeLink) {
-                    activeLink.classList.add('active');
-                }
+    function openCategory(categoryName) {
+        // Hide all card sections
+        allCardSections.forEach(s => s.style.display = 'none');
+
+        // Hide all detail categories
+        allCategories.forEach(c => c.style.display = 'none');
+
+        // Show the menu display container
+        menuDisplay.style.display = 'block';
+
+        // Show the matching detail section
+        const target = document.getElementById('sec-' + categoryName);
+        if (target) {
+            target.style.display = 'block';
+            target.style.animation = 'fadeInUp 0.5s ease-out';
+        }
+
+        // Scroll to top of menu display
+        menuDisplay.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Update active nav link
+        document.querySelectorAll('.categoria-link').forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + categoryName) {
+                link.classList.add('active');
             }
         });
-    }, {
-        threshold: 0.5,
-        rootMargin: '-150px 0px -50% 0px'
+    }
+
+    function closeCategory() {
+        // Hide menu display
+        menuDisplay.style.display = 'none';
+
+        // Show all card sections
+        allCardSections.forEach(s => s.style.display = 'block');
+
+        // Remove active from nav links
+        document.querySelectorAll('.categoria-link').forEach(link => {
+            link.classList.remove('active');
+        });
+    }
+
+    // Click on image cards
+    cardButtons.forEach(card => {
+        card.addEventListener('click', () => {
+            const cat = card.getAttribute('data-category');
+            openCategory(cat);
+        });
     });
 
-    // Observe all food category sections
-    document.querySelectorAll('[id^="bebidas"], [id^="entrantes"], [id^="carnes"], [id^="vegetales"], [id^="pescados"], [id^="pastas"], [id^="postres"], [id^="menus"]').forEach(section => {
-        observer.observe(section);
+    // Click on nav links
+    document.querySelectorAll('.categoria-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const cat = link.getAttribute('href').substring(1);
+            openCategory(cat);
+        });
     });
+
+    // Volver button
+    if (btnVolver) {
+        btnVolver.addEventListener('click', closeCategory);
+    }
 }
+
 
 // Intersection Observer for fade-in animations
 const fadeInObserver = new IntersectionObserver((entries) => {
