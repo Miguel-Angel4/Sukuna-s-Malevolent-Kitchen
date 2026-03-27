@@ -983,23 +983,8 @@ body.carta {
     transition: color var(--transition-fast);
 }
 
-.nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--oro-kamutoke), var(--azul-agua));
-    transition: width var(--transition-normal);
-}
-
 .nav-link:hover {
     color: var(--oro-kamutoke);
-}
-
-.nav-link:hover::after {
-    width: 100%;
 }
 
 .footer-link {
@@ -1387,9 +1372,9 @@ body.home p {
 }
 
 @keyframes fast-line-slash {
-    0% { transform: scaleX(0); opacity: 0; left: 0; }
+    0% { transform: scaleX(0); opacity: 0; }
     30% { opacity: 1; transform: scaleX(1); }
-    100% { transform: scaleX(1.5); opacity: 0; left: 100%; }
+    100% { transform: scaleX(2); opacity: 0; }
 }
 
 /* Application to CTA Buttons (Carta/Empleados) on Home */
@@ -1444,35 +1429,65 @@ body.home .botonempleado:hover {
     animation: sukuna-glitch 0.3s ease-out;
 }
 
-/* Application to Header Links (Navigation) on Home */
-body.home .nav-link {
+/* Application to Header Links (Navigation) - Global */
+.nav-link {
     position: relative;
 }
 
-body.home .nav-link::before {
+/* First slash (Cleave) */
+.nav-link::before {
     content: '';
     position: absolute;
     top: 50%;
     left: 0;
     width: 100%;
-    height: 2px;
+    height: 3px;
     background: var(--sukuna-crimson);
-    box-shadow: 0 0 10px var(--sukuna-blood);
+    box-shadow: 0 0 12px var(--sukuna-blood), 0 0 4px #fff;
     pointer-events: none;
     z-index: 20;
     opacity: 0;
-    transform-origin: left;
-    transform: rotate(-5deg);
+    transform: rotate(-15deg) scaleX(0);
 }
 
-body.home .nav-link:hover::before {
-    animation: fast-line-slash 0.4s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+/* Second slash (Dismantle) */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--sukuna-crimson);
+    box-shadow: 0 0 12px var(--sukuna-blood), 0 0 4px #fff;
+    pointer-events: none;
+    z-index: 20;
+    opacity: 0;
+    transform: rotate(15deg) scaleX(0);
 }
 
-body.home .nav-link:hover strong {
+.nav-link:hover::before {
+    animation: nav-slash-anim 0.25s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+.nav-link:hover::after {
+    animation: nav-slash-anim 0.25s cubic-bezier(0.23, 1, 0.32, 1) 0.05s forwards;
+}
+
+@keyframes nav-slash-anim {
+    0% { transform: rotate(var(--rot, -15deg)) scaleX(0); opacity: 0; }
+    20% { opacity: 1; transform: rotate(var(--rot, -15deg)) scaleX(1.2); }
+    100% { opacity: 0; transform: rotate(var(--rot, -15deg)) scaleX(1.5); }
+}
+
+.nav-link::before { --rot: -15deg; }
+.nav-link::after { --rot: 15deg; }
+
+.nav-link:hover strong {
     display: inline-block;
     animation: sukuna-glitch 0.3s ease-out;
     color: var(--sukuna-crimson);
+    text-shadow: 0 0 10px var(--sukuna-blood);
 }
 
 /* --- DOMAIN ENTRANCE OVERLAY --- */
