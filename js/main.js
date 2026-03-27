@@ -314,18 +314,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const formEmpleo = document.getElementById('form-empleo');
     
     if (formEmpleo) {
-        formEmpleo.addEventListener('submit', (e) => {
+        formEmpleo.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const nombre = document.getElementById('nombre') ? document.getElementById('nombre').value : "";
-            const selectPuesto = document.getElementById('puesto');
-            const puestoText = selectPuesto ? selectPuesto.options[selectPuesto.selectedIndex].text : "candidato";
+            const formData = new FormData(formEmpleo);
+            const nombre = formData.get('nombre') || "";
+            const puesto = formData.get('puesto') || "candidato";
+            const submitBtn = formEmpleo.querySelector('button[type="submit"]');
             
-            // Simular envío con un mensaje temático
-            alert("¡Tu juramento ha sido escuchado, " + nombre + "! \n\nHas sido marcado como candidato para el puesto de " + puestoText + ". El Rey de las Maldiciones decidirá tu destino.");
-            
-            // Resetear formulario
-            formEmpleo.reset();
+            // Cambiar estado del botón
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Enviando...";
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch(formEmpleo.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    // Simular envío con un mensaje temático
+                    alert(`¡Tu juramento ha sido escuchado, ${nombre}! \n\nHas sido marcado como candidato para el puesto de ${puesto}. El Rey de las Maldiciones decidirá tu destino.`);
+                    formEmpleo.reset();
+                } else {
+                    alert("Hubo un error al enviar tu juramento. Inténtalo de nuevo más tarde.");
+                }
+            } catch (error) {
+                alert("Error de conexión. Asegúrate de estar en línea para enviar tu juramento.");
+            } finally {
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+            }
         });
     }
 });
