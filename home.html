@@ -170,7 +170,54 @@
 
     <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------  -->
 
-
+    <!-- SECCION TRABAJA CON NOSOTROS -->
+    <section class="seccion-empleos fade-in" id="empleos" style="padding: 100px 0;">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-8 text-center mb-5">
+            <h2 class="titulo-trabajadores">ÚNETE AL RELICARIO</h2>
+            <p class="frase-ingredientes">¿Tienes el potencial para servir al Rey de las Maldiciones? Envíanos tu juramento.</p>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-lg-7">
+            <form id="form-empleo" class="form-sukuna glass-effect">
+              <div class="mb-4">
+                <label for="nombre" class="form-label">Nombre del Hechicero</label>
+                <input type="text" class="form-control input-sukuna" id="nombre" required placeholder="Tu nombre">
+              </div>
+              <div class="mb-4">
+                <label for="email" class="form-label">Canal de Comunicación (Email)</label>
+                <input type="email" class="form-control input-sukuna" id="email" required placeholder="tu@email.com">
+              </div>
+              <div class="mb-4">
+                <label for="puesto" class="form-label">Puesto a Desempeñar</label>
+                <select class="form-select input-sukuna" id="puesto" required>
+                  <option value="" disabled selected>Selecciona tu técnica maldita...</option>
+                  <option value="cocinero">Cocinero</option>
+                  <option value="pinche">Pinche</option>
+                  <option value="friegaplatos">Friegaplatos</option>
+                  <option value="cajero">Cajero</option>
+                  <option value="mesero">Mesero</option>
+                  <option value="conserje">Conserje</option>
+                </select>
+              </div>
+              <div class="mb-4">
+                <label for="cv" class="form-label">Tu Expediente (CV - PDF/Imagen)</label>
+                <input type="file" class="form-control input-sukuna" id="cv" required accept=".pdf,image/*">
+              </div>
+              <div class="mb-4">
+                <label for="mensaje" class="form-label">Juramento de Lealtad (Mensaje)</label>
+                <textarea class="form-control input-sukuna" id="mensaje" rows="4" placeholder="¿Por qué deberías ser tú el elegido?"></textarea>
+              </div>
+              <div class="text-center mt-5">
+                <button type="submit" class="botoncarta hover-lift">Enviar al Relicario</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- FOOTER -->
     <footer class="footer">

@@ -308,3 +308,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// --- FORMULARIO DE EMPLEO INTERACTIVO ---
+document.addEventListener('DOMContentLoaded', () => {
+    const formEmpleo = document.getElementById('form-empleo');
+    
+    if (formEmpleo) {
+        formEmpleo.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const nombre = document.getElementById('nombre') ? document.getElementById('nombre').value : "";
+            const selectPuesto = document.getElementById('puesto');
+            const puestoText = selectPuesto ? selectPuesto.options[selectPuesto.selectedIndex].text : "candidato";
+            
+            // Simular envío con un mensaje temático
+            alert("¡Tu juramento ha sido escuchado, " + nombre + "! \n\nHas sido marcado como candidato para el puesto de " + puestoText + ". El Rey de las Maldiciones decidirá tu destino.");
+            
+            // Resetear formulario
+            formEmpleo.reset();
+        });
+    }
+});

@@ -1792,3 +1792,101 @@ body.home .botonempleado:hover {
 .menu-item[data-img] {
     cursor: pointer;
 }
+
+/* ================================================
+   FORMULARIO TRABAJA CON NOSOTROS
+   ================================================ */
+
+.seccion-empleos {
+    position: relative;
+    z-index: 2;
+}
+
+.form-sukuna {
+    padding: 40px;
+    background: rgba(10, 10, 10, 0.4);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 20px;
+    border: 1px solid rgba(139, 0, 0, 0.3);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-sukuna:hover {
+    border-color: var(--sukuna-crimson);
+    box-shadow: 0 15px 50px rgba(139, 0, 0, 0.2);
+}
+
+.form-label {
+    color: var(--oro-kamutoke);
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 0.85em;
+    display: block;
+}
+
+.input-sukuna {
+    background: rgba(10, 10, 10, 0.7) !important;
+    border: 1px solid rgba(139, 0, 0, 0.5) !important;
+    color: var(--blanco) !important;
+    border-radius: 8px !important;
+    padding: 12px 18px !important;
+    transition: all 0.3s ease !important;
+    font-family: 'Inter', sans-serif;
+}
+
+.input-sukuna:focus {
+    background: rgba(20, 10, 10, 0.9) !important;
+    border-color: var(--sukuna-crimson) !important;
+    box-shadow: 0 0 15px rgba(220, 20, 60, 0.4) !important;
+    outline: none !important;
+}
+
+.input-sukuna::placeholder {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+/* Styling for select dropdown */
+select.input-sukuna {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23f1dc1e' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1.5rem center;
+    background-size: 15px;
+}
+
+select.input-sukuna option {
+    background: #0a0a0a;
+    color: #fff;
+}
+
+/* Custom styling for file input */
+input[type="file"].input-sukuna {
+    padding: 10px 18px !important;
+}
+
+input[type="file"].input-sukuna::file-selector-button {
+    background: var(--sukuna-crimson);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 15px;
+    margin-right: 15px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background 0.3s;
+}
+
+input[type="file"].input-sukuna::file-selector-button:hover {
+    background: var(--sukuna-blood);
+}
+
+/* Label effects */
+.input-sukuna:focus + .form-label {
+    color: var(--blanco);
+}
