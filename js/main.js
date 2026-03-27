@@ -309,19 +309,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// --- FORMULARIO DE EMPLEO ---
-// El envío se maneja nativamente por el atributo 'action' de Forminit 
-// para asegurar la compatibilidad con archivos en todos los entornos.
-document.addEventListener('DOMContentLoaded', () => {
-    const formEmpleo = document.getElementById('form-empleo');
-    if (formEmpleo) {
-        formEmpleo.addEventListener('submit', () => {
-            const submitBtn = formEmpleo.querySelector('button[type="submit"]');
-            if (submitBtn) {
-                submitBtn.innerText = "Enviando al Relicario...";
-                submitBtn.style.opacity = "0.7";
-                submitBtn.style.pointerEvents = "none";
-            }
-        });
-    }
-});
+
