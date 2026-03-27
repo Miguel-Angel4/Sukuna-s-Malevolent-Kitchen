@@ -310,17 +310,48 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // --- FORMULARIO DE EMPLEO ---
-// El envío se maneja nativamente por el atributo 'action' de Formspree 
-// para asegurar la compatibilidad con archivos y la activación del correo.
 document.addEventListener('DOMContentLoaded', () => {
     const formEmpleo = document.getElementById('form-empleo');
     if (formEmpleo) {
-        formEmpleo.addEventListener('submit', () => {
+        formEmpleo.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(formEmpleo);
+            const nombre = formData.get('nombre') || "";
+            const puesto = formData.get('puesto') || "candidato";
             const submitBtn = formEmpleo.querySelector('button[type="submit"]');
-            if (submitBtn) {
-                submitBtn.innerText = "Enviando al Relicario...";
-                submitBtn.style.opacity = "0.7";
-                submitBtn.style.pointerEvents = "none";
+            
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Enviando al Relicario...";
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = "0.7";
+
+            try {
+                const response = await fetch(formEmpleo.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    alert(`¡Tu juramento ha sido escuchado, ${nombre}! \n\nHas sido marcado como candidato para el puesto de ${puesto}. El Rey de las Maldiciones decidirá tu destino.`);
+                    formEmpleo.reset();
+                } else {
+                    const data = await response.json();
+                    if (data.errors) {
+                        alert("Error: " + data.errors.map(error => error.message).join(", "));
+                    } else {
+                        alert("Hubo un error al enviar tu juramento. Inténtalo de nuevo más tarde.");
+                    }
+                }
+            } catch (error) {
+                alert("Error de conexión. Asegúrate de estar en línea para enviar tu juramento.");
+            } finally {
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = "1";
             }
         });
     }
