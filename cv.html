@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Sukuna's Malevolent Kitchen - Únete al Relicario. Envía tu CV para ser parte de nuestro equipo.">
+  <title>Trabaja con Nosotros - Sukuna's Malevolent Kitchen</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/icono.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="home">
+
+  <!-- ZONA DEL HEADER -->
+  <header class="header" id="header">
+    <a href="home.html" class="logo" aria-label="Volver al inicio">
+      <img src="img/logo.png" alt="Logo Sukuna's Malevolent Kitchen" />
+    </a>
+    <div class="header-content">
+      <nav class="menu">
+        <a href="carta.html" class="nav-link"><strong>Nuestra carta</strong></a>
+        <a href="home.html#descuentos" class="nav-link"><strong>Descuentos</strong></a>
+        <a href="cv.html" class="nav-link"><strong>¿Quieres trabajar para nosotros?</strong></a>
+        <a href="home.html#reserva" class="nav-link"><strong>Reserva</strong></a>
+        <a href="home.html#login" class="nav-link"><strong>Iniciar sesión</strong></a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MEJORA DEL FONDO -->
+  <div class="circle-overlay"></div>
+  <div class="blood-particles" id="bloodParticles"></div>
+
+  <main>
+    <!-- SECCION TRABAJA CON NOSOTROS -->
+    <section class="seccion-empleos fade-in" id="empleos" style="padding: 120px 0 80px 0;">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-8 text-center mb-5">
+            <h2 class="titulo-trabajadores">ÚNETE AL RELICARIO</h2>
+            <p class="frase-ingredientes">¿Tienes el potencial para servir al Rey de las Maldiciones? Envíanos tu juramento.</p>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-lg-7">
+            <form id="form-empleo" class="form-sukuna glass-effect">
+              <div class="mb-4">
+                <label for="nombre" class="form-label">Nombre del Hechicero</label>
+                <input type="text" class="form-control input-sukuna" id="nombre" required placeholder="Tu nombre">
+              </div>
+              <div class="mb-4">
+                <label for="email" class="form-label">Canal de Comunicación (Email)</label>
+                <input type="email" class="form-control input-sukuna" id="email" required placeholder="tu@email.com">
+              </div>
+              <div class="mb-4">
+                <label for="puesto" class="form-label">Puesto a Desempeñar</label>
+                <select class="form-select input-sukuna" id="puesto" required>
+                  <option value="" disabled selected>Selecciona tu técnica maldita...</option>
+                  <option value="cocinero">Cocinero</option>
+                  <option value="pinche">Pinche</option>
+                  <option value="friegaplatos">Friegaplatos</option>
+                  <option value="cajero">Cajero</option>
+                  <option value="mesero">Mesero</option>
+                  <option value="conserje">Conserje</option>
+                </select>
+              </div>
+              <div class="mb-4">
+                <label for="cv" class="form-label">Tu Expediente (CV - PDF/Imagen)</label>
+                <input type="file" class="form-control input-sukuna" id="cv" required accept=".pdf,image/*">
+              </div>
+              <div class="mb-4">
+                <label for="mensaje" class="form-label">Juramento de Lealtad (Mensaje)</label>
+                <textarea class="form-control input-sukuna" id="mensaje" rows="4" placeholder="¿Por qué deberías ser tú el elegido?"></textarea>
+              </div>
+              <div class="text-center mt-5">
+                <button type="submit" class="botoncarta hover-lift">Enviar al Relicario</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-content">
+        <nav class="menu" style="text-align: center;">
+          <a href="#faq" class="footer-link"><strong>Preguntas Frecuentes</strong></a>
+          <a href="#contacto" class="footer-link"><strong>Contáctanos</strong></a>
+          <a href="#cookies" class="footer-link"><strong>Configuración de cookies</strong></a>
+          <a href="#legal" class="footer-link"><strong>Aviso legal</strong></a>
+          <a href="#derechos" class="footer-link"><strong>Derechos Reservados</strong></a>
+          <a href="#privacidad" class="footer-link"><strong>Política de Privacidad</strong></a>
+        </nav>
+      </div>
+    </footer>
+  </main>
+
+  <script src="js/main.js"></script>
+</body>
+
+</html>
