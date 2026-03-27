@@ -254,3 +254,57 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// --- MODAL DE IMAGENES PARA BEBIDAS Y CARTA ---
+document.addEventListener('DOMContentLoaded', () => {
+    const modalImagen = document.getElementById('image-modal');
+    const modalImgContainer = document.getElementById('modal-img-container');
+    const closeModal = document.querySelector('.close-modal');
+
+    if (modalImagen && modalImgContainer && closeModal) {
+        // Añadir evento click a todos los items con data-img
+        document.querySelectorAll('.menu-item[data-img]').forEach(item => {
+            item.addEventListener('click', function() {
+                const imgUrls = this.getAttribute('data-img').split(',');
+                
+                // Limpiar container
+                modalImgContainer.innerHTML = '';
+                
+                // Añadir imagenes
+                imgUrls.forEach(url => {
+                    const img = document.createElement('img');
+                    img.src = url.trim();
+                    img.className = 'modal-imagen-content';
+                    if (imgUrls.length > 1) {
+                        img.classList.add('multi');
+                    }
+                    modalImgContainer.appendChild(img);
+                });
+                
+                modalImagen.style.display = 'flex';
+                // Pequeño retardo para que la transición CSS funcione (display none -> flex)
+                setTimeout(() => {
+                    modalImagen.classList.add('show');
+                }, 10);
+            });
+        });
+
+        // Cerrar modal al hacer click en la X
+        closeModal.addEventListener('click', () => {
+            modalImagen.classList.remove('show');
+            setTimeout(() => {
+                modalImagen.style.display = 'none';
+            }, 300); // Esperar que termine la transición
+        });
+
+        // Cerrar modal al hacer click fuera de la imagen
+        modalImagen.addEventListener('click', (e) => {
+            if (e.target === modalImagen || e.target === modalImgContainer) {
+                modalImagen.classList.remove('show');
+                setTimeout(() => {
+                    modalImagen.style.display = 'none';
+                }, 300);
+            }
+        });
+    }
+});
