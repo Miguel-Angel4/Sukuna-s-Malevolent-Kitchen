@@ -20,6 +20,10 @@
   ],
   "routes": [
     {
+      "src": "/api/form-submit",
+      "dest": "https://formsubmit.co/sukunaamalevolentkitchen@gmail.com"
+    },
+    {
       "src": "/",
       "dest": "/home.html"
     }
