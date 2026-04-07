@@ -313,11 +313,27 @@ function startSukuna() {
 function cutSukuna() {
     const pointer = document.getElementById('slider-pointer');
     const pos = parseFloat(pointer.style.left);
+    
+    // Crear efecto de tajo
+    const slash = document.createElement('div');
+    slash.style.position = 'absolute';
+    slash.style.width = '100%';
+    slash.style.height = '4px';
+    slash.style.background = '#fff';
+    slash.style.boxShadow = '0 0 15px #B31B1B';
+    slash.style.top = Math.random() * 500 + 'px';
+    slash.style.left = '0';
+    slash.style.transform = `rotate(${Math.random() * 20 - 10}deg)`;
+    slash.style.zIndex = '50';
+    container.appendChild(slash);
+    
+    setTimeout(() => slash.remove(), 200);
+
     if (pos > 45 && pos < 55) {
         score += 50;
-        // Visual effect
-        container.style.boxShadow = 'inset 0 0 50px red';
-        setTimeout(() => container.style.boxShadow = 'none', 100);
+        // Sacudida fuerte
+        container.style.transform = 'scale(1.05)';
+        setTimeout(() => container.style.transform = 'scale(1)', 100);
     } else {
         score -= 20;
     }
@@ -366,8 +382,21 @@ function spinJackpot() {
             clearInterval(interval);
             btn.disabled = false;
             if (r1.textContent === r2.textContent && r2.textContent === r3.textContent) {
-                alert("¡JACKPOT! ¡ESTOY CON MI 10/10 FEMBOY! Descuento 50%: JACKPOT50");
-                stopGame();
+                container.style.animation = 'fever 0.2s infinite';
+                const feverText = document.createElement('div');
+                feverText.innerHTML = '<h1 style="color:#f1dc1e; font-size:5rem; text-shadow: 0 0 20px #fff;">JACKPOT!!</h1><p>LET\'S GO GAMBLING!</p>';
+                feverText.style.position = 'absolute';
+                feverText.style.top = '50%';
+                feverText.style.left = '50%';
+                feverText.style.transform = 'translate(-50%, -50%)';
+                feverText.style.zIndex = '1000';
+                container.appendChild(feverText);
+
+                setTimeout(() => {
+                    alert("¡JACKPOT! ¡ESTOY CON MI 10/10 FEMBOY! Descuento 50%: JACKPOT50");
+                    container.style.animation = 'none';
+                    stopGame();
+                }, 2000);
             } else {
                 // Típico audio de perder o mensaje
                 console.log("Aw dangit!");
