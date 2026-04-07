@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Sukuna's Malevolent Kitchen - Reserva tu mesa. Disfruta de la mejor cocina del Rey de las Maldiciones.">
+  <title>Reserva - Sukuna's Malevolent Kitchen</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/icono.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="home">
+
+  <!-- ZONA DEL HEADER -->
+  <header class="header" id="header">
+    <a href="home.html" class="logo" aria-label="Volver al inicio">
+      <img src="img/logo.png" alt="Logo Sukuna's Malevolent Kitchen" />
+    </a>
+    <div class="header-content">
+      <nav class="menu">
+        <a href="carta.html" class="nav-link"><strong>Nuestra carta</strong></a>
+        <a href="home.html#descuentos" class="nav-link"><strong>Descuentos</strong></a>
+        <a href="cv.html" class="nav-link"><strong>¿Quieres trabajar para nosotros?</strong></a>
+        <a href="reserva.html" class="nav-link"><strong>Reserva</strong></a>
+        <a href="home.html#login" class="nav-link"><strong>Iniciar sesión</strong></a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MEJORA DEL FONDO -->
+  <div class="circle-overlay"></div>
+  <div class="blood-particles" id="bloodParticles"></div>
+
+  <main>
+    <!-- SECCION RESERVAS -->
+    <section class="seccion-empleos fade-in" id="reserva-section" style="padding: 120px 0 80px 0;">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-8 text-center mb-5">
+            <h2 class="titulo-trabajadores">RESERVA TU MESA</h2>
+            <p class="frase-ingredientes">Asegura tu lugar en el dominio de Sukuna. Elige cuándo y dónde quieres servir tu paladar.</p>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-lg-7">
+            <form id="form-reserva" action="/api/form-submit" method="POST" enctype="multipart/form-data" class="form-sukuna glass-effect">
+              <!-- Parámetros técnicos de compatibilidad de Formsubmit -->
+              <input type="hidden" name="_captcha" value="false">
+              <input type="hidden" name="_subject" value="¡Nueva Reserva en Sukuna's Malevolent Kitchen!">
+              <input type="hidden" name="_next" value="https://sukuna-s-malevolent-kitchen.vercel.app/reserva.html">
+
+              <div class="mb-4">
+                <label for="nombre" class="form-label">Nombre a cargo de la reserva</label>
+                <input type="text" name="nombre" class="form-control input-sukuna" id="nombre" required placeholder="Tu nombre">
+              </div>
+              <div class="mb-4">
+                <label for="email" class="form-label">Correo de contacto</label>
+                <input type="email" name="email" class="form-control input-sukuna" id="email" required placeholder="tu@email.com">
+              </div>
+              <div class="mb-4">
+                <label for="telefono" class="form-label">Teléfono de contacto</label>
+                <input type="tel" name="telefono" class="form-control input-sukuna" id="telefono" required placeholder="+34 600000000">
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6 mb-4">
+                  <label for="fecha" class="form-label">Día del sacrificio (Fecha)</label>
+                  <input type="date" name="fecha" class="form-control input-sukuna" id="fecha" required>
+                </div>
+                <div class="col-md-6 mb-4">
+                  <label for="hora" class="form-label">Hora exacto (Hora)</label>
+                  <input type="time" name="hora" class="form-control input-sukuna" id="hora" required>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label for="mesa" class="form-label">Selecciona tu Mesa (15 Disponibles)</label>
+                <select name="mesa" class="form-select input-sukuna" id="mesa" required>
+                  <option value="" disabled selected>Elige tu mesa maldita...</option>
+                  <option value="Mesa 1 (El Altar)">Mesa 1 (El Altar)</option>
+                  <option value="Mesa 2 (Expansión Oculta)">Mesa 2 (Expansión Oculta)</option>
+                  <option value="Mesa 3">Mesa 3</option>
+                  <option value="Mesa 4">Mesa 4</option>
+                  <option value="Mesa 5">Mesa 5</option>
+                  <option value="Mesa 6">Mesa 6</option>
+                  <option value="Mesa 7">Mesa 7</option>
+                  <option value="Mesa 8">Mesa 8</option>
+                  <option value="Mesa 9">Mesa 9</option>
+                  <option value="Mesa 10">Mesa 10</option>
+                  <option value="Mesa 11">Mesa 11</option>
+                  <option value="Mesa 12">Mesa 12</option>
+                  <option value="Mesa 13">Mesa 13</option>
+                  <option value="Mesa 14">Mesa 14</option>
+                  <option value="Mesa 15 (El Dedo de Sukuna)">Mesa 15 (El Dedo de Sukuna)</option>
+                </select>
+              </div>
+              <div class="mb-4">
+                <label for="peticiones" class="form-label">Peticiones o Alergias</label>
+                <textarea name="peticiones" class="form-control input-sukuna" id="peticiones" rows="3" placeholder="Ej: Dos sillas adicionales, alergia al veneno maldito..."></textarea>
+              </div>
+              <div class="text-center mt-5">
+                <button type="submit" name="submit_btn" class="botoncarta hover-lift">Confirmar Reserva</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-content">
+        <nav class="menu" style="text-align: center;">
+          <a href="#faq" class="footer-link"><strong>Preguntas Frecuentes</strong></a>
+          <a href="#contacto" class="footer-link"><strong>Contáctanos</strong></a>
+          <a href="#cookies" class="footer-link"><strong>Configuración de cookies</strong></a>
+          <a href="#legal" class="footer-link"><strong>Aviso legal</strong></a>
+          <a href="#derechos" class="footer-link"><strong>Derechos Reservados</strong></a>
+          <a href="#privacidad" class="footer-link"><strong>Política de Privacidad</strong></a>
+        </nav>
+      </div>
+    </footer>
+  </main>
+
+  <script src="js/main.js"></script>
+</body>
+
+</html>
