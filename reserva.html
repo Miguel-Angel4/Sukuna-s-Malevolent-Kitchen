@@ -67,37 +67,37 @@
               </div>
               
               <div class="row">
-                <div class="col-md-6 mb-4">
-                  <label for="fecha" class="form-label">Día del sacrificio (Fecha)</label>
-                  <input type="date" name="fecha" class="form-control input-sukuna" id="fecha" required>
+                <div class="col-md-4 mb-4">
+                  <label for="fecha_hora" class="form-label">Día y hora del banquete</label>
+                  <input type="datetime-local" name="fecha_hora" class="form-control input-sukuna" id="fecha_hora" required>
                 </div>
-                <div class="col-md-6 mb-4">
-                  <label for="hora" class="form-label">Hora exacto (Hora)</label>
-                  <input type="time" name="hora" class="form-control input-sukuna" id="hora" required>
+                <div class="col-md-4 mb-4">
+                  <label for="personas" class="form-label">Número de comensales</label>
+                  <input type="number" name="personas" class="form-control input-sukuna" id="personas" min="1" max="20" required placeholder="Ej: 2">
+                </div>
+                <div class="col-md-4 mb-4">
+                  <label for="mesa" class="form-label">Elige tu Mesa</label>
+                  <select name="mesa" class="form-select input-sukuna" id="mesa" required>
+                    <option value="" disabled selected>Selecciona mesa...</option>
+                    <option value="Mesa 1">Mesa 1</option>
+                    <option value="Mesa 2">Mesa 2</option>
+                    <option value="Mesa 3">Mesa 3</option>
+                    <option value="Mesa 4">Mesa 4</option>
+                    <option value="Mesa 5">Mesa 5</option>
+                    <option value="Mesa 6">Mesa 6</option>
+                    <option value="Mesa 7">Mesa 7</option>
+                    <option value="Mesa 8">Mesa 8</option>
+                    <option value="Mesa 9">Mesa 9</option>
+                    <option value="Mesa 10">Mesa 10</option>
+                    <option value="Mesa 11">Mesa 11</option>
+                    <option value="Mesa 12">Mesa 12</option>
+                    <option value="Mesa 13">Mesa 13</option>
+                    <option value="Mesa 14">Mesa 14</option>
+                    <option value="Mesa 15 (Especial para Cumpleaños)">Mesa 15 (Especial para Cumpleaños)</option>
+                  </select>
                 </div>
               </div>
 
-              <div class="mb-4">
-                <label for="mesa" class="form-label">Selecciona tu Mesa (15 Disponibles)</label>
-                <select name="mesa" class="form-select input-sukuna" id="mesa" required>
-                  <option value="" disabled selected>Elige tu mesa maldita...</option>
-                  <option value="Mesa 1 (El Altar)">Mesa 1 (El Altar)</option>
-                  <option value="Mesa 2 (Expansión Oculta)">Mesa 2 (Expansión Oculta)</option>
-                  <option value="Mesa 3">Mesa 3</option>
-                  <option value="Mesa 4">Mesa 4</option>
-                  <option value="Mesa 5">Mesa 5</option>
-                  <option value="Mesa 6">Mesa 6</option>
-                  <option value="Mesa 7">Mesa 7</option>
-                  <option value="Mesa 8">Mesa 8</option>
-                  <option value="Mesa 9">Mesa 9</option>
-                  <option value="Mesa 10">Mesa 10</option>
-                  <option value="Mesa 11">Mesa 11</option>
-                  <option value="Mesa 12">Mesa 12</option>
-                  <option value="Mesa 13">Mesa 13</option>
-                  <option value="Mesa 14">Mesa 14</option>
-                  <option value="Mesa 15 (El Dedo de Sukuna)">Mesa 15 (El Dedo de Sukuna)</option>
-                </select>
-              </div>
               <div class="mb-4">
                 <label for="peticiones" class="form-label">Peticiones o Alergias</label>
                 <textarea name="peticiones" class="form-control input-sukuna" id="peticiones" rows="3" placeholder="Ej: Dos sillas adicionales, alergia al veneno maldito..."></textarea>
