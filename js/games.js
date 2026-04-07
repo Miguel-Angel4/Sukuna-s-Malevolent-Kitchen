@@ -52,59 +52,115 @@ function startKokusen() {
 function spawnKokusenCircle() {
     if (activeGame !== 'kokusen') return;
 
-    const circle = document.createElement('div');
-    circle.style.position = 'absolute';
-    circle.style.width = '60px';
-    circle.style.height = '60px';
-    circle.style.borderRadius = '50%';
-    circle.style.border = '3px solid #000';
-    circle.style.background = 'rgba(0,0,100,0.5)';
-    circle.style.left = Math.random() * 700 + 'px';
-    circle.style.top = Math.random() * 500 + 'px';
-    circle.style.cursor = 'pointer';
-
-    const ring = document.createElement('div');
-    ring.style.position = 'absolute';
-    ring.style.width = '120px';
-    ring.style.height = '120px';
-    ring.style.borderRadius = '50%';
-    ring.style.border = '2px solid #B31B1B';
-    ring.style.top = '-30px';
-    ring.style.left = '-30px';
-    ring.style.transition = 'all 1s linear';
+    // Crear sprite de Yuji atacando
+    const yuji = document.createElement('img');
+    yuji.src = 'img/game_yuji.png';
+    yuji.style.position = 'absolute';
+    yuji.style.width = '100px';
+    yuji.style.imageRendering = 'pixelated';
+    yuji.style.transition = 'all 0.3s ease-out';
     
-    circle.appendChild(ring);
-    container.appendChild(circle);
+    // Posición inicial (fuera o en el borde)
+    const startX = Math.random() > 0.5 ? -100 : 800;
+    const startY = Math.random() * 500;
+    yuji.style.left = startX + 'px';
+    yuji.style.top = startY + 'px';
+    container.appendChild(yuji);
 
-    // Animation of shrinking ring
+    // Objetivo del golpe
+    const targetX = Math.random() * 650;
+    const targetY = Math.random() * 450;
+
+    // Animación de ataque
     setTimeout(() => {
-        ring.style.width = '60px';
-        ring.style.height = '60px';
-        ring.style.top = '0px';
-        ring.style.left = '0px';
-    }, 10);
+        yuji.style.left = targetX + 'px';
+        yuji.style.top = targetY + 'px';
+        yuji.src = 'img/game_yuji_punch.png'; // Cambiar a pose de golpe
+        
+        // Crear el círculo de timing en el punto del golpe
+        const circle = document.createElement('div');
+        circle.className = 'kokusen-target';
+        circle.style.position = 'absolute';
+        circle.style.width = '60px';
+        circle.style.height = '60px';
+        circle.style.borderRadius = '50%';
+        circle.style.border = '3px solid #000';
+        circle.style.background = 'rgba(0,0,100,0.3)';
+        circle.style.left = (targetX + 80) + 'px'; // Ajustado al puño
+        circle.style.top = (targetY + 20) + 'px';
+        circle.style.cursor = 'pointer';
+        circle.style.zIndex = '10';
 
-    circle.onclick = () => {
-        const currentSize = parseInt(ring.style.width);
-        if (currentSize < 70 && currentSize > 50) {
-            score += 10;
-            // Visual feedback
-            circle.style.background = 'white';
-            setTimeout(() => circle.remove(), 100);
-        } else {
-            score -= 5;
-            circle.remove();
-        }
-        spawnKokusenCircle();
-    };
+        const ring = document.createElement('div');
+        ring.style.position = 'absolute';
+        ring.style.width = '120px';
+        ring.style.height = '120px';
+        ring.style.borderRadius = '50%';
+        ring.style.border = '2px solid #B31B1B';
+        ring.style.top = '-30px';
+        ring.style.left = '-30px';
+        ring.style.transition = 'all 1s linear';
+        
+        circle.appendChild(ring);
+        container.appendChild(circle);
 
-    // Auto remove if not clicked
-    setTimeout(() => {
-        if (circle.parentNode) {
-            circle.remove();
+        setTimeout(() => {
+            ring.style.width = '60px';
+            ring.style.height = '60px';
+            ring.style.top = '0px';
+            ring.style.left = '0px';
+        }, 10);
+
+        circle.onclick = () => {
+            const currentSize = parseInt(ring.style.width);
+            if (currentSize < 75 && currentSize > 45) {
+                score += 10;
+                showBlackFlashEffect(targetX + 110, targetY + 50);
+                circle.remove();
+            } else {
+                score -= 5;
+                circle.remove();
+            }
+            yuji.remove();
             spawnKokusenCircle();
-        }
-    }, 1500);
+        };
+
+        // Si no se pulsa a tiempo
+        setTimeout(() => {
+            if (circle.parentNode) {
+                circle.remove();
+                yuji.remove();
+                spawnKokusenCircle();
+            }
+        }, 1200);
+
+    }, 200);
+}
+
+function showBlackFlashEffect(x, y) {
+    const flash = document.createElement('div');
+    flash.style.position = 'absolute';
+    flash.style.left = x + 'px';
+    flash.style.top = y + 'px';
+    flash.style.width = '2px';
+    flash.style.height = '2px';
+    flash.style.background = '#fff';
+    flash.style.boxShadow = '0 0 40px 20px #000, 0 0 100px 40px #B31B1B';
+    flash.style.borderRadius = '50%';
+    flash.style.zIndex = '100';
+    flash.style.pointerEvents = 'none';
+    
+    // Rayos rojos simulados con sombras múltiples
+    flash.style.boxShadow += ', 20px -20px 0 #B31B1B, -20px 20px 0 #B31B1B';
+
+    container.appendChild(flash);
+    
+    // Efecto de sacudida
+    container.style.transform = 'translate(5px, 5px)';
+    setTimeout(() => container.style.transform = 'translate(-5px, -5px)', 50);
+    setTimeout(() => container.style.transform = 'translate(0, 0)', 100);
+
+    setTimeout(() => flash.remove(), 400);
 }
 
 // ------------------------------------------
