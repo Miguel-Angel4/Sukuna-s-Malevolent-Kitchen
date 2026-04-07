@@ -216,7 +216,7 @@ window.addEventListener('load', () => {
 });
 
 // Prevent default behavior for placeholder links
-document.querySelectorAll('a[href="#empleos"], a[href="#login"], a[href="#faq"], a[href="#contacto"], a[href="#cookies"], a[href="#legal"], a[href="#derechos"], a[href="#privacidad"], a[href="#empleados"], a[href="#descuentos"]').forEach(link => {
+document.querySelectorAll('a[href="#empleos"], a[href="#faq"], a[href="#contacto"], a[href="#cookies"], a[href="#legal"], a[href="#derechos"], a[href="#privacidad"], a[href="#empleados"], a[href="#descuentos"]').forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
         // Future: Add modal or redirect logic here
@@ -309,4 +309,127 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// --- SISTEMA DE AUTENTICACION (LOGIN / REGISTRO) ---
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Mostrar estado de sesión en el Nav
+    const navLoginBtn = document.getElementById('nav-login');
+    const currentUser = JSON.parse(localStorage.getItem('sukuna_user'));
 
+    if (currentUser && navLoginBtn) {
+        navLoginBtn.innerHTML = `<strong>Cerrar sesión (${currentUser.email})</strong>`;
+        navLoginBtn.href = "#";
+        navLoginBtn.classList.add('logged-in'); // Por si quieres darle un color distinto en CSS
+        navLoginBtn.onclick = (e) => {
+            e.preventDefault();
+            if(confirm("¿Estás seguro de que deseas abandonar el Dominio? (Cerrar sesión)")){
+                localStorage.removeItem('sukuna_user');
+                alert("Sesión cerrada. Vuelve pronto.");
+                window.location.href = "home.html";
+            }
+        };
+    }
+
+    // 2. Lógica específica de login.html
+    const authForm = document.getElementById('auth-form');
+    if (authForm) {
+        // Redirigir si ya está logueado
+        if (currentUser) {
+            document.getElementById('login-section').innerHTML = `
+                <div class="container text-center">
+                    <h2 class="titulo-trabajadores">Ya estás dentro del Dominio</h2>
+                    <p class="frase-ingredientes">Sesión iniciada como: ${currentUser.email}</p>
+                    <br><a href="home.html" class="botoncarta mt-4" style="text-decoration:none;">Volver al Inicio</a>
+                </div>`;
+            return;
+        }
+
+        const emailInput = document.getElementById('auth-email');
+        const passInput = document.getElementById('auth-password');
+        const toggleFormBtn = document.getElementById('toggle-form');
+        const formTitle = document.getElementById('form-title');
+        const formSubtitle = document.getElementById('form-subtitle');
+        const mainBtn = document.getElementById('main-btn');
+        const toggleText = document.getElementById('toggle-text');
+        const authMessage = document.getElementById('auth-message');
+        const googleBtn = document.getElementById('google-btn');
+
+        let isLoginMode = true; // true = Login, false = Registro
+
+        // Cambiar entre Login y Registro
+        const setupToggleButton = () => {
+            const btn = document.getElementById('toggle-form');
+            if (btn) {
+                btn.onclick = (e) => {
+                    e.preventDefault();
+                    isLoginMode = !isLoginMode;
+                    authMessage.classList.add('d-none');
+
+                    if (isLoginMode) {
+                        formTitle.textContent = "INICIAR SESIÓN";
+                        formSubtitle.textContent = "Bienvenido de nuevo al Dominio.";
+                        mainBtn.textContent = "Entrar";
+                        toggleText.innerHTML = '¿No tienes cuenta? <a href="#" id="toggle-form" style="color:#B31B1B; font-weight:bold;">Créala aquí</a>';
+                    } else {
+                        formTitle.textContent = "NUEVA CUENTA";
+                        formSubtitle.textContent = "Sella tu juramento para entrar.";
+                        mainBtn.textContent = "Registrarse";
+                        toggleText.innerHTML = '¿Ya tienes cuenta? <a href="#" id="toggle-form" style="color:#B31B1B; font-weight:bold;">Inicia sesión</a>';
+                    }
+                    setupToggleButton(); // Re-vincula el evento al nuevo link
+                };
+            }
+        };
+        setupToggleButton();
+
+        const showMessage = (msg, isError = true) => {
+            authMessage.textContent = msg;
+            authMessage.className = `alert mt-3 text-center ${isError ? 'alert-danger' : 'alert-success'}`;
+            authMessage.classList.remove('d-none');
+        };
+
+        // Enviar Formulario
+        authForm.onsubmit = (e) => {
+            e.preventDefault();
+            const email = emailInput.value.trim();
+            const pass = passInput.value.trim();
+
+            if (!email || !pass) return;
+
+            // Simulamos DB en localStorage
+            localStorage.setItem('sukuna_db', localStorage.getItem('sukuna_db') || JSON.stringify({}));
+            const db = JSON.parse(localStorage.getItem('sukuna_db'));
+
+            if (isLoginMode) {
+                if (!db[email]) {
+                    showMessage("❌ No existe cuenta con este correo.");
+                } else if (db[email].password !== pass) {
+                    showMessage("❌ Contraseña incorrecta.");
+                } else {
+                    showMessage("✅ Autenticado. Entrando al Dominio...", false);
+                    localStorage.setItem('sukuna_user', JSON.stringify({ email: email }));
+                    setTimeout(() => { window.location.href = "home.html"; }, 1500);
+                }
+            } else {
+                if (db[email]) {
+                    showMessage("❌ Este correo ya está registrado.");
+                } else {
+                    db[email] = { password: pass };
+                    localStorage.setItem('sukuna_db', JSON.stringify(db));
+                    showMessage("✅ Cuenta creada. Bienvenido al Dominio.", false);
+                    localStorage.setItem('sukuna_user', JSON.stringify({ email: email }));
+                    setTimeout(() => { window.location.href = "home.html"; }, 1500);
+                }
+            }
+        };
+
+        // Botón de Google (Simulado)
+        googleBtn.onclick = () => {
+            const googleEmail = prompt("🔒 [Simulación Google Login]\nIntroduce tu email de Google:");
+            if (googleEmail && googleEmail.includes('@')) {
+                showMessage(`✅ Iniciando sesión con Google (${googleEmail})...`, false);
+                localStorage.setItem('sukuna_user', JSON.stringify({ email: googleEmail, google: true }));
+                setTimeout(() => { window.location.href = "home.html"; }, 1200);
+            }
+        };
+    }
+});
