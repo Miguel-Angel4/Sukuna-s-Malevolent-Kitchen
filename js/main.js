@@ -316,17 +316,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentUser = JSON.parse(localStorage.getItem('sukuna_user'));
 
     if (currentUser && navLoginBtn) {
-        navLoginBtn.innerHTML = `<strong>Cerrar sesión (${currentUser.email})</strong>`;
-        navLoginBtn.href = "#";
-        navLoginBtn.classList.add('logged-in'); // Por si quieres darle un color distinto en CSS
-        navLoginBtn.onclick = (e) => {
-            e.preventDefault();
-            if(confirm("¿Estás seguro de que deseas abandonar el Dominio? (Cerrar sesión)")){
-                localStorage.removeItem('sukuna_user');
-                alert("Sesión cerrada. Vuelve pronto.");
-                window.location.href = "home.html";
-            }
-        };
+        // En lugar de cerrar sesión directo, llevamos a Mi Cuenta
+        navLoginBtn.innerHTML = `<strong>Mi Cuenta</strong>`;
+        navLoginBtn.href = "cuenta.html";
+        navLoginBtn.classList.add('logged-in');
     }
 
     // 2. Lógica específica de login.html
@@ -334,12 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (authForm) {
         // Redirigir si ya está logueado
         if (currentUser) {
-            document.getElementById('login-section').innerHTML = `
-                <div class="container text-center">
-                    <h2 class="titulo-trabajadores">Ya estás dentro del Dominio</h2>
-                    <p class="frase-ingredientes">Sesión iniciada como: ${currentUser.email}</p>
-                    <br><a href="home.html" class="botoncarta mt-4" style="text-decoration:none;">Volver al Inicio</a>
-                </div>`;
+            window.location.href = "cuenta.html";
             return;
         }
 
@@ -407,17 +395,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     showMessage("✅ Autenticado. Entrando al Dominio...", false);
                     localStorage.setItem('sukuna_user', JSON.stringify({ email: email }));
-                    setTimeout(() => { window.location.href = "home.html"; }, 1500);
+                    setTimeout(() => { window.location.href = "cuenta.html"; }, 1500);
                 }
             } else {
                 if (db[email]) {
                     showMessage("❌ Este correo ya está registrado.");
                 } else {
-                    db[email] = { password: pass };
+                    db[email] = { password: pass, name: "", bio: "", photo: "" };
                     localStorage.setItem('sukuna_db', JSON.stringify(db));
                     showMessage("✅ Cuenta creada. Bienvenido al Dominio.", false);
                     localStorage.setItem('sukuna_user', JSON.stringify({ email: email }));
-                    setTimeout(() => { window.location.href = "home.html"; }, 1500);
+                    setTimeout(() => { window.location.href = "cuenta.html"; }, 1500);
                 }
             }
         };
@@ -428,7 +416,85 @@ document.addEventListener('DOMContentLoaded', () => {
             if (googleEmail && googleEmail.includes('@')) {
                 showMessage(`✅ Iniciando sesión con Google (${googleEmail})...`, false);
                 localStorage.setItem('sukuna_user', JSON.stringify({ email: googleEmail, google: true }));
-                setTimeout(() => { window.location.href = "home.html"; }, 1200);
+                
+                // Asegurar que existe en la DB simulada
+                localStorage.setItem('sukuna_db', localStorage.getItem('sukuna_db') || JSON.stringify({}));
+                const db = JSON.parse(localStorage.getItem('sukuna_db'));
+                if (!db[googleEmail]) {
+                    db[googleEmail] = { password: "google_account", name: "", bio: "", photo: "" };
+                    localStorage.setItem('sukuna_db', JSON.stringify(db));
+                }
+
+                setTimeout(() => { window.location.href = "cuenta.html"; }, 1200);
+            }
+        };
+    }
+
+    // 3. Lógica específica de cuenta.html
+    const profileForm = document.getElementById('profile-form');
+    if (profileForm) {
+        if (!currentUser) {
+            window.location.href = "login.html";
+            return;
+        }
+
+        const db = JSON.parse(localStorage.getItem('sukuna_db') || "{}");
+        const userData = db[currentUser.email] || {};
+
+        const emailField = document.getElementById('profile-email');
+        const nameField = document.getElementById('profile-name');
+        const bioField = document.getElementById('profile-bio');
+        const displayImg = document.getElementById('display-profile-img');
+        const uploadInput = document.getElementById('profile-upload');
+        const profileMsg = document.getElementById('profile-msg');
+        const logoutLink = document.getElementById('logout-link');
+
+        // Cargar datos actuales
+        emailField.value = currentUser.email;
+        nameField.value = userData.name || "";
+        bioField.value = userData.bio || "";
+        if (userData.photo) {
+            displayImg.src = userData.photo;
+        }
+
+        // Manejar subida de foto (Simulada con Base64)
+        uploadInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    displayImg.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        // Guardar cambios
+        profileForm.onsubmit = (e) => {
+            e.preventDefault();
+            
+            userData.name = nameField.value.trim();
+            userData.bio = bioField.value.trim();
+            userData.photo = displayImg.src;
+
+            db[currentUser.email] = userData;
+            localStorage.setItem('sukuna_db', JSON.stringify(db));
+
+            profileMsg.textContent = "✅ Perfil actualizado correctamente.";
+            profileMsg.className = "alert alert-success mt-3 text-center";
+            profileMsg.classList.remove('d-none');
+
+            setTimeout(() => {
+                profileMsg.classList.add('d-none');
+            }, 3000);
+        };
+
+        // Logout
+        logoutLink.onclick = (e) => {
+            e.preventDefault();
+            if(confirm("¿Estás seguro de que deseas abandonar el Dominio?")){
+                localStorage.removeItem('sukuna_user');
+                window.location.href = "home.html";
             }
         };
     }
