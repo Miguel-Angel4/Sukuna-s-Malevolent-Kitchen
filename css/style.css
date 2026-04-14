@@ -356,30 +356,40 @@ body.carta {
 }
 
 /* BARRA DE CATEGORÍAS */
+/* BARRA DE CATEGORÍAS (CARTA) */
 .comidas {
     position: fixed;
     top: 100px;
-    /* debajo del header (~100px de alto) */
     left: 0;
     width: 100vw;
-    background: linear-gradient(135deg, rgba(10, 10, 10, 0.97), rgba(74, 0, 0, 0.97));
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    padding: 14px 30px;
-    color: var(--oro-kamutoke);
-    font-size: 1em;
-    font-weight: 600;
-    line-height: 1em;
+    background: rgba(45, 0, 0, 0.9);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    padding: 0.75rem 2rem;
     z-index: 1001;
-    /* encima del header */
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 1rem;
     flex-wrap: wrap;
-    box-shadow: 0 4px 20px rgba(139, 0, 0, 0.6);
-    border-bottom: 2px solid var(--sukuna-blood);
-    margin-top: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.categoria-link {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all var(--transition-fast);
+    padding: 4px 12px;
+}
+
+.categoria-link:hover, .categoria-link.active {
+    color: var(--blanco);
+    background: rgba(220, 38, 38, 0.2);
+    border-radius: 4px;
 }
 
 /* FRASE CARTA */
@@ -415,94 +425,50 @@ body.carta {
 }
 
 /* CARDS DE COMIDA — ESTILO SUKUNA */
-.bebidas,
-.entrantes,
-.carnes,
-.vegetales,
-.pescados,
-.pastas,
-.postres,
-.menus,
-.retos {
+/* CARDS DE CARTA (ESTILO PREMIUM V2) */
+.bebidas, .entrantes, .carnes, .vegetales, .pescados, .pastas, .postres, .menus, .retos {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     width: 100%;
-    height: 35vh;
-    min-height: 220px;
+    height: 250px;
     display: flex;
-    align-items: flex-end;
-    padding: 20px 25px;
-    font-size: 1.5em;
-    border: 2px solid rgba(139, 0, 0, 0.4);
-    border-radius: 12px;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
     position: relative;
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: transform var(--transition-normal), border-color var(--transition-normal);
+    cursor: pointer;
 }
 
-/* Overlay oscuro sobre las imágenes */
-.bebidas::before,
-.entrantes::before,
-.carnes::before,
-.vegetales::before,
-.pescados::before,
-.pastas::before,
-.postres::before,
-.menus::before,
-.retos::before {
+.bebidas::before, .entrantes::before, .carnes::before, .vegetales::before, .pescados::before, .pastas::before, .postres::before, .menus::before, .retos::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(139, 0, 0, 0.2) 60%, transparent 100%);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(139, 0, 0, 0.2) 100%);
     z-index: 1;
     transition: background 0.3s ease;
 }
 
-/* Slash rojo en hover */
-.bebidas:hover::after,
-.entrantes:hover::after,
-.carnes:hover::after,
-.vegetales:hover::after,
-.pescados:hover::after,
-.pastas:hover::after,
-.postres:hover::after,
-.menus:hover::after,
-.retos:hover::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 200%;
-    height: 3px;
-    background: var(--sukuna-crimson);
-    box-shadow: 0 0 20px var(--sukuna-blood);
-    transform: translate(-50%, -50%) rotate(-45deg);
-    z-index: 3;
-    animation: sukuna-slash-1 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-}
-
-.bebidas strong,
-.entrantes strong,
-.carnes strong,
-.vegetales strong,
-.pescados strong,
-.pastas strong,
-.postres strong,
-.menus strong,
-.retos strong {
+.bebidas strong, .entrantes strong, .carnes strong, .vegetales strong, .pescados strong, .pastas strong, .postres strong, .menus strong, .retos strong {
     position: relative;
     z-index: 2;
     color: var(--blanco);
-    font-size: 1em;
+    font-size: 1.4rem;
     letter-spacing: 4px;
     text-transform: uppercase;
-    text-shadow: 0 0 15px rgba(220, 20, 60, 0.7), 2px 2px 8px rgba(0, 0, 0, 0.9);
-    font-family: 'Outfit', sans-serif;
     font-weight: 700;
-    border-left: 3px solid var(--sukuna-crimson);
-    padding-left: 12px;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.9);
 }
+
+.bebidas:hover, .entrantes:hover, .carnes:hover, .vegetales:hover, .pescados:hover, .pastas:hover, .postres:hover, .menus:hover, .retos:hover {
+    transform: scale(1.02);
+    border-color: var(--sukuna-crimson);
+}
+
+
 
 /* Imágenes individuales */
 .bebidas {
@@ -541,20 +507,7 @@ body.carta {
     background-image: url(../img/reto_temporal.jpg);
 }
 
-/* Hover en las cards */
-.bebidas:hover,
-.entrantes:hover,
-.carnes:hover,
-.vegetales:hover,
-.pescados:hover,
-.pastas:hover,
-.postres:hover,
-.menus:hover,
-.retos:hover {
-    border-color: var(--sukuna-crimson);
-    box-shadow: 0 0 30px rgba(220, 20, 60, 0.5), 0 15px 35px rgba(0, 0, 0, 0.5);
-    transform: translateY(-5px) scale(1.02);
-}
+
 
 
 /* ================================================
@@ -632,49 +585,10 @@ body.carta {
     color: var(--oro-kamutoke);
 }
 
-/* ================================================
-   MEJORAS DE CARDS DE COMIDA
-   ================================================ */
-
+/* .card-comida base style integrated into premium categories */
 .card-comida {
-    position: relative;
-    overflow: hidden;
-    border-radius: 15px;
-    transition: all var(--transition-normal);
-    cursor: pointer;
-}
-
-.card-comida::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(240, 64, 78, 0.3), rgba(65, 95, 120, 0.3));
-    opacity: 0;
-    transition: opacity var(--transition-normal);
-    z-index: 1;
-}
-
-.card-comida:hover::before {
-    opacity: 1;
-}
-
-.card-comida strong {
-    position: relative;
-    z-index: 2;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
-    transition: transform var(--transition-normal);
-}
-
-.card-comida:hover strong {
-    transform: scale(1.1);
-}
-
-.card-comida:hover {
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-    border: 2px solid var(--oro-kamutoke);
+    border: none;
+    background-color: transparent;
 }
 
 .categoria-link {
@@ -1719,19 +1633,22 @@ body.home .botonempleado:hover {
 }
 
 .category-title {
-    font-size: 3em;
-    color: var(--oro-kamutoke);
+    font-size: 2.5rem;
+    color: var(--blanco);
     text-align: center;
-    margin-bottom: 40px;
-    letter-spacing: 5px;
+    margin-bottom: 3rem;
+    letter-spacing: 6px;
     text-transform: uppercase;
-    text-shadow: 0 0 20px rgba(241, 220, 30, 0.4);
-    border-bottom: 2px solid var(--sukuna-blood);
-    display: inline-block;
-    padding-bottom: 10px;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
+    font-weight: 800;
+}
+
+.category-title::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: var(--sukuna-red);
+    margin: 1rem auto;
 }
 
 .menu-items-grid {
@@ -1742,22 +1659,20 @@ body.home .botonempleado:hover {
 }
 
 .menu-item {
-    background: rgba(10, 10, 10, 0.7);
-    border: 1px solid rgba(139, 0, 0, 0.3);
-    border-left: 4px solid var(--sukuna-crimson);
-    padding: 20px;
-    border-radius: 8px;
+    background: rgba(24, 24, 27, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(5px);
+    transition: background var(--transition-fast), transform var(--transition-fast);
 }
 
 .menu-item:hover {
-    transform: translateX(10px);
-    background: rgba(139, 0, 0, 0.15);
-    border-color: var(--sukuna-crimson);
+    background: rgba(24, 24, 27, 0.8);
+    transform: translateY(-2px);
+    border-color: rgba(220, 38, 38, 0.3);
 }
 
 .item-info h3 {
@@ -1780,13 +1695,12 @@ body.home .botonempleado:hover {
 }
 
 .price {
-    font-family: 'Outfit', sans-serif;
-    font-weight: 700;
-    color: var(--oro-kamutoke);
-    font-size: 1.2em;
-    padding: 5px 15px;
-    background: rgba(139, 0, 0, 0.3);
-    border-radius: 4px;
+    font-weight: 600;
+    color: var(--blanco);
+    font-size: 1.1rem;
+    padding: 0.4rem 1rem;
+    background: var(--sukuna-red);
+    border-radius: 2px;
     white-space: nowrap;
 }
 

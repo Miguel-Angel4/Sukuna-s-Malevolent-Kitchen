@@ -21,13 +21,12 @@
     <a href="home.html" class="logo" aria-label="Volver al inicio">
       <img src="img/logo.png" alt="Logo Sukuna's Malevolent Kitchen" />
     </a>
-    <div class="header-content">
       <nav class="menu">
-        <a href="carta.html" class="nav-link"><strong>Nuestra carta</strong></a>
-        <a href="descuentos.html" class="nav-link"><strong>Descuentos</strong></a>
-        <a href="cv.html" class="nav-link"><strong>¿Quieres trabajar para nosotros?</strong></a>
-        <a href="reserva.html" class="nav-link"><strong>Reserva</strong></a>
-        <a href="login.html" class="nav-link" id="nav-login"><strong>Iniciar sesión</strong></a>
+        <a href="carta.html" class="nav-link">Nuestra carta</a>
+        <a href="descuentos.html" class="nav-link">Descuentos</a>
+        <a href="cv.html" class="nav-link">¿Quieres trabajar para nosotros?</a>
+        <a href="reserva.html" class="nav-link">Reserva</a>
+        <a href="login.html" class="nav-link" id="nav-login">Iniciar sesión</a>
       </nav>
     </div>
   </header>
@@ -51,15 +50,15 @@
 
   <main>
     <nav class="comidas" id="menu-navegacion">
-      <a href="#bebidas" class="categoria-link"><strong>⚔ BEBIDAS</strong></a>
-      <a href="#entrantes" class="categoria-link"><strong>⚔ ENTRANTES</strong></a>
-      <a href="#carnes" class="categoria-link"><strong>⚔ CARNES</strong></a>
-      <a href="#vegetales" class="categoria-link"><strong>⚔ VEGETALES</strong></a>
-      <a href="#pescados" class="categoria-link"><strong>⚔ PESCADOS</strong></a>
-      <a href="#pastas" class="categoria-link"><strong>⚔ PASTAS</strong></a>
-      <a href="#postres" class="categoria-link"><strong>⚔ POSTRES</strong></a>
-      <a href="#menus" class="categoria-link"><strong>⚔ MENÚS</strong></a>
-      <a href="#retos" class="categoria-link"><strong>⚔ RETOS</strong></a>
+      <a href="#bebidas" class="categoria-link">⚔ BEBIDAS</a>
+      <a href="#entrantes" class="categoria-link">⚔ ENTRANTES</a>
+      <a href="#carnes" class="categoria-link">⚔ CARNES</a>
+      <a href="#vegetales" class="categoria-link">⚔ VEGETALES</a>
+      <a href="#pescados" class="categoria-link">⚔ PESCADOS</a>
+      <a href="#pastas" class="categoria-link">⚔ PASTAS</a>
+      <a href="#postres" class="categoria-link">⚔ POSTRES</a>
+      <a href="#menus" class="categoria-link">⚔ MENÚS</a>
+      <a href="#retos" class="categoria-link">⚔ RETOS</a>
     </nav>
 
 
@@ -68,9 +67,12 @@
     <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------  -->
 
 
-    <section class="frase-carta fade-in">
-      <h1>RELICARIO ALIMENTARIO</h1>
-      <p class="frase-carta-subtitulo">「 El festín del Rey Maldito &mdash; comida digna de dominar mil años 」</p>
+    <section class="frase-carta fade-in text-center d-flex flex-column justify-content-center align-items-center mt-5 mb-5 pt-4">
+      <h1 class="display-3 fw-bold text-uppercase" style="letter-spacing: 4px;">Relicario Alimentario</h1>
+      <div class="sukuna-divider my-4"></div>
+      <p class="frase-carta-subtitulo text-muted" style="font-size: 1.15rem; letter-spacing: 3px; font-weight: 300;">
+        「 El festín del Rey Maldito &mdash; comida digna de dominar mil años 」
+      </p>
     </section>
 
     <!-- TARJETAS DE CATEGORÍAS (BOTONES CON IMAGEN) -->
@@ -278,17 +280,19 @@
       <div id="modal-img-container" class="modal-img-container"></div>
     </div>
 
-    <!-- FOOTER -->
-    <footer class="footer" style="margin-top: 50px;">
-      <div class="footer-content">
-        <nav class="menu" style="text-align: center;">
-          <a href="#faq" class="footer-link"><strong>Preguntas Frecuentes</strong></a>
-          <a href="#contacto" class="footer-link"><strong>Contáctanos</strong></a>
-          <a href="#cookies" class="footer-link"><strong>Configuración de cookies</strong></a>
-          <a href="#legal" class="footer-link"><strong>Aviso legal</strong></a>
-          <a href="#derechos" class="footer-link"><strong>Derechos Reservados</strong></a>
-          <a href="#privacidad" class="footer-link"><strong>Política de Privacidad</strong></a>
-        </nav>
+    <!-- FOOTER PROFESIONAL -->
+    <footer class="footer py-5 mt-5 border-top border-dark">
+      <div class="container text-center">
+        <div class="d-flex justify-content-center flex-wrap gap-4 mb-4">
+          <a href="#faq" class="footer-link">Preguntas Frecuentes</a>
+          <a href="#contacto" class="footer-link">Contáctanos</a>
+          <a href="#cookies" class="footer-link">Ajustes de Cookies</a>
+          <a href="#legal" class="footer-link">Aviso Legal</a>
+          <a href="#privacidad" class="footer-link">Privacidad</a>
+        </div>
+        <p style="color: var(--blanco); font-size: 0.9em; opacity: 0.8;">
+          &copy; 2026 Sukuna's Malevolent Kitchen. Todos los derechos reservados.
+        </p>
       </div>
     </footer>
   </main>
