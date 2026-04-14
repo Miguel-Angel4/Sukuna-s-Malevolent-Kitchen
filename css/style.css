@@ -158,7 +158,8 @@ h1, h2, h3, h4, h5, h6, strong {
 body.home {
     margin: 0;
     overflow-x: hidden;
-    background-color: var(--sukuna-black);
+    background: radial-gradient(circle at top right, #380a0a 0%, #170404 100%);
+    background-attachment: fixed;
     position: relative;
     z-index: 1;
     padding-top: 100px;
@@ -1864,7 +1865,7 @@ input[type="file"].input-sukuna::file-selector-button:hover {
 
 .hero-section {
     min-height: 80vh;
-    padding-top: 100px;
+    padding-top: 80px;
     background: transparent;
 }
 
