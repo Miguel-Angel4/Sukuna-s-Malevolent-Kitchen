@@ -168,7 +168,7 @@ strong {
 body.home {
     margin: 0;
     overflow-x: hidden;
-    background: radial-gradient(circle at top right, #380a0a 0%, #170404 100%);
+    background: radial-gradient(circle at top right, #610505 0%, #270000 100%);
     background-attachment: fixed;
     position: relative;
     z-index: 1;
@@ -253,7 +253,7 @@ body.home {
     top: 0;
     left: 0;
     width: 100vw;
-    background: rgba(9, 9, 11, 0.8);
+    background: rgba(69, 5, 5, 0.85); /* Rojo oscuro translúcido */
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     padding: 1.25rem 2rem;
@@ -270,7 +270,7 @@ body.home {
 }
 
 .header:hover {
-    background: rgba(9, 9, 11, 0.95);
+    background: rgba(69, 5, 5, 0.98);
 }
 
 @keyframes slideInDown {
