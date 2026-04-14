@@ -1857,3 +1857,113 @@ input[type="file"].input-sukuna::file-selector-button:hover {
 .input-sukuna:focus + .form-label {
     color: var(--blanco);
 }
+/* ================================================
+   SHADCN LAYOUT REFACTOR (HOME) 
+   ================================================ */
+
+.hero-section {
+    min-height: 80vh;
+    padding-top: 100px;
+    background: transparent;
+}
+
+.hero-logo {
+    max-width: 250px;
+    filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.5));
+}
+
+.hero-title {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    background: linear-gradient(135deg, #fff, #a1a1aa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+}
+
+.hero-subtitle {
+    font-size: 1.125rem;
+    max-width: 600px;
+}
+
+.botones-cta {
+    margin-left: 0 !important;
+    margin-top: 2rem !important;
+    transform: none !important;
+    flex-wrap: wrap;
+}
+
+/* TEAM GRID (EL RELICARIO) */
+.section-title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 2rem 0;
+}
+
+.team-card {
+    background-color: rgba(24, 24, 27, 0.6); /* Zinc 900 tint */
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.team-img-wrapper {
+    width: 100%;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    border-radius: 0.5rem;
+}
+
+.team-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+}
+
+.team-card:hover .team-img-wrapper img {
+    transform: scale(1.05);
+}
+
+/* LOCATION SECTION */
+.location-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.info-card {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background var(--transition-fast);
+}
+
+.info-card:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.info-contacto {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+}
+
+/* Hide old chaos */
+.slider-container, .descripcion-restaurant, .circle-overlay, .blood-particles {
+    display: none !important;
+}
+
+@media (max-width: 992px) {
+    .location-section .row {
+        flex-direction: column;
+    }
+}

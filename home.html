@@ -55,113 +55,84 @@
 
 
 
-    <!-- TRABAJADORES Y FRASE -->
-    <section class="cosplay" id="nosotros">
-      <div class="container">
-        <!-- Imagen Centro Integrada -->
-        <div class="row justify-content-center text-center mb-4">
-          <div class="col-lg-8">
-            <img src="img/Centro.png" alt="Sukuna's Malevolent Kitchen" class="img-fluid fade-in"
-              style="max-height: 200px; filter: drop-shadow(0 0 10px rgba(139, 0, 0, 0.5));">
+    <!-- HERO SECTION MODERNA -->
+    <section class="hero-section text-center d-flex flex-column justify-content-center align-items-center fade-in">
+      <div class="hero-content mt-5">
+        <img src="img/Centro.png" alt="Sukuna Icon" class="hero-logo hover-lift mb-4" />
+        <h1 class="hero-title">Sukuna's Malevolent Kitchen</h1>
+        <p class="hero-subtitle text-muted mt-3 mb-5">El templo de alimentos definitivo. Ingredientes de grado especial para satisfacer a un rey, ahora en Viladecans.</p>
+        
+        <div class="botones-cta d-flex gap-3 justify-content-center">
+          <a href="carta.html" class="botoncarta">Ver la Carta</a>
+          <a href="reserva.html" class="botoncarta" style="background-color: transparent; border-color: var(--muted); color: var(--blanco);">Reservar Mesa</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRABAJADORES - GRID PROFESIONAL -->
+    <section class="team-section container mt-5 pt-5 text-center fade-in" id="empleados">
+      <h2 class="mb-5 section-title">Alta Cocina del Relicario</h2>
+      <div class="team-grid">
+        <div class="team-card glass-effect hover-lift p-3">
+          <div class="team-img-wrapper"><img src="img/sukuna.png" alt="Ryomen Sukuna"></div>
+          <div class="team-info mt-3">
+            <h4 class="mb-1 text-white">Ryomen Sukuna</h4>
+            <p class="text-muted small">Jefe de Cocina</p>
           </div>
         </div>
-
-        <!-- Título principal -->
-        <div class="row justify-content-center text-center mb-5">
-          <div class="col-lg-10">
-            <h3 class="titulo-trabajadores">NUESTROS TRABAJADORES</h3>
+        <div class="team-card glass-effect hover-lift p-3">
+          <div class="team-img-wrapper"><img src="img/toji.jpg" alt="Toji Fushiguro"></div>
+          <div class="team-info mt-3">
+            <h4 class="mb-1 text-white">Toji Fushiguro</h4>
+            <p class="text-muted small">Sous Chef</p>
           </div>
         </div>
-
-        <!-- Descripción -->
-        <div class="row justify-content-center text-center mb-5">
-          <div class="col-lg-10">
-            <h2 class="descripcion-restaurant">
-              Sukuna's Malevolent Kitchen es un templo de alimentos ubicado en Viladecans que proporciona la comida para
-              satisfacer incluso a un rey
-            </h2>
+        <div class="team-card glass-effect hover-lift p-3">
+          <div class="team-img-wrapper"><img src="img/maki.jpeg" alt="Maki Zen'in"></div>
+          <div class="team-info mt-3">
+            <h4 class="mb-1 text-white">Maki Zen'in</h4>
+            <p class="text-muted small">Maestra Sommelier</p>
+          </div>
+        </div>
+        <div class="team-card glass-effect hover-lift p-3">
+          <div class="team-img-wrapper"><img src="img/gojo.jpg" alt="Satoru Gojo"></div>
+          <div class="team-info mt-3">
+            <h4 class="mb-1 text-white">Satoru Gojo</h4>
+            <p class="text-muted small">Chef Pastelero</p>
           </div>
         </div>
       </div>
     </section>
 
-
-    <!-- SLIDER DE TRABAJADORES -->
-    <div class="slider-container">
-      <div class="slider-frame">
-        <ul id="sliderUl">
-          <li><img src="img/sukuna.png" alt="Ryomen Sukuna - Jefe de Cocina"></li>
-          <li><img src="img/toji.jpg" alt="Toji Fushiguro - Sous Chef"></li>
-          <li><img src="img/maki.jpeg" alt="Maki Zen'in - Sommelier"></li>
-          <li><img src="img/inumaki.png" alt="Toge Inumaki - Chef de Partida"></li>
-          <li><img src="img/gojo.jpg" alt="Satoru Gojo - Chef Pastelero"></li>
-        </ul>
-      </div>
-      <div class="slider-controls">
-        <button onclick="goToSlide(0)" id="dot-0"></button>
-        <button onclick="goToSlide(1)" id="dot-1"></button>
-        <button onclick="goToSlide(2)" id="dot-2"></button>
-        <button onclick="goToSlide(3)" id="dot-3"></button>
-        <button onclick="goToSlide(4)" id="dot-4"></button>
-      </div>
-    </div>
-
-    <!-- BOTONES CTA -->
-    <div class="botones-cta slide-in-right">
-      <a href="#empleados" class="botonempleado hover-lift">Nuestros Empleados</a>
-    </div>
-
-
-
-    <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------  -->
-
-
-
-
-    <!-- LOCALIZACIÓN -->
-    <section class="localizacion fade-in" id="localizacion">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-lg-5 col-md-12 mb-4">
-            <h2 class="frase-ingredientes">
-              En Sukuna's Malevolent Kitchen utilizamos ingredientes frescos y naturales dejando un buen sabor de boca
-              por mil años
-            </h2>
+    <!-- LOCALIZACIÓN Y CONTACTO -->
+    <section class="location-section container mt-5 mb-5 pb-5 fade-in" id="localizacion">
+      <div class="glass-effect p-5 row align-items-center">
+        <div class="col-lg-5 mb-4 mb-lg-0 text-start">
+          <h2 class="mb-4 text-white font-bold" style="font-size: 2rem;">El Sabor de Mil Años</h2>
+          <p class="text-muted" style="font-size: 1.1rem; line-height: 1.6;">
+            En Sukuna's Malevolent Kitchen utilizamos ingredientes frescos y técnicas prohibidas para asegurar una experiencia culinaria inolvidable.
+          </p>
+        </div>
+        <div class="col-lg-7 text-start location-grid">
+          <div class="info-card mb-3">
+            <strong class="d-block mb-1 text-danger">Dirección</strong>
+            <span class="text-muted">Avenida Siglo XXI, 6, 08840, Viladecans, Barcelona</span>
           </div>
-          <div class="col-lg-6 col-md-12 info-contacto">
-            <div class="contacto-item">
-              <strong>Dirección</strong>
-              <p>Avenida Siglo XXI, 6, 08840, Viladecans, Barcelona</p>
-            </div>
-
-            <div class="contacto-item">
-              <strong>Teléfono</strong>
-              <p>690 06 40 39</p>
-            </div>
-
-            <div class="contacto-item">
-              <strong>Email</strong>
-              <p>sukunaamalevolentkitchen@gmail.com</p>
-            </div>
-
-            <div class="contacto-item">
-              <strong>Horario</strong>
-              <p>Todos los días de 09:00 a 16:00 / 20:00 a 00:00</p>
-            </div>
-
-            <div class="contacto-item">
-              <strong>Servicios</strong>
-              <p>Zona climatizada y tematizada como el anime Jujutsu Kaisen. Zonas privadas como los dominios de los
-                personajes</p>
-            </div>
+          <div class="info-card mb-3">
+            <strong class="d-block mb-1 text-danger">Contacto</strong>
+            <span class="text-muted">690 06 40 39 | sukunaamalevolentkitchen@gmail.com</span>
+          </div>
+          <div class="info-card mb-3">
+            <strong class="d-block mb-1 text-danger">Horarios</strong>
+            <span class="text-muted">Todos los días de 09:00 a 16:00 / 20:00 a 00:00</span>
+          </div>
+          <div class="info-card">
+            <strong class="d-block mb-1 text-danger">Experiencias</strong>
+            <span class="text-muted">Zona tematizada exclusiva. Reserva disponible para los dominios de personajes.</span>
           </div>
         </div>
       </div>
     </section>
-
-    <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------  -->
-
-
 
     <!-- FOOTER -->
     <footer class="footer">
