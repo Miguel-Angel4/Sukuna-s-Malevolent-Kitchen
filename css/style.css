@@ -5,12 +5,15 @@
     /* Shadcn UI x Temática Premium Oscura */
     --sukuna-red: #7f1d1d;
     --sukuna-crimson: #dc2626;
-    --sukuna-black: #09090b; /* Zinc 950 */
-    --sukuna-dark-red: #450a0a;
+    --sukuna-black: #09090b;
+    /* Zinc 950 */
+    --sukuna-dark-red: #c40303;
     --blanco: #ffffff;
-    --muted: #ffffff; /* Letras totalmente blancas por solicitud del cliente */
-    --sukuna-shadow: rgba(0,0,0,0.8);
-    --oro-kamutoke: #ef4444; /* Reemplazado oro por rojo más vivo en acentos */
+    --muted: #ffffff;
+    /* Letras totalmente blancas por solicitud del cliente */
+    --sukuna-shadow: rgba(0, 0, 0, 0.8);
+    --oro-kamutoke: #ef4444;
+    /* Reemplazado oro por rojo más vivo en acentos */
     --sukuna-blood: #991b1b;
     --border: rgba(255, 255, 255, 0.1);
 
@@ -45,10 +48,17 @@ body {
     color: var(--blanco);
 }
 
-h1, h2, h3, h4, h5, h6, strong {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+strong {
     font-family: 'Inter', sans-serif;
     font-weight: 600;
-    letter-spacing: -0.025em; /* Tracking característico de Shadcn */
+    letter-spacing: -0.025em;
+    /* Tracking característico de Shadcn */
 }
 
 /* Utility Classes */
@@ -210,7 +220,8 @@ body.home {
     position: absolute;
     width: 3px;
     height: 3px;
-    background: #ff5e00; /* Ember orange */
+    background: #ff5e00;
+    /* Ember orange */
     border-radius: 50%;
     opacity: 0.8;
     box-shadow: 0 0 8px 2px #ff0000, 0 0 12px 4px #ff5e00;
@@ -339,17 +350,19 @@ body.carta {
     animation: gradientShift 15s ease infinite;
     position: relative;
     z-index: 1;
-    padding-top: 185px; /* espacio para header (~100px) + comidas nav (~55px) + margen */
+    padding-top: 185px;
+    /* espacio para header (~100px) + comidas nav (~55px) + margen */
     color: var(--blanco);
 }
 
 /* BARRA DE CATEGORÍAS */
 .comidas {
     position: fixed;
-    top: 100px; /* debajo del header (~100px de alto) */
+    top: 100px;
+    /* debajo del header (~100px de alto) */
     left: 0;
     width: 100vw;
-    background: linear-gradient(135deg, rgba(10,10,10,0.97), rgba(74,0,0,0.97));
+    background: linear-gradient(135deg, rgba(10, 10, 10, 0.97), rgba(74, 0, 0, 0.97));
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     padding: 14px 30px;
@@ -357,7 +370,8 @@ body.carta {
     font-size: 1em;
     font-weight: 600;
     line-height: 1em;
-    z-index: 1001; /* encima del header */
+    z-index: 1001;
+    /* encima del header */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -394,7 +408,7 @@ body.carta {
 
 .frase-carta-subtitulo {
     font-size: 1em;
-    color: rgba(255,255,255,0.5);
+    color: rgba(255, 255, 255, 0.5);
     letter-spacing: 3px;
     font-style: italic;
     margin: 0;
@@ -420,7 +434,7 @@ body.carta {
     align-items: flex-end;
     padding: 20px 25px;
     font-size: 1.5em;
-    border: 2px solid rgba(139,0,0,0.4);
+    border: 2px solid rgba(139, 0, 0, 0.4);
     border-radius: 12px;
     position: relative;
     overflow: hidden;
@@ -440,7 +454,7 @@ body.carta {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(139,0,0,0.2) 60%, transparent 100%);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(139, 0, 0, 0.2) 60%, transparent 100%);
     z-index: 1;
     transition: background 0.3s ease;
 }
@@ -483,7 +497,7 @@ body.carta {
     font-size: 1em;
     letter-spacing: 4px;
     text-transform: uppercase;
-    text-shadow: 0 0 15px rgba(220,20,60,0.7), 2px 2px 8px rgba(0,0,0,0.9);
+    text-shadow: 0 0 15px rgba(220, 20, 60, 0.7), 2px 2px 8px rgba(0, 0, 0, 0.9);
     font-family: 'Outfit', sans-serif;
     font-weight: 700;
     border-left: 3px solid var(--sukuna-crimson);
@@ -491,15 +505,41 @@ body.carta {
 }
 
 /* Imágenes individuales */
-.bebidas       { background-image: url(../img/bebida_temporal.jpg); }
-.entrantes     { background-image: url(../img/entrantes_temporal.png); }
-.carnes        { background-image: url(../img/carne_temporal.png); }
-.vegetales     { background-image: url(../img/vegetales_temporal.jpg); }
-.pescados      { background-image: url(../img/pescado_temporal.jpg); }
-.pastas        { background-image: url(../img/pasta_temporal.jpg); }
-.postres       { background-image: url(../img/postre_temporal.jpg); }
-.menus         { background-image: url(../img/menu_temporal.png); }
-.retos         { background-image: url(../img/reto_temporal.jpg); }
+.bebidas {
+    background-image: url(../img/bebida_temporal.jpg);
+}
+
+.entrantes {
+    background-image: url(../img/entrantes_temporal.png);
+}
+
+.carnes {
+    background-image: url(../img/carne_temporal.png);
+}
+
+.vegetales {
+    background-image: url(../img/vegetales_temporal.jpg);
+}
+
+.pescados {
+    background-image: url(../img/pescado_temporal.jpg);
+}
+
+.pastas {
+    background-image: url(../img/pasta_temporal.jpg);
+}
+
+.postres {
+    background-image: url(../img/postre_temporal.jpg);
+}
+
+.menus {
+    background-image: url(../img/menu_temporal.png);
+}
+
+.retos {
+    background-image: url(../img/reto_temporal.jpg);
+}
 
 /* Hover en las cards */
 .bebidas:hover,
@@ -512,7 +552,7 @@ body.carta {
 .menus:hover,
 .retos:hover {
     border-color: var(--sukuna-crimson);
-    box-shadow: 0 0 30px rgba(220, 20, 60, 0.5), 0 15px 35px rgba(0,0,0,0.5);
+    box-shadow: 0 0 30px rgba(220, 20, 60, 0.5), 0 15px 35px rgba(0, 0, 0, 0.5);
     transform: translateY(-5px) scale(1.02);
 }
 
@@ -1320,40 +1360,96 @@ body.home p {
 
 /* Keyframes for the slashes */
 @keyframes sukuna-slash-1 {
-    0% { transform: translate(-100%, -100%) rotate(-45deg) scaleX(0); opacity: 0; }
-    20% { opacity: 1; transform: translate(-50%, -50%) rotate(-45deg) scaleX(1.5); }
-    100% { transform: translate(100%, 100%) rotate(-45deg) scaleX(2); opacity: 0; }
+    0% {
+        transform: translate(-100%, -100%) rotate(-45deg) scaleX(0);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+        transform: translate(-50%, -50%) rotate(-45deg) scaleX(1.5);
+    }
+
+    100% {
+        transform: translate(100%, 100%) rotate(-45deg) scaleX(2);
+        opacity: 0;
+    }
 }
 
 @keyframes sukuna-slash-2 {
-    0% { transform: translate(100%, -100%) rotate(45deg) scaleX(0); opacity: 0; }
-    20% { opacity: 1; transform: translate(50%, -50%) rotate(45deg) scaleX(1.5); }
-    100% { transform: translate(-100%, 100%) rotate(45deg) scaleX(2); opacity: 0; }
+    0% {
+        transform: translate(100%, -100%) rotate(45deg) scaleX(0);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+        transform: translate(50%, -50%) rotate(45deg) scaleX(1.5);
+    }
+
+    100% {
+        transform: translate(-100%, 100%) rotate(45deg) scaleX(2);
+        opacity: 0;
+    }
 }
 
 @keyframes sukuna-glitch {
-    0% { clip-path: inset(0 0 0 0); transform: translate(0); }
-    20% { clip-path: inset(10% 0 40% 0); transform: translate(-5px, 2px); }
-    40% { clip-path: inset(50% 0 10% 0); transform: translate(5px, -2px); }
-    60% { clip-path: inset(30% 0 30% 0); transform: translate(-3px, 1px); }
-    80% { clip-path: inset(0 0 70% 0); transform: translate(3px, -1px); }
-    100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+    0% {
+        clip-path: inset(0 0 0 0);
+        transform: translate(0);
+    }
+
+    20% {
+        clip-path: inset(10% 0 40% 0);
+        transform: translate(-5px, 2px);
+    }
+
+    40% {
+        clip-path: inset(50% 0 10% 0);
+        transform: translate(5px, -2px);
+    }
+
+    60% {
+        clip-path: inset(30% 0 30% 0);
+        transform: translate(-3px, 1px);
+    }
+
+    80% {
+        clip-path: inset(0 0 70% 0);
+        transform: translate(3px, -1px);
+    }
+
+    100% {
+        clip-path: inset(0 0 0 0);
+        transform: translate(0);
+    }
 }
 
 @keyframes fast-line-slash {
-    0% { transform: scaleX(0); opacity: 0; }
-    30% { opacity: 1; transform: scaleX(1); }
-    100% { transform: scaleX(2); opacity: 0; }
+    0% {
+        transform: scaleX(0);
+        opacity: 0;
+    }
+
+    30% {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+
+    100% {
+        transform: scaleX(2);
+        opacity: 0;
+    }
 }
 
 /* Application to CTA Buttons (Carta/Empleados) on Home */
-body.home .botoncarta, 
+body.home .botoncarta,
 body.home .botonempleado {
     position: relative;
     overflow: hidden;
 }
 
-body.home .botoncarta::after, 
+body.home .botoncarta::after,
 body.home .botonempleado::after {
     content: '';
     position: absolute;
@@ -1369,13 +1465,13 @@ body.home .botonempleado::after {
     transform: translate(-50%, -50%) rotate(-45deg);
 }
 
-body.home .botoncarta:hover::after, 
+body.home .botoncarta:hover::after,
 body.home .botonempleado:hover::after {
     animation: sukuna-slash-1 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
 /* Adding a second slash to buttons */
-body.home .botoncarta:hover::before, 
+body.home .botoncarta:hover::before,
 body.home .botonempleado:hover::before {
     content: '';
     position: absolute;
@@ -1393,7 +1489,7 @@ body.home .botonempleado:hover::before {
     transition: none;
 }
 
-body.home .botoncarta:hover, 
+body.home .botoncarta:hover,
 body.home .botonempleado:hover {
     animation: sukuna-glitch 0.3s ease-out;
 }
@@ -1444,13 +1540,29 @@ body.home .botonempleado:hover {
 }
 
 @keyframes nav-slash-anim {
-    0% { transform: rotate(var(--rot, -15deg)) scaleX(0); opacity: 0; }
-    20% { opacity: 1; transform: rotate(var(--rot, -15deg)) scaleX(1.2); }
-    100% { opacity: 0; transform: rotate(var(--rot, -15deg)) scaleX(1.5); }
+    0% {
+        transform: rotate(var(--rot, -15deg)) scaleX(0);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+        transform: rotate(var(--rot, -15deg)) scaleX(1.2);
+    }
+
+    100% {
+        opacity: 0;
+        transform: rotate(var(--rot, -15deg)) scaleX(1.5);
+    }
 }
 
-.nav-link::before { --rot: -15deg; }
-.nav-link::after { --rot: 15deg; }
+.nav-link::before {
+    --rot: -15deg;
+}
+
+.nav-link::after {
+    --rot: 15deg;
+}
 
 .nav-link:hover strong {
     display: inline-block;
@@ -1483,7 +1595,7 @@ body.home .botonempleado:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(139,0,0,0.4) 0%, rgba(0,0,0,1) 70%);
+    background: radial-gradient(circle, rgba(139, 0, 0, 0.4) 0%, rgba(0, 0, 0, 1) 70%);
     animation: pulseGlow 4s infinite;
 }
 
@@ -1531,12 +1643,12 @@ body.home .botonempleado:hover {
 
 /* State when domain is opened */
 .domain-overlay.opened {
-    clip-path: polygon(
-        0% 0%, 100% 0%, 100% 100%, 0% 100%, /* Outer frame */
-        /* Cutting slices (this is where the slash effect happens) */
-        0% 50%, 45% 45%, 50% 0%, 55% 45%, 100% 50%, 55% 55%, 50% 100%, 45% 55%, 0% 50%
-    );
-    clip-path: circle(0% at 50% 50%); /* Simpler cut for better performance */
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%,
+            /* Outer frame */
+            /* Cutting slices (this is where the slash effect happens) */
+            0% 50%, 45% 45%, 50% 0%, 55% 45%, 100% 50%, 55% 55%, 50% 100%, 45% 55%, 0% 50%);
+    clip-path: circle(0% at 50% 50%);
+    /* Simpler cut for better performance */
     opacity: 0;
     pointer-events: none;
 }
@@ -1547,9 +1659,19 @@ body.home .botonempleado:hover {
 }
 
 @keyframes symbolPulse {
-    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px var(--sukuna-blood)); }
-    50% { transform: scale(1.1); filter: drop-shadow(0 0 30px var(--sukuna-blood)); }
+
+    0%,
+    100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 15px var(--sukuna-blood));
+    }
+
+    50% {
+        transform: scale(1.1);
+        filter: drop-shadow(0 0 30px var(--sukuna-blood));
+    }
 }
+
 .categoria-link.active {
     background: rgba(220, 20, 60, 0.2);
     color: var(--blanco);
@@ -1670,17 +1792,17 @@ body.home .botonempleado:hover {
     .menu-items-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .category-title {
         font-size: 2em;
     }
-    
+
     .menu-item {
         flex-direction: column;
         align-items: flex-start;
         gap: 15px;
     }
-    
+
     .price {
         align-self: flex-end;
     }
@@ -1692,7 +1814,8 @@ body.home .botonempleado:hover {
 
 .modal-imagen {
     position: fixed;
-    z-index: 10005; /* Encima de todo */
+    z-index: 10005;
+    /* Encima de todo */
     left: 0;
     top: 0;
     width: 100%;
@@ -1856,9 +1979,10 @@ input[type="file"].input-sukuna::file-selector-button:hover {
 }
 
 /* Label effects */
-.input-sukuna:focus + .form-label {
+.input-sukuna:focus+.form-label {
     color: var(--blanco);
 }
+
 /* ================================================
    SHADCN LAYOUT REFACTOR (HOME) 
    ================================================ */
@@ -1922,7 +2046,8 @@ input[type="file"].input-sukuna::file-selector-button:hover {
 }
 
 .team-card {
-    background-color: rgba(24, 24, 27, 0.6); /* Zinc 900 tint */
+    background-color: rgba(24, 24, 27, 0.6);
+    /* Zinc 900 tint */
     border: 1px solid var(--border);
     border-radius: 0.75rem;
     overflow: hidden;
@@ -1971,7 +2096,9 @@ input[type="file"].input-sukuna::file-selector-button:hover {
 }
 
 /* Hide old chaos, but keep particles for ember effect */
-.slider-container, .descripcion-restaurant, .circle-overlay {
+.slider-container,
+.descripcion-restaurant,
+.circle-overlay {
     display: none !important;
 }
 
