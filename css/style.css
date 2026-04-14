@@ -1886,6 +1886,16 @@ input[type="file"].input-sukuna::file-selector-button:hover {
 .hero-subtitle {
     font-size: 1.125rem;
     max-width: 600px;
+    color: var(--muted) !important;
+}
+
+/* OVERRIDES BOOTSTRAP */
+.text-muted {
+    color: var(--muted) !important;
+}
+
+.text-danger {
+    color: var(--sukuna-crimson) !important;
 }
 
 .botones-cta {
