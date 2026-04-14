@@ -2199,3 +2199,47 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     transform: scale(1.1);
     color: var(--sukuna-red);
 }
+
+/* ================================================
+   MENU ITEM ENHANCEMENTS (THUMBNAILS) 
+   ================================================ */
+
+.menu-item {
+    padding: 1.25rem !important;
+    gap: 1.5rem;
+}
+
+.item-thumbnail {
+    width: 80px;
+    height: 80px;
+    border-radius: 4px;
+    object-fit: cover;
+    background: #111;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform var(--transition-fast), border-color var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.menu-item:hover .item-thumbnail {
+    transform: scale(1.1);
+    border-color: var(--sukuna-red);
+}
+
+.item-info {
+    flex-grow: 1;
+}
+
+.item-info h3 {
+    font-size: 1.15rem !important;
+    margin-bottom: 0.25rem !important;
+}
+
+.item-info p {
+    font-size: 0.85rem !important;
+    opacity: 0.7;
+}
+
+.price {
+    font-size: 1rem !important;
+    letter-spacing: 0.5px;
+}
