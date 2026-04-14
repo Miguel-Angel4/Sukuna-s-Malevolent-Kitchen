@@ -136,24 +136,25 @@
     </button>
 
     <div class="calendar-widget" id="calendarWidget">
-      <div class="widget-title">Estado de Mesas (Hoy)</div>
-      <div class="tables-status">
-        <!-- Generación de 15 mesas (algunas reservadas para realismo) -->
-        <div class="table-dot" title="Mesa 1 - Libre">1</div>
-        <div class="table-dot reserved" title="Mesa 2 - Reservada (14:00)">2</div>
-        <div class="table-dot" title="Mesa 3 - Libre">3</div>
-        <div class="table-dot reserved" title="Mesa 4 - Reservada (21:30)">4</div>
-        <div class="table-dot" title="Mesa 5 - Libre">5</div>
-        <div class="table-dot" title="Mesa 6 - Libre">6</div>
-        <div class="table-dot reserved" title="Mesa 7 - Reservada (20:00)">7</div>
-        <div class="table-dot" title="Mesa 8 - Libre">8</div>
-        <div class="table-dot" title="Mesa 9 - Libre">9</div>
-        <div class="table-dot reserved" title="Mesa 10 - Reservada (22:00)">10</div>
-        <div class="table-dot" title="Mesa 11 - Libre">11</div>
-        <div class="table-dot" title="Mesa 12 - Libre">12</div>
-        <div class="table-dot" title="Mesa 13 - Libre">13</div>
-        <div class="table-dot" title="Mesa 14 - Libre">14</div>
-        <div class="table-dot reserved" title="Mesa 15 - Reservada (Cumpleaños)">15</div>
+      <div class="calendar-header">
+        <span>Abril 2026</span>
+        <span style="opacity:0.5; font-size: 0.7rem;">Viladecans</span>
+      </div>
+      
+      <div class="calendar-month-grid">
+        <!-- Mock de días del mes -->
+        <span class="calendar-day other-month">30</span>
+        <span class="calendar-day other-month">31</span>
+        <span class="calendar-day">1</span><span class="calendar-day">2</span><span class="calendar-day">3</span><span class="calendar-day">4</span><span class="calendar-day">5</span>
+        <span class="calendar-day">6</span><span class="calendar-day">7</span><span class="calendar-day">8</span><span class="calendar-day">9</span><span class="calendar-day">10</span><span class="calendar-day">11</span><span class="calendar-day">12</span>
+        <span class="calendar-day">13</span><span class="calendar-day active">14</span><span class="calendar-day">15</span><span class="calendar-day">16</span><span class="calendar-day">17</span><span class="calendar-day">18</span><span class="calendar-day">19</span>
+        <span class="calendar-day">20</span><span class="calendar-day">21</span><span class="calendar-day">22</span><span class="calendar-day">23</span><span class="calendar-day">24</span><span class="calendar-day">25</span><span class="calendar-day">26</span>
+        <span class="calendar-day">27</span><span class="calendar-day">28</span><span class="calendar-day">29</span><span class="calendar-day">30</span>
+      </div>
+
+      <div class="widget-title" id="status-title">Estado para el día 14</div>
+      <div class="tables-status" id="tablesContainer">
+        <!-- Las mesas se generarán dinámicamente o se actualizarán via JS -->
       </div>
       <div class="calendar-legend">
         <div class="legend-item"><div class="legend-color" style="background:#10b981;"></div> Libre</div>

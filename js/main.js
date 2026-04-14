@@ -489,3 +489,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// --- Lógica extendida del Calendario Mensual ---
+document.addEventListener('DOMContentLoaded', () => {
+    const calendarDays = document.querySelectorAll('.calendar-day:not(.other-month)');
+    const tablesContainer = document.getElementById('tablesContainer');
+    const statusTitle = document.getElementById('status-title');
+
+    function updateTables(day) {
+        if (!tablesContainer) return;
+        tablesContainer.innerHTML = '';
+        statusTitle.textContent = Estado para el día  + day;
+
+        // Generar 15 mesas con estados pseudo-aleatorios basados en el día
+        for (let i = 1; i <= 15; i++) {
+            const isReserved = (Math.sin(day * i) > 0.3); // Algoritmo simple para variar ocupación
+            const dot = document.createElement('div');
+            dot.className = isReserved ? 'table-dot reserved' : 'table-dot';
+            dot.textContent = i;
+            dot.title = isReserved ? Mesa  + i +  - Reservada : Mesa  + i +  - Libre;
+            tablesContainer.appendChild(dot);
+        }
+    }
+
+    if (calendarDays.length > 0) {
+        calendarDays.forEach(dayBtn => {
+            dayBtn.addEventListener('click', () => {
+                calendarDays.forEach(d => d.classList.remove('active'));
+                dayBtn.classList.add('active');
+                updateTables(dayBtn.textContent);
+            });
+        });
+
+        // Inicializar con el día actual (14)
+        updateTables(14);
+    }
+});
