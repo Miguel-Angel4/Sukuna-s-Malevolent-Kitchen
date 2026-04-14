@@ -252,13 +252,14 @@ body.home {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    background: rgba(9, 9, 11, 0.8); /* Zinc 950 semi-transparent */
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    width: 100%;
+    background: rgba(9, 9, 11, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     padding: 0.75rem 3rem;
     color: var(--blanco);
-    display: flex;
+    display: grid;
+    grid-template-columns: 200px 1fr 200px; /* Logo - Menu - Spacer */
     align-items: center;
     border-bottom: 1px solid var(--border);
     z-index: 1000;
@@ -266,15 +267,21 @@ body.home {
 }
 
 .header-content {
-    flex: 1;
     display: flex;
     justify-content: center;
+    width: 100%;
 }
 
 .menu {
     display: flex;
     gap: 3rem;
     align-items: center;
+}
+
+/* Espaciador invisible para balancear el logo */
+.header::after {
+    content: "";
+    width: 200px;
 }
 
 .header:hover {
