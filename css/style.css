@@ -258,8 +258,8 @@ body.home {
     -webkit-backdrop-filter: blur(20px);
     padding: 0.75rem 3rem;
     color: var(--blanco);
-    display: grid;
-    grid-template-columns: 200px 1fr 200px; /* Logo - Menu - Spacer */
+    display: flex;
+    justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid var(--border);
     z-index: 1000;
@@ -268,20 +268,14 @@ body.home {
 
 .header-content {
     display: flex;
-    justify-content: center;
-    width: 100%;
+    justify-content: flex-end;
+    flex: 1;
 }
 
 .menu {
     display: flex;
-    gap: 3rem;
+    gap: 3.5rem;
     align-items: center;
-}
-
-/* Espaciador invisible para balancear el logo */
-.header::after {
-    content: "";
-    width: 200px;
 }
 
 .header:hover {
@@ -2257,28 +2251,4 @@ input[type="file"].input-sukuna::file-selector-button:hover {
 .price {
     font-size: 1rem !important;
     letter-spacing: 0.5px;
-}
-
-/* Centrado de submenú de categorías (Carta) */
-.seccion-comida {
-    display: flex !important;
-    justify-content: center !important;
-    flex-wrap: wrap !important;
-    gap: 1.5rem !important;
-    margin-top: 1rem !important;
-    padding-bottom: 1rem !important;
-}
-
-.categoria-link {
-    color: var(--muted) !important;
-    text-decoration: none !important;
-    font-size: 0.85rem !important;
-    letter-spacing: 2px !important;
-    text-transform: uppercase !important;
-    transition: all var(--transition-fast) !important;
-}
-
-.categoria-link:hover, .categoria-link.active {
-    color: var(--sukuna-red) !important;
-    transform: translateY(-2px) !important;
 }
