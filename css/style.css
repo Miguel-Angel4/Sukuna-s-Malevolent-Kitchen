@@ -2416,3 +2416,83 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     color: var(--blanco);
     text-transform: uppercase;
 }
+
+/* DASHBOARD CUENTA */
+.account-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+@media (max-width: 992px) {
+    .account-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.account-sidebar {
+    position: sticky;
+    top: 120px;
+}
+
+.status-card {
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.1), rgba(0, 0, 0, 0.4));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.sorcerer-grade {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--sukuna-red);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--blanco);
+    display: block;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+}
+
+.nav-account {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.nav-account-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    background: transparent;
+    border: 1px solid transparent;
+}
+
+.nav-account-link:hover, .nav-account-link.active {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--blanco);
+    border-color: var(--border);
+}
+
+.nav-account-link i {
+    font-size: 1.2rem;
+}

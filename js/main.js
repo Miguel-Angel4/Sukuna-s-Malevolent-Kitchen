@@ -459,14 +459,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 3000);
         };
 
-        // Logout
-        logoutLink.onclick = (e) => {
+                // Logout
+        const doLogout = (e) => {
             e.preventDefault();
             if(confirm("¿Estás seguro de que deseas abandonar el Dominio?")){
                 localStorage.removeItem('sukuna_user');
                 window.location.href = "home.html";
             }
         };
+        if(logoutLink) logoutLink.onclick = doLogout;
+        const logoutSide = document.getElementById('logout-link-side');
+        if(logoutSide) logoutSide.onclick = doLogout;
     }
 });
 
@@ -518,3 +521,4 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTables(14); // Dia actual por defecto
     }
 });
+

@@ -58,11 +58,11 @@
     </a>
     <div class="header-content">
       <nav class="menu">
-        <a href="carta.html" class="nav-link"><strong>Nuestra carta</strong></a>
-        <a href="descuentos.html" class="nav-link"><strong>Descuentos</strong></a>
-        <a href="cv.html" class="nav-link"><strong>¿Quieres trabajar para nosotros?</strong></a>
-        <a href="reserva.html" class="nav-link"><strong>Reserva</strong></a>
-        <a href="login.html" class="nav-link" id="nav-login"><strong>Iniciar sesión</strong></a>
+        <a href="carta.html" class="nav-link">Nuestra carta</a>
+        <a href="descuentos.html" class="nav-link">Descuentos</a>
+        <a href="cv.html" class="nav-link">¿Quieres trabajar para nosotros?</a>
+        <a href="reserva.html" class="nav-link">Reserva</a>
+        <a href="login.html" class="nav-link" id="nav-login">Iniciar sesión</a>
       </nav>
     </div>
   </header>
@@ -72,70 +72,98 @@
   <div class="blood-particles" id="bloodParticles"></div>
 
   <main>
-    <section class="seccion-empleos fade-in" style="padding: 120px 0 80px 0;">
+    <section class="seccion-dashboard fade-in" style="padding: 130px 0 80px 0;">
       <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-lg-6 text-center mb-5">
-            <h2 class="titulo-trabajadores">PERFIL DE HECHICERO</h2>
-            <p class="frase-ingredientes">Gestiona tu identidad dentro del Dominio.</p>
-          </div>
-        </div>
+        
+        <div class="account-grid">
+          <!-- SIDEBAR DE CUENTA -->
+          <aside class="account-sidebar">
+            <div class="form-sukuna glass-effect p-4 mb-4">
+              <nav class="nav-account">
+                <a href="#" class="nav-account-link active">Mi Perfil</a>
+                <a href="reserva.html" class="nav-account-link">Mis Reservas</a>
+                <a href="descuentos.html" class="nav-account-link">Recompensas</a>
+                <a href="#" id="logout-link-side" class="nav-account-link" style="color: var(--sukuna-red);">Cerrar Sesión</a>
+              </nav>
+            </div>
 
-        <div class="row justify-content-center">
-          <div class="col-lg-6">
-            <div id="cuenta-container" class="form-sukuna glass-effect text-center p-5">
+            <div class="status-card glass-effect">
+              <span class="sorcerer-grade">Grado de Hechicero</span>
+              <span class="stat-value">Especial</span>
+              <p class="stat-label mt-2">Nivel de Lealtad</p>
               
-              <!-- Imagen de Perfil -->
-              <div class="profile-img-container" id="profile-img-wrapper">
-                <img src="img/icono.png" alt="Perfil" id="display-profile-img">
-                <label for="profile-upload" class="upload-overlay">Cambiar Foto</label>
-                <input type="file" id="profile-upload" style="display:none;" accept="image/*">
+              <div class="d-flex justify-content-around mt-4">
+                <div>
+                  <span class="stat-value" style="font-size: 1.2rem;">3</span>
+                  <span class="stat-label">Citas</span>
+                </div>
+                <div>
+                  <span class="stat-value" style="font-size: 1.2rem;">450</span>
+                  <span class="stat-label">Puntos</span>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <!-- CONTENIDO PRINCIPAL -->
+          <div class="account-main-content">
+            <div id="cuenta-container" class="form-sukuna glass-effect p-5">
+              <div class="d-flex align-items-center gap-4 mb-5 pb-4 border-bottom border-dark">
+                <div class="profile-img-container m-0" id="profile-img-wrapper">
+                  <img src="img/icono.png" alt="Perfil" id="display-profile-img">
+                  <label for="profile-upload" class="upload-overlay">Cambiar</label>
+                  <input type="file" id="profile-upload" style="display:none;" accept="image/*">
+                </div>
+                <div class="text-start">
+                  <h2 class="mb-1 text-white" style="font-weight: 300; letter-spacing: 2px;">GESTIÓN DE DOMINIO</h2>
+                  <p class="text-muted m-0">Actualiza tu identidad maldita</p>
+                </div>
               </div>
 
               <form id="profile-form">
-                <div class="mb-4 text-start">
-                  <label class="form-label" style="color:#B31B1B;">Correo Electrónico</label>
-                  <input type="text" id="profile-email" class="form-control input-sukuna" disabled style="opacity:0.7;">
+                <div class="row">
+                  <div class="col-md-6 mb-4 text-start">
+                    <label class="form-label" style="color:var(--sukuna-red);">Correo Electrónico</label>
+                    <input type="text" id="profile-email" class="form-control input-sukuna" disabled style="opacity:0.7;">
+                  </div>
+  
+                  <div class="col-md-6 mb-4 text-start">
+                    <label for="profile-name" class="form-label">Apodo de Hechicero</label>
+                    <input type="text" id="profile-name" class="form-control input-sukuna" placeholder="Pon tu nombre aquí">
+                  </div>
                 </div>
 
                 <div class="mb-4 text-start">
-                  <label for="profile-name" class="form-label">Nombre del Hechicero / Apodo</label>
-                  <input type="text" id="profile-name" class="form-control input-sukuna" placeholder="Pon tu nombre aquí">
+                  <label for="profile-bio" class="form-label">Técnica Maldita Inherente</label>
+                  <textarea id="profile-bio" class="form-control input-sukuna" rows="4" placeholder="Describe tu técnica o biografía..."></textarea>
                 </div>
 
-                <div class="mb-4 text-start">
-                  <label for="profile-bio" class="form-label">Técnica Maldita / Bio</label>
-                  <textarea id="profile-bio" class="form-control input-sukuna" rows="3" placeholder="Describe tu técnica..."></textarea>
-                </div>
-
-                <div class="text-center mt-5">
-                  <button type="submit" class="botoncarta hover-lift">Guardar Cambios</button>
-                </div>
-
-                <div class="mt-4 pt-3 border-top border-secondary">
-                   <a href="#" id="logout-link" style="color:#ffffff; font-size:14px; opacity:0.8; text-decoration:none;">Abandonar el Dominio (Cerrar sesión)</a>
+                <div class="text-end mt-4">
+                  <button type="submit" class="botoncarta hover-lift" style="width: auto; padding: 0.8rem 2.5rem;">Guardar Identidad</button>
                 </div>
               </form>
 
               <div id="profile-msg" class="alert d-none mt-3"></div>
-
             </div>
           </div>
         </div>
+
       </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer class="footer">
-      <div class="footer-content">
-        <nav class="menu" style="text-align: center;">
-          <a href="#faq" class="footer-link"><strong>Preguntas Frecuentes</strong></a>
-          <a href="#contacto" class="footer-link"><strong>Contáctanos</strong></a>
-          <a href="#cookies" class="footer-link"><strong>Configuración de cookies</strong></a>
-          <a href="#legal" class="footer-link"><strong>Aviso legal</strong></a>
-          <a href="#derechos" class="footer-link"><strong>Derechos Reservados</strong></a>
-          <a href="#privacidad" class="footer-link"><strong>Política de Privacidad</strong></a>
-        </nav>
+    <!-- FOOTER PROFESIONAL -->
+    <footer class="footer py-5 mt-5 border-top border-dark">
+      <div class="container text-center">
+        <div class="d-flex justify-content-center flex-wrap gap-4 mb-4">
+          <a href="#faq" class="footer-link">Preguntas Frecuentes</a>
+          <a href="#contacto" class="footer-link">Contáctanos</a>
+          <a href="#cookies" class="footer-link">Ajustes de Cookies</a>
+          <a href="#legal" class="footer-link">Aviso Legal</a>
+          <a href="#privacidad" class="footer-link">Privacidad</a>
+        </div>
+        <p style="color: var(--blanco); font-size: 0.9em; opacity: 0.8;">
+          &copy; 2026 Sukuna's Malevolent Kitchen. Todos los derechos reservados.
+        </p>
       </div>
     </footer>
   </main>
