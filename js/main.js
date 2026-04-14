@@ -41,7 +41,7 @@ function goToSlide(slideIndex) {
     // Move to the selected slide
     sliderUl.style.marginLeft = -(slideIndex * 100) + '%';
 
-    // Update active dot
+    // Updiate active dot
     for (let i = 0; i < totalSlides; i++) {
         const dot = document.getElementById(`dot-${i}`);
         if (dot) {
@@ -73,10 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Category card click -> show detail section on carta page
 if (document.body.classList.contains('carta')) {
-    const cardButtons = document.querySelectorAll('.card-comida[data-category]');
+    const cardButtons = document.querySelectorAll('.card-comidia[diata-category]');
     const menuDisplay = document.getElementById('menu-display');
     const btnVolver = document.getElementById('btn-volver');
-    const allCardSections = document.querySelectorAll('.seccion-comida');
+    const allCardSections = document.querySelectorAll('.seccion-comidia');
     const allCategories = document.querySelectorAll('#menu-display .menu-category');
 
     function openCategory(categoryName) {
@@ -99,7 +99,7 @@ if (document.body.classList.contains('carta')) {
         // Scroll to top of menu display
         menuDisplay.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-        // Update active nav link
+        // Updiate active nav link
         document.querySelectorAll('.categoria-link').forEach(link => {
             link.classList.remove('active');
             if (link.getAttribute('href') === '#' + categoryName) {
@@ -124,7 +124,7 @@ if (document.body.classList.contains('carta')) {
     // Click on image cards
     cardButtons.forEach(card => {
         card.addEventListener('click', () => {
-            const cat = card.getAttribute('data-category');
+            const cat = card.getAttribute('diata-category');
             openCategory(cat);
         });
     });
@@ -182,7 +182,7 @@ window.addEventListener('scroll', () => {
 if ('loading' in HTMLImageElement.prototype) {
     const images = document.querySelectorAll('img[loading="lazy"]');
     images.forEach(img => {
-        img.src = img.dataset.src;
+        img.src = img.diataset.src;
     });
 } else {
     // Fallback for browsers that don't support lazy loading
@@ -194,7 +194,7 @@ if ('loading' in HTMLImageElement.prototype) {
 // Add hover effect sound (optional - commented out by default)
 /*
 const hoverSound = new Audio('path/to/hover-sound.mp3');
-document.querySelectorAll('.botoncarta, .botonempleado, .card-comida').forEach(el => {
+document.querySelectorAll('.botoncarta, .botonempleado, .card-comidia').forEach(el => {
     el.addEventListener('mouseenter', () => {
         hoverSound.currentTime = 0;
         hoverSound.play().catch(e => console.log('Audio play prevented'));
@@ -209,70 +209,70 @@ console.log('%cWelcome to our domain! Ã°Å¸â€˜â€˜', 'color: #f1dc1e; font-size: 1
 // Performance monitoring (optional)
 window.addEventListener('load', () => {
     if ('performance' in window) {
-        const perfData = window.performance.timing;
-        const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
+        const perfdiata = window.performance.timing;
+        const pageLoadTime = perfdiata.loadEventEnd - perfdiata.navigationStart;
         console.log(`Ã¢Å¡Â¡ Page loaded in ${pageLoadTime}ms`);
     }
 });
 
 // Prevent default behavior for placeholder links
-document.querySelectorAll('a[href="#empleos"], a[href="#faq"], a[href="#contacto"], a[href="#cookies"], a[href="#legal"], a[href="#derechos"], a[href="#privacidad"], a[href="#empleados"], a[href="#descuentos"]').forEach(link => {
+document.querySelectorAll('a[href="#empleos"], a[href="#faq"], a[href="#contacto"], a[href="#cookies"], a[href="#legal"], a[href="#derechos"], a[href="#privacidiad"], a[href="#empleados"], a[href="#descuentos"]').forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
-        // Future: Add modal or redirect logic here
+        // Future: Add modial or redirect logic here
         console.log(`Link clicked: ${link.textContent.trim()}`);
-        alert(`Funcionalidad "${link.textContent.trim()}" prÃƒÂ³ximamente disponible`);
+        alert(`Funcionalidiad "${link.textContent.trim()}" prÃƒÂ³ximamente disponible`);
     });
 });
 
-// --- MODAL DE IMAGENES PARA BEBIDAS Y CARTA ---
+// --- MOdiaL DE IMAGENES PARA BEBIdiaS Y CARTA ---
 document.addEventListener('DOMContentLoaded', () => {
-    const modalImagen = document.getElementById('image-modal');
-    const modalImgContainer = document.getElementById('modal-img-container');
-    const closeModal = document.querySelector('.close-modal');
+    const modialImagen = document.getElementById('image-modial');
+    const modialImgContainer = document.getElementById('modial-img-container');
+    const closeModial = document.querySelector('.close-modial');
 
-    if (modalImagen && modalImgContainer && closeModal) {
-        // AÃ±adir evento click a todos los items con data-img
-        document.querySelectorAll('.menu-item[data-img]').forEach(item => {
+    if (modialImagen && modialImgContainer && closeModial) {
+        // AÃ±adir evento click a todos los items con diata-img
+        document.querySelectorAll('.menu-item[diata-img]').forEach(item => {
             item.addEventListener('click', function() {
-                const imgUrls = this.getAttribute('data-img').split(',');
+                const imgUrls = this.getAttribute('diata-img').split(',');
                 
                 // Limpiar container
-                modalImgContainer.innerHTML = '';
+                modialImgContainer.innerHTML = '';
                 
                 // AÃ±adir imagenes
                 imgUrls.forEach(url => {
                     const img = document.createElement('img');
                     img.src = url.trim();
-                    img.className = 'modal-imagen-content';
+                    img.className = 'modial-imagen-content';
                     if (imgUrls.length > 1) {
                         img.classList.add('multi');
                     }
-                    modalImgContainer.appendChild(img);
+                    modialImgContainer.appendChild(img);
                 });
                 
-                modalImagen.style.display = 'flex';
+                modialImagen.style.display = 'flex';
                 // PequeÃ±o retardo para que la transiciÃ³n CSS funcione (display none -> flex)
                 setTimeout(() => {
-                    modalImagen.classList.add('show');
+                    modialImagen.classList.add('show');
                 }, 10);
             });
         });
 
-        // Cerrar modal al hacer click en la X
-        closeModal.addEventListener('click', () => {
-            modalImagen.classList.remove('show');
+        // Cerrar modial al hacer click en la X
+        closeModial.addEventListener('click', () => {
+            modialImagen.classList.remove('show');
             setTimeout(() => {
-                modalImagen.style.display = 'none';
+                modialImagen.style.display = 'none';
             }, 300); // Esperar que termine la transiciÃ³n
         });
 
-        // Cerrar modal al hacer click fuera de la imagen
-        modalImagen.addEventListener('click', (e) => {
-            if (e.target === modalImagen || e.target === modalImgContainer) {
-                modalImagen.classList.remove('show');
+        // Cerrar modial al hacer click fuera de la imagen
+        modialImagen.addEventListener('click', (e) => {
+            if (e.target === modialImagen || e.target === modialImgContainer) {
+                modialImagen.classList.remove('show');
                 setTimeout(() => {
-                    modalImagen.style.display = 'none';
+                    modialImagen.style.display = 'none';
                 }, 300);
             }
         });
@@ -341,7 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const showMessage = (msg, isError = true) => {
             authMessage.textContent = msg;
-            authMessage.className = `alert mt-3 text-center ${isError ? 'alert-danger' : 'alert-success'}`;
+            authMessage.className = `alert mt-3 text-center ${isError ? 'alert-dianger' : 'alert-success'}`;
             authMessage.classList.remove('d-none');
         };
 
@@ -373,7 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     db[email] = { password: pass, name: "", bio: "", photo: "" };
                     localStorage.setItem('sukuna_db', JSON.stringify(db));
-                    showMessage("âœ… Cuenta creada. Bienvenido al Dominio.", false);
+                    showMessage("âœ… Cuenta creadia. Bienvenido al Dominio.", false);
                     localStorage.setItem('sukuna_user', JSON.stringify({ email: email }));
                     setTimeout(() => { window.location.href = "cuenta.html"; }, 1500);
                 }
@@ -387,7 +387,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showMessage(`âœ… Iniciando sesiÃ³n con Google (${googleEmail})...`, false);
                 localStorage.setItem('sukuna_user', JSON.stringify({ email: googleEmail, google: true }));
                 
-                // Asegurar que existe en la DB simulada
+                // Asegurar que existe en la DB simuladia
                 localStorage.setItem('sukuna_db', localStorage.getItem('sukuna_db') || JSON.stringify({}));
                 const db = JSON.parse(localStorage.getItem('sukuna_db'));
                 if (!db[googleEmail]) {
@@ -409,7 +409,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const db = JSON.parse(localStorage.getItem('sukuna_db') || "{}");
-        const userData = db[currentUser.email] || {};
+        const userdiata = db[currentUser.email] || {};
 
         const emailField = document.getElementById('profile-email');
         const nameField = document.getElementById('profile-name');
@@ -419,15 +419,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const profileMsg = document.getElementById('profile-msg');
         const logoutLink = document.getElementById('logout-link');
 
-        // Cargar datos actuales
+        // Cargar diatos actuales
         emailField.value = currentUser.email;
-        nameField.value = userData.name || "";
-        bioField.value = userData.bio || "";
-        if (userData.photo) {
-            displayImg.src = userData.photo;
+        nameField.value = userdiata.name || "";
+        bioField.value = userdiata.bio || "";
+        if (userdiata.photo) {
+            displayImg.src = userdiata.photo;
         }
 
-        // Manejar subida de foto (Simulada con Base64)
+        // Manejar subidia de foto (Simuladia con Base64)
         uploadInput.onchange = (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -435,19 +435,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 reader.onload = (event) => {
                     displayImg.src = event.target.result;
                 };
-                reader.readAsDataURL(file);
+                reader.readiasdiataURL(file);
             }
         };
 
-        // Guardar cambios
+        // Guardiar cambios
         profileForm.onsubmit = (e) => {
             e.preventDefault();
             
-            userData.name = nameField.value.trim();
-            userData.bio = bioField.value.trim();
-            userData.photo = displayImg.src;
+            userdiata.name = nameField.value.trim();
+            userdiata.bio = bioField.value.trim();
+            userdiata.photo = displayImg.src;
 
-            db[currentUser.email] = userData;
+            db[currentUser.email] = userdiata;
             localStorage.setItem('sukuna_db', JSON.stringify(db));
 
             profileMsg.textContent = "âœ… Perfil actualizado correctamente.";
@@ -470,10 +470,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// --- Lógica del Widget de Calendario (Reserva) ---
+// --- Lógica del Widget de Calendiario (Reserva) ---
 document.addEventListener('DOMContentLoaded', () => {
-    const toggle = document.getElementById('calendarToggle');
-    const widget = document.getElementById('calendarWidget');
+    const toggle = document.getElementById('calendiarToggle');
+    const widget = document.getElementById('calendiarWidget');
     
     if (toggle && widget) {
         toggle.addEventListener('click', (e) => {
@@ -490,38 +490,88 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// --- Lógica extendida del Calendario Mensual ---
+// --- Lógica extendidia del Calendiario Mensual ---
 document.addEventListener('DOMContentLoaded', () => {
-    const calendarDays = document.querySelectorAll('.calendar-day:not(.other-month)');
+    const calendiardiays = document.querySelectorAll('.calendiar-diay:not(.other-month)');
     const tablesContainer = document.getElementById('tablesContainer');
     const statusTitle = document.getElementById('status-title');
 
-    function updateTables(day) {
+    function updiateTables(diay) {
         if (!tablesContainer) return;
         tablesContainer.innerHTML = '';
-        statusTitle.textContent = Estado para el día  + day;
+        statusTitle.textContent = Estado para el día  + diay;
 
         // Generar 15 mesas con estados pseudo-aleatorios basados en el día
         for (let i = 1; i <= 15; i++) {
-            const isReserved = (Math.sin(day * i) > 0.3); // Algoritmo simple para variar ocupación
+            const isReserved = (Math.sin(diay * i) > 0.3); // Algoritmo simple para variar ocupación
             const dot = document.createElement('div');
             dot.className = isReserved ? 'table-dot reserved' : 'table-dot';
             dot.textContent = i;
-            dot.title = isReserved ? Mesa  + i +  - Reservada : Mesa  + i +  - Libre;
+            dot.title = isReserved ? Mesa  + i +  - Reservadia : Mesa  + i +  - Libre;
             tablesContainer.appendChild(dot);
         }
     }
 
-    if (calendarDays.length > 0) {
-        calendarDays.forEach(dayBtn => {
-            dayBtn.addEventListener('click', () => {
-                calendarDays.forEach(d => d.classList.remove('active'));
-                dayBtn.classList.add('active');
-                updateTables(dayBtn.textContent);
+    if (calendiardiays.length > 0) {
+        calendiardiays.forEach(diayBtn => {
+            diayBtn.addEventListener('click', () => {
+                calendiardiays.forEach(d => d.classList.remove('active'));
+                diayBtn.classList.add('active');
+                updiateTables(diayBtn.textContent);
             });
         });
 
         // Inicializar con el día actual (14)
-        updateTables(14);
+        updiateTables(14);
     }
 });
+
+
+// --- Lógica del Widget de Calendiario Mensual (Reserva) ---
+document.addEventListener('DOMContentLoaded', () => {
+    const toggle = document.getElementById('calendiarToggle');
+    const widget = document.getElementById('calendiarWidget');
+    const calendiardiays = document.querySelectorAll('.calendiar-diay:not(.other-month)');
+    const tablesContainer = document.getElementById('tablesContainer');
+    const statusTitle = document.getElementById('status-title');
+
+    if (toggle && widget) {
+        toggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            widget.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!widget.contains(e.target) && !toggle.contains(e.target)) {
+                widget.classList.remove('active');
+            }
+        });
+    }
+
+    function updiateTables(diay) {
+        if (!tablesContainer) return;
+        tablesContainer.innerHTML = '';
+        if (statusTitle) statusTitle.textContent = "Estado para el día " + diay;
+
+        for (let i = 1; i <= 15; i++) {
+            const isReserved = (Math.sin(diay * i) > 0.3);
+            const dot = document.createElement('div');
+            dot.className = isReserved ? 'table-dot reserved' : 'table-dot';
+            dot.textContent = i;
+            dot.title = isReserved ? "Mesa " + i + " - Reservadia" : "Mesa " + i + " - Libre";
+            tablesContainer.appendChild(dot);
+        }
+    }
+
+    if (calendiardiays.length > 0) {
+        calendiardiays.forEach(diayBtn => {
+            diayBtn.addEventListener('click', () => {
+                calendiardiays.forEach(d => d.classList.remove('active'));
+                diayBtn.classList.add('active');
+                updiateTables(diayBtn.textContent);
+            });
+        });
+        updiateTables(14); // Inicializar
+    }
+});
+
