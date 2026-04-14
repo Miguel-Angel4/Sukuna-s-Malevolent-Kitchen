@@ -258,7 +258,7 @@ body.home {
     -webkit-backdrop-filter: blur(12px);
     padding: 1.25rem 2rem;
     color: var(--blanco);
-    font-size: 0.95em;
+    font-size: 1.1em;
     font-weight: 500;
     z-index: 1000;
     display: flex;
@@ -606,8 +606,10 @@ body.carta {
     display: inline-flex;
     align-items: center;
     transition: color var(--transition-fast);
-    font-size: 0.9em;
+    font-size: 1.15em;
     font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
 }
 
 .nav-link:hover {
