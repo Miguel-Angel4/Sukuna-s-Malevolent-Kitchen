@@ -469,3 +469,23 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 });
+
+// --- Lógica del Widget de Calendario (Reserva) ---
+document.addEventListener('DOMContentLoaded', () => {
+    const toggle = document.getElementById('calendarToggle');
+    const widget = document.getElementById('calendarWidget');
+    
+    if (toggle && widget) {
+        toggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            widget.classList.toggle('active');
+        });
+
+        // Cerrar widget al hacer click fuera
+        document.addEventListener('click', (e) => {
+            if (!widget.contains(e.target) && !toggle.contains(e.target)) {
+                widget.classList.remove('active');
+            }
+        });
+    }
+});
