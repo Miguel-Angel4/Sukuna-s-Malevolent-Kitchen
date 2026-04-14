@@ -2107,3 +2107,73 @@ input[type="file"].input-sukuna::file-selector-button:hover {
         flex-direction: column;
     }
 }
+
+/* ================================================
+   HIGH-END PREMIUM POLISH (HOME)
+   ================================================ */
+.floating-anim {
+    animation: floating 4s ease-in-out infinite;
+}
+@keyframes floating {
+    0% { transform: translateY(0px); filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.5)); }
+    50% { transform: translateY(-15px); filter: drop-shadow(0 20px 25px rgba(220, 38, 38, 0.4)); }
+    100% { transform: translateY(0px); filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.5)); }
+}
+
+.sukuna-divider {
+    height: 2px;
+    width: 60px;
+    background: var(--sukuna-red);
+    margin: 0 auto;
+    box-shadow: 0 0 10px var(--sukuna-red);
+    position: relative;
+}
+.sukuna-divider::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 10px;
+    height: 10px;
+    background: var(--blanco);
+    box-shadow: 0 0 5px var(--blanco);
+}
+
+.btn-premium {
+    padding: 1rem 2.5rem !important;
+    font-size: 1.1rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.5px !important;
+    border-radius: 2px !important; /* Sharp edges are more pro */
+    background: var(--sukuna-red) !important;
+    border: 1px solid var(--sukuna-red) !important;
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.2) !important;
+}
+.btn-premium:hover {
+    background: var(--sukuna-blood) !important;
+    box-shadow: 0 4px 25px rgba(220, 38, 38, 0.5) !important;
+}
+
+.btn-premium-outline {
+    padding: 1rem 2.5rem !important;
+    font-size: 1.1rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.5px !important;
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 2px !important;
+    color: var(--blanco) !important;
+}
+.btn-premium-outline:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: var(--blanco) !important;
+}
+
+.team-role {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.75rem;
+    color: var(--sukuna-red);
+    font-weight: 600;
+}
