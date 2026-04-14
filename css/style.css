@@ -256,25 +256,31 @@ body.home {
     background: rgba(9, 9, 11, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    padding: 0.75rem 3rem;
+    padding: 0.75rem 0; /* Padding vertical, horizontal lo maneja el centrado */
     color: var(--blanco);
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     border-bottom: 1px solid var(--border);
     z-index: 1000;
     transition: all var(--transition-normal);
 }
 
+.logo {
+    position: absolute;
+    left: 3rem;
+    display: flex;
+    align-items: center;
+}
+
 .header-content {
     display: flex;
-    justify-content: flex-end;
-    flex: 1;
+    justify-content: center;
 }
 
 .menu {
     display: flex;
-    gap: 3.5rem;
+    gap: 3rem;
     align-items: center;
 }
 
