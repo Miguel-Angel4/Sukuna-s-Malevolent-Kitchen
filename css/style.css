@@ -7,8 +7,8 @@
     --sukuna-crimson: #dc2626;
     --sukuna-black: #09090b; /* Zinc 950 */
     --sukuna-dark-red: #450a0a;
-    --blanco: #fafafa;
-    --muted: #a1a1aa; /* Zinc 400 */
+    --blanco: #ffffff;
+    --muted: #ffffff; /* Letras totalmente blancas por solicitud del cliente */
     --sukuna-shadow: rgba(0,0,0,0.8);
     --oro-kamutoke: #ef4444; /* Reemplazado oro por rojo más vivo en acentos */
     --sukuna-blood: #991b1b;
@@ -1891,7 +1891,7 @@ input[type="file"].input-sukuna::file-selector-button:hover {
 
 /* OVERRIDES BOOTSTRAP */
 .text-muted {
-    color: var(--muted) !important;
+    color: var(--blanco) !important;
 }
 
 .text-danger {
