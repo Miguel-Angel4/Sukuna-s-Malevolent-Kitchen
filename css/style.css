@@ -2258,3 +2258,27 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     font-size: 1rem !important;
     letter-spacing: 0.5px;
 }
+
+/* Centrado de submenú de categorías (Carta) */
+.seccion-comida {
+    display: flex !important;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+    gap: 1.5rem !important;
+    margin-top: 1rem !important;
+    padding-bottom: 1rem !important;
+}
+
+.categoria-link {
+    color: var(--muted) !important;
+    text-decoration: none !important;
+    font-size: 0.85rem !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase !important;
+    transition: all var(--transition-fast) !important;
+}
+
+.categoria-link:hover, .categoria-link.active {
+    color: var(--sukuna-red) !important;
+    transform: translateY(-2px) !important;
+}
