@@ -11,85 +11,7 @@
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="icon" type="image/png" sizes="32x32" href="img/icono.png">
   <link rel="stylesheet" href="css/style.css">
-  <style>
-    .game-card {
-      background: rgba(20, 20, 20, 0.8);
-      border: 2px solid #B31B1B;
-      padding: 20px;
-      border-radius: 15px;
-      transition: transform 0.3s, box-shadow 0.3s;
-      cursor: pointer;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-    .game-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 0 20px rgba(179, 27, 27, 0.5);
-    }
-    .game-sprite {
-      width: 120px;
-      height: 120px;
-      margin-bottom: 20px;
-      image-rendering: pixelated;
-    }
-    .game-title {
-      color: #fff;
-      font-size: 1.5rem;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .game-desc {
-      color: #ccc;
-      font-size: 0.9rem;
-    }
-    /* Modal para Juegos */
-    #game-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 9999;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-    }
-    #game-container {
-      width: 800px;
-      height: 600px;
-      background: #111;
-      border: 4px solid #B31B1B;
-      position: relative;
-      overflow: hidden;
-    }
-    .game-header {
-      width: 800px;
-      display: flex;
-      justify-content: space-between;
-      color: #fff;
-      margin-bottom: 10px;
-      font-family: 'Courier New', Courier, monospace;
-    }
-    .close-game {
-      color: #fff;
-      font-size: 2rem;
-      cursor: pointer;
-      position: absolute;
-      top: 20px;
-      right: 40px;
-    }
-    @keyframes fever {
-      0% { background: #111; }
-      50% { background: #f1dc1e; }
-      100% { background: #111; }
-    }
-  </style>
+
 </head>
 
 <body class="home">
@@ -101,11 +23,11 @@
     </a>
     <div class="header-content">
       <nav class="menu">
-        <a href="carta.html" class="nav-link"><strong>Nuestra carta</strong></a>
-        <a href="descuentos.html" class="nav-link"><strong>Descuentos</strong></a>
-        <a href="cv.html" class="nav-link"><strong>¿Quieres trabajar para nosotros?</strong></a>
-        <a href="reserva.html" class="nav-link"><strong>Reserva</strong></a>
-        <a href="login.html" class="nav-link" id="nav-login"><strong>Iniciar sesión</strong></a>
+        <a href="carta.html" class="nav-link">Nuestra carta</a>
+        <a href="descuentos.html" class="nav-link">Descuentos</a>
+        <a href="cv.html" class="nav-link">¿Quieres trabajar para nosotros?</a>
+        <a href="reserva.html" class="nav-link">Reserva</a>
+        <a href="login.html" class="nav-link" id="nav-login">Iniciar sesión</a>
       </nav>
     </div>
   </header>
@@ -118,9 +40,12 @@
     <section class="seccion-empleos fade-in" style="padding: 120px 0 80px 0;">
       <div class="container">
         <div class="row justify-content-center">
-          <div class="col-lg-8 text-center mb-5">
-            <h2 class="titulo-trabajadores">EL JUEGO DE LAS MALDICIONES</h2>
-            <p class="frase-ingredientes">Gana minijuegos para obtener cupones de descuento exclusivos. Cada técnica es única.</p>
+          <div class="col-lg-8 d-flex flex-column align-items-center text-center mb-5">
+            <h1 class="hero-title text-uppercase" style="letter-spacing: 4px;">El Juego de las Maldiciones</h1>
+            <div class="sukuna-divider my-4"></div>
+            <p class="hero-subtitle text-muted mt-2" style="font-size: 1.1rem; font-weight: 300;">
+              Gana minijuegos para obtener cupones de descuento exclusivos. Cada técnica es única, cada victoria es un grado especial.
+            </p>
           </div>
         </div>
 
@@ -173,6 +98,8 @@
       </div>
     </section>
 
+    </div>
+
     <!-- Modal de Juego -->
     <div id="game-modal">
       <span class="close-game" onclick="stopGame()">×</span>
@@ -184,6 +111,22 @@
         <!-- El contenido del juego se inyectará aquí via JS -->
       </div>
     </div>
+
+    <!-- FOOTER PROFESIONAL -->
+    <footer class="footer py-5 mt-5 border-top border-dark">
+      <div class="container text-center">
+        <div class="d-flex justify-content-center flex-wrap gap-4 mb-4">
+          <a href="#faq" class="footer-link">Preguntas Frecuentes</a>
+          <a href="#contacto" class="footer-link">Contáctanos</a>
+          <a href="#cookies" class="footer-link">Ajustes de Cookies</a>
+          <a href="#legal" class="footer-link">Aviso Legal</a>
+          <a href="#privacidad" class="footer-link">Privacidad</a>
+        </div>
+        <p style="color: var(--blanco); font-size: 0.9em; opacity: 0.8;">
+          &copy; 2026 Sukuna's Malevolent Kitchen. Todos los derechos reservados.
+        </p>
+      </div>
+    </footer>
 
   </main>
 
