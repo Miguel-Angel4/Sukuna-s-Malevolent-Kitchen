@@ -253,20 +253,28 @@ body.home {
     top: 0;
     left: 0;
     width: 100vw;
-    background: rgba(69, 5, 5, 0.85); /* Rojo oscuro translúcido */
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: 1.25rem 2rem;
+    background: rgba(9, 9, 11, 0.8); /* Zinc 950 semi-transparent */
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 0.75rem 3rem;
     color: var(--blanco);
-    font-size: 1.1em;
-    font-weight: 500;
-    z-index: 1000;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    gap: 30px;
     border-bottom: 1px solid var(--border);
-    transition: background-color var(--transition-fast), border-color var(--transition-fast);
+    z-index: 1000;
+    transition: all var(--transition-normal);
+}
+
+.header-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.menu {
+    display: flex;
+    gap: 3rem;
+    align-items: center;
 }
 
 .header:hover {
