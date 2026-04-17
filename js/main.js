@@ -256,6 +256,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     const tablesContainer = document.getElementById('tablesContainer');
     const fechaHoraInput = document.getElementById('fecha_hora');
     const calendarDays = document.querySelectorAll('.calendar-day:not(.other-month)');
+    const calendarWidget = document.getElementById('calendarWidget');
+    const calendarToggle = document.getElementById('calendarToggle');
+    const statusTitle = document.getElementById('status-title');
+
+    // Toggle del widget
+    if (calendarToggle && calendarWidget) {
+        calendarToggle.onclick = () => {
+            calendarWidget.classList.toggle('show');
+            console.log("📅 Toggle calendario");
+        };
+    }
 
     if (tablesContainer && sb) {
         async function updateTables(day) {
@@ -290,6 +301,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             calendarDays.forEach(d => d.addEventListener('click', () => {
                 calendarDays.forEach(x => x.classList.remove('active'));
                 d.classList.add('active');
+                if (statusTitle) statusTitle.textContent = `Estado para el día ${d.textContent}`;
                 updateTables(d.textContent);
             }));
             updateTables(14); // Día por defecto
