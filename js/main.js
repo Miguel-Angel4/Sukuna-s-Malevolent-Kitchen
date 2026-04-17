@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Toggle del widget
     if (calendarToggle && calendarWidget) {
         calendarToggle.onclick = () => {
-            calendarWidget.classList.toggle('show');
+            calendarWidget.classList.toggle('active');
             console.log("📅 Toggle calendario");
         };
     }
