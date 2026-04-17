@@ -128,16 +128,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         registerForm.onsubmit = async (e) => {
             e.preventDefault();
-            const { error } = await supabase.auth.signUp({
+            const { data, error } = await supabase.auth.signUp({
                 email: regEmailInput.value.trim(),
                 password: regPassInput.value.trim()
             });
+            
             if (error) {
                 regMessage.textContent = "❌ " + error.message;
                 regMessage.className = "alert alert-danger mt-3 text-center";
                 regMessage.classList.remove('d-none');
+            } else if (data.user && data.user.identities && data.user.identities.length === 0) {
+                regMessage.textContent = "⚠️ Cuenta ya existente";
+                regMessage.className = "alert alert-warning mt-3 text-center";
+                regMessage.classList.remove('d-none');
             } else {
-                regMessage.textContent = "✅ ¡Registro completado! Ya puedes iniciar sesión.";
+                regMessage.textContent = "✅ Cuenta creada";
                 regMessage.className = "alert alert-success mt-3 text-center";
                 regMessage.classList.remove('d-none');
                 registerForm.reset();
