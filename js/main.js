@@ -1,5 +1,5 @@
 // ========================================
-// Sukuna's Malevolent Kitchen - Main JavaScript (Blindado)
+// Sukuna's Malevolent Kitchen - Main JavaScript (Final Robust Version)
 // ========================================
 
 const SUPABASE_URL = "https://wxbjrpqpomekvyuhlwdg.supabase.co";
@@ -53,21 +53,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
     }
 
-    const regForm = document.getElementById('register-form');
-    if (regForm && sb) {
-        regForm.onsubmit = async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('reg-email').value.trim();
-            const pass = document.getElementById('reg-password').value.trim();
-            const msg = document.getElementById('reg-message');
-            const { data, error } = await sb.auth.signUp({ email, password: pass });
-            if (error) msg.textContent = "❌ " + error.message;
-            else if (data.user?.identities?.length === 0) msg.textContent = "⚠️ Ya existe.";
-            else msg.textContent = "✅ Creada.";
-            msg.classList.remove('d-none');
-        };
-    }
-
     // --- 4. CALENDARIO Y RESERVAS ---
     const calendarToggle = document.getElementById('calendarToggle');
     const calendarWidget = document.getElementById('calendarWidget');
@@ -78,27 +63,45 @@ document.addEventListener('DOMContentLoaded', async () => {
     const tablesContainer = document.getElementById('tablesContainer');
     if (tablesContainer && sb) {
         const widgetHour = document.getElementById('widget-hour');
+        
         const updateTables = async (day) => {
             if (!tablesContainer) return;
-            tablesContainer.innerHTML = '...';
-            const { data: reservations } = await sb.from('reservations').select('*');
+            tablesContainer.innerHTML = '<span style="color:red">Cargando...</span>';
+            
+            // Forzar descarga fresca de Supabase
+            const { data: reservations, error } = await sb.from('reservations').select('*');
+            if (error) console.error("Error al cargar mesas:", error);
+
             let h = 14, m = 0;
             if (widgetHour?.value) [h, m] = widgetHour.value.split(':').map(Number);
             
             tablesContainer.innerHTML = '';
             for (let i = 1; i <= 15; i++) {
-                const mesa = i === 15 ? "Mesa 15 (Especial para Cumpleaños)" : `Mesa ${i}`;
-                const busy = reservations?.some(r => {
+                const mesaNombre = i === 15 ? "Mesa 15 (Especial para Cumpleaños)" : `Mesa ${i}`;
+                
+                const isBusy = (reservations || []).some(r => {
+                    // Limpieza de datos para comparar
+                    const resMesa = String(r.mesa).trim().toLowerCase();
+                    const targetMesa = mesaNombre.trim().toLowerCase();
+                    const simpleMesa = `mesa ${i}`;
+
                     const d = new Date(r.fecha_hora);
-                    // Comprobar día, mes (Abril=3) y año (2026)
-                    return d.getDate() == day && d.getMonth() === 3 && d.getFullYear() === 2026 &&
-                           Math.abs((d.getHours()*60+d.getMinutes()) - (h*60+m)) < 60 && 
-                           (r.mesa === mesa || r.mesa === `Mesa ${i}`);
+                    // Comparación robusta (Día, Mes y Año)
+                    const dayMatch = d.getUTCDate() == day || d.getDate() == day;
+                    const monthMatch = d.getUTCMonth() === 3 || d.getMonth() === 3; // Abril
+                    
+                    // Comparación de hora (margen de 2 horas para seguridad)
+                    const resTotalMinutes = d.getUTCHours() * 60 + d.getUTCMinutes();
+                    const targetTotalMinutes = h * 60 + m;
+                    const timeMatch = Math.abs(resTotalMinutes - targetTotalMinutes) < 120;
+
+                    return dayMatch && monthMatch && timeMatch && (resMesa === targetMesa || resMesa === simpleMesa);
                 });
+
                 const dot = document.createElement('div');
-                dot.className = `table-dot ${busy ? 'reserved' : ''}`;
+                dot.className = `table-dot ${isBusy ? 'reserved' : ''}`;
                 dot.textContent = i;
-                dot.title = busy ? "Ocupada" : "Libre";
+                dot.title = isBusy ? "Mesa Ocupada" : "Mesa Libre";
                 tablesContainer.appendChild(dot);
             }
         };
@@ -112,38 +115,56 @@ document.addEventListener('DOMContentLoaded', async () => {
                 updateTables(d.textContent);
             };
         });
+        
+        // Carga inicial
         updateTables(14);
+    }
 
-        const resForm = document.getElementById('form-reserva');
-        if (resForm) {
-            resForm.onsubmit = async (e) => {
-                e.preventDefault();
-                const data = Object.fromEntries(new FormData(resForm));
-                try {
-                    await sb.from('reservations').insert([data]);
-                    // 2. Intentar enviar el email (Formsubmit)
-                    fetch("https://formsubmit.co/ajax/sukunaamalevolentkitchen@gmail.com", {
-                        method: "POST", 
-                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                        body: JSON.stringify(data)
-                    }).then(res => console.log("📧 Formsubmit respuesta:", res))
-                      .catch(e => console.error("❌ Error email:", e));
-                    
-                    // Mostrar resumen de la reserva al usuario
-                    const resumen = `🩸 RESERVA CONFIRMADA 🩸\n\nNombre: ${data.nombre}\nMesa: ${data.mesa}\nHora: ${data.fecha_hora.replace('T', ' ')}`;
-                    alert(resumen);
-                    
-                    resForm.reset();
-                    
-                    // FORZAR REFRESCO: Volver a cargar mesas tras 500ms para asegurar que Supabase se actualizó
-                    setTimeout(() => {
-                        const activeDay = document.querySelector('.calendar-day.active');
-                        if (activeDay) updateTables(activeDay.textContent);
-                    }, 500);
+    const resForm = document.getElementById('form-reserva');
+    if (resForm && sb) {
+        resForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const formData = new FormData(resForm);
+            const data = Object.fromEntries(formData);
 
-                } catch (err) { alert("❌ Error: " + err.message); }
-            };
-        }
+            try {
+                // 1. GUARDAR EN SUPABASE
+                const { error: sbError } = await sb.from('reservations').insert([data]);
+                if (sbError) throw sbError;
+
+                // 2. ENVIAR EMAIL (FORM SUBMIT AJAX)
+                // Añadimos campos de control para FormSubmit
+                const emailData = {
+                    ...data,
+                    _subject: "¡Nueva Reserva en Sukuna's Kitchen!",
+                    _captcha: "false",
+                    _template: "table"
+                };
+
+                fetch("https://formsubmit.co/ajax/sukunaamalevolentkitchen@gmail.com", {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(emailData)
+                })
+                .then(r => r.json())
+                .then(res => console.log("📧 Email enviado:", res))
+                .catch(err => console.error("❌ Fallo email:", err));
+
+                // 3. CONFIRMACIÓN Y REFRESCO
+                const info = `🩸 RESERVA CONFIRMADA 🩸\n\nNombre: ${data.nombre}\nMesa: ${data.mesa}\nFecha: ${data.fecha_hora}`;
+                alert(info);
+                resForm.reset();
+                
+                // Forzar actualización del calendario
+                const activeDay = document.querySelector('.calendar-day.active');
+                if (activeDay) {
+                    setTimeout(() => updateTables(activeDay.textContent), 800);
+                }
+
+            } catch (err) {
+                alert("❌ Error: " + err.message);
+            }
+        };
     }
 
     // --- 5. CUENTA (cuenta.html) ---
