@@ -84,20 +84,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const mesaNombre = i === 15 ? "Mesa 15 (Especial para Cumpleaños)" : `Mesa ${i}`;
                 
                 const isBusy = (reservations || []).some(r => {
-                    // Limpieza de datos para comparar
                     const resMesa = String(r.mesa).trim().toLowerCase();
                     const targetMesa = mesaNombre.trim().toLowerCase();
                     const simpleMesa = `mesa ${i}`;
 
                     const d = new Date(r.fecha_hora);
-                    // Comparación robusta (Día, Mes y Año)
                     const dayMatch = d.getUTCDate() == day || d.getDate() == day;
-                    const monthMatch = d.getUTCMonth() === 3 || d.getMonth() === 3; // Abril
+                    const monthMatch = d.getUTCMonth() === 3 || d.getMonth() === 3;
                     
-                    // Comparación de hora (margen de 2 horas para seguridad)
+                    // EXACTAMENTE 1 hora de bloqueo (60 minutos)
                     const resTotalMinutes = d.getUTCHours() * 60 + d.getUTCMinutes();
                     const targetTotalMinutes = h * 60 + m;
-                    const timeMatch = Math.abs(resTotalMinutes - targetTotalMinutes) < 120;
+                    const timeMatch = Math.abs(resTotalMinutes - targetTotalMinutes) < 60;
 
                     return dayMatch && monthMatch && timeMatch && (resMesa === targetMesa || resMesa === simpleMesa);
                 });
@@ -145,20 +143,27 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const { error: sbError } = await sb.from('reservations').insert([supabaseData]);
                 if (sbError) throw sbError;
 
-                // 2. ENVIAR EMAIL (campos extra solo para Formsubmit, no van a la BD)
-                const emailData = {
+                // 2. ENVIAR EMAIL con formulario oculto (método fiable desde Vercel)
+                const hiddenForm = document.createElement('form');
+                hiddenForm.method = 'POST';
+                hiddenForm.action = 'https://formsubmit.co/sukunaamalevolentkitchen@gmail.com';
+                hiddenForm.target = '_blank'; // Abre en nueva pestaña para no salir de la página
+                hiddenForm.style.display = 'none';
+
+                const emailFields = {
                     ...supabaseData,
-                    _subject: "¡Nueva Reserva en Sukuna's Kitchen!",
-                    _captcha: "false"
+                    _subject: "\u00a1Nueva Reserva en Sukuna's Kitchen!",
+                    _captcha: 'false',
+                    _next: window.location.href
                 };
-                fetch("https://formsubmit.co/ajax/sukunaamalevolentkitchen@gmail.com", {
-                    method: "POST",
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify(emailData)
-                })
-                .then(r => r.json())
-                .then(res => console.log("📧 Email enviado:", res))
-                .catch(err => console.error("❌ Fallo email:", err));
+                Object.entries(emailFields).forEach(([k, v]) => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden'; input.name = k; input.value = v || '';
+                    hiddenForm.appendChild(input);
+                });
+                document.body.appendChild(hiddenForm);
+                hiddenForm.submit();
+                setTimeout(() => document.body.removeChild(hiddenForm), 2000);
 
                 // 3. CONFIRMACIÓN Y REFRESCO
                 alert(`🩸 RESERVA CONFIRMADA 🩸\n\nNombre: ${data.nombre}\nMesa: ${data.mesa}\nFecha: ${data.fecha_hora}`);
