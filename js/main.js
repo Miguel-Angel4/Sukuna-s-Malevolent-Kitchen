@@ -188,23 +188,23 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const { error: sbError } = await sb.from('reservations').insert([supabaseData]);
                 if (sbError) throw sbError;
 
-                // Formatear los datos como x-www-form-urlencoded para Forminit
-                const params = new URLSearchParams();
-                Object.entries(supabaseData).forEach(([k, v]) => {
-                    params.append(k, v);
-                });
+                // Enviar email usando el proxy de Vercel hacia Formsubmit (evita Cisco Umbrella)
+                const emailData = {
+                    ...supabaseData,
+                    _subject: "¡Nueva Reserva en Sukuna's Kitchen!",
+                    _captcha: "false"
+                };
 
-                // Proxy simple de Vercel → Forminit (sin CORS)
-                fetch("/api/reserva-submit", {
+                fetch("/api/form-submit", {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Content-Type": "application/json",
                         "Accept": "application/json"
                     },
-                    body: params.toString()
+                    body: JSON.stringify(emailData)
                 })
-                .then(r => console.log("📧 Forminit enviado:", r.status))
-                .catch(e => console.warn("⚠️ Forminit no disponible:", e));
+                .then(r => console.log("📧 Email enviado al proxy:", r.status))
+                .catch(e => console.warn("⚠️ Proxy no disponible:", e));
 
                 // 3. CONFIRMACIÓN
                 alert(`🩸 RESERVA CONFIRMADA 🩸\n\nNombre: ${data.nombre}\nMesa: ${data.mesa}\nFecha: ${data.fecha_hora.replace('T', ' ')}\nPersonas: ${data.personas}`);
