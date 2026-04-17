@@ -179,6 +179,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             d.onclick = () => {
                 document.querySelectorAll('.calendar-day').forEach(x => x.classList.remove('active'));
                 d.classList.add('active');
+                const statusTitle = document.getElementById('status-title');
+                if (statusTitle) statusTitle.textContent = `Estado para el día ${d.textContent}`;
                 updateTables(d.textContent);
             };
         });
@@ -194,14 +196,27 @@ document.addEventListener('DOMContentLoaded', async () => {
                 e.preventDefault();
                 const data = Object.fromEntries(new FormData(resForm));
                 try {
-                    await sb.from('reservations').insert([data]);
-                    await fetch("https://formsubmit.co/ajax/miguelangel261106@gmail.com", {
-                        method: "POST", headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
-                    });
-                    alert("Reserva confirmada");
+                    // 1. Siempre guardar en Supabase primero
+                    const { error: sbError } = await sb.from('reservations').insert([data]);
+                    if (sbError) throw sbError;
+
+                    // 2. Intentar enviar el email (Formsubmit)
+                    try {
+                        await fetch("https://formsubmit.co/ajax/miguelangel261106@gmail.com", {
+                            method: "POST", 
+                            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                            body: JSON.stringify(data)
+                        });
+                    } catch (emailErr) {
+                        console.warn("⚠️ El aviso por email falló, pero la reserva se guardó:", emailErr);
+                    }
+
+                    alert("🩸 Reserva confirmada en el Dominio.");
                     resForm.reset();
-                } catch (err) { alert("Error: " + err.message); }
+                } catch (err) { 
+                    console.error("Error en reserva:", err);
+                    alert("❌ Error al guardar la reserva: " + err.message); 
+                }
             };
         }
     }
