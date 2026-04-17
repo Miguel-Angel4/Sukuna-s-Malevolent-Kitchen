@@ -292,6 +292,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             };
         });
 
+        // Hacer que los enlaces de texto de la barra superior también funcionen
+        const categoryLinks = document.querySelectorAll('.categoria-link');
+        categoryLinks.forEach(link => {
+            link.onclick = (e) => {
+                e.preventDefault();
+                const cat = link.getAttribute('href').replace('#', '');
+                const target = document.getElementById(`sec-${cat}`);
+                document.querySelectorAll('.menu-category').forEach(s => s.style.display = 'none');
+                if (target) {
+                    target.style.display = 'block';
+                    menuDisplay.style.display = 'block';
+                    document.querySelectorAll('.seccion-comida').forEach(s => s.style.display = 'none');
+                }
+            };
+        });
+
         const btnVolver = document.getElementById('btn-volver');
         if (btnVolver) {
             btnVolver.onclick = () => {
