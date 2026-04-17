@@ -188,21 +188,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const { error: sbError } = await sb.from('reservations').insert([supabaseData]);
                 if (sbError) throw sbError;
 
-                // 2. ENVIAR NOTIFICACIÓN A FORMINIT
-                const emailFormData = new FormData();
-                emailFormData.append('nombre',     data.nombre);
-                emailFormData.append('email',      data.email);
-                emailFormData.append('telefono',   data.telefono);
-                emailFormData.append('fecha_hora', data.fecha_hora);
-                emailFormData.append('personas',   data.personas);
-                emailFormData.append('mesa',       data.mesa);
-                emailFormData.append('peticiones', data.peticiones || 'Ninguna');
-
-                // Usar ruta proxy de Vercel para evitar CORS
+                // Proxy serverless de Vercel → Forminit (sin CORS)
                 fetch("/api/reserva-submit", {
                     method: "POST",
-                    body: emailFormData,
-                    headers: { "Accept": "application/json" }
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify(supabaseData)
                 })
                 .then(r => console.log("📧 Forminit enviado:", r.status))
                 .catch(e => console.warn("⚠️ Forminit no disponible:", e));
