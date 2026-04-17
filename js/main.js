@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (tablesContainer && sb) {
         const widgetHour = document.getElementById('widget-hour');
         const updateTables = async (day) => {
+            if (!tablesContainer) return;
             tablesContainer.innerHTML = '...';
             const { data: reservations } = await sb.from('reservations').select('*');
             let h = 14, m = 0;
@@ -89,11 +90,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const mesa = i === 15 ? "Mesa 15 (Especial para Cumpleaños)" : `Mesa ${i}`;
                 const busy = reservations?.some(r => {
                     const d = new Date(r.fecha_hora);
-                    return d.getDate() == day && Math.abs((d.getHours()*60+d.getMinutes()) - (h*60+m)) < 60 && r.mesa === mesa;
+                    // Comprobar día, mes (Abril=3) y año (2026)
+                    return d.getDate() == day && d.getMonth() === 3 && d.getFullYear() === 2026 &&
+                           Math.abs((d.getHours()*60+d.getMinutes()) - (h*60+m)) < 60 && 
+                           (r.mesa === mesa || r.mesa === `Mesa ${i}`);
                 });
                 const dot = document.createElement('div');
                 dot.className = `table-dot ${busy ? 'reserved' : ''}`;
                 dot.textContent = i;
+                dot.title = busy ? "Ocupada" : "Libre";
                 tablesContainer.appendChild(dot);
             }
         };
@@ -116,12 +121,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const data = Object.fromEntries(new FormData(resForm));
                 try {
                     await sb.from('reservations').insert([data]);
-                    fetch("https://formsubmit.co/ajax/miguelangel261106@gmail.com", {
+                    // Corregido el email de destino
+                    fetch("https://formsubmit.co/ajax/sukunaamalevolentkitchen@gmail.com", {
                         method: "POST", headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(data)
                     }).catch(() => {});
-                    alert("Reserva confirmada");
+                    
+                    alert("🩸 Reserva confirmada. Tu alma y tu mesa están aseguradas.");
                     resForm.reset();
+                    
+                    // Refrescar calendario automáticamente
+                    const activeDay = document.querySelector('.calendar-day.active');
+                    if (activeDay) updateTables(activeDay.textContent);
                 } catch (err) { alert("Error: " + err.message); }
             };
         }
