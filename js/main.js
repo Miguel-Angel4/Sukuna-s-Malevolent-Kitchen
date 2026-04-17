@@ -219,5 +219,52 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             };
         }
+    // --- 7. CARTA (carta.html) ---
+    const menuDisplay = document.getElementById('menu-display');
+    const categoryCards = document.querySelectorAll('.card-comida');
+    const btnVolver = document.getElementById('btn-volver');
+    const modal = document.getElementById('image-modal');
+
+    if (categoryCards.length > 0 && menuDisplay) {
+        categoryCards.forEach(card => {
+            card.onclick = () => {
+                const category = card.getAttribute('data-category');
+                // Ocultar todas las secciones
+                document.querySelectorAll('.menu-category').forEach(sec => sec.style.display = 'none');
+                // Mostrar la seleccionada
+                const target = document.getElementById(`sec-${category}`);
+                if (target) {
+                    target.style.display = 'block';
+                    menuDisplay.style.display = 'block';
+                    document.querySelector('.seccion-comida').parentElement.style.display = 'none';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            };
+        });
+
+        if (btnVolver) {
+            btnVolver.onclick = () => {
+                menuDisplay.style.display = 'none';
+                document.querySelector('.seccion-comida').parentElement.style.display = 'block';
+            };
+        }
+
+        // Lógica de Modales de Imagen
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.onclick = () => {
+                const imgUrls = item.getAttribute('data-img').split(',');
+                const container = document.getElementById('modal-img-container');
+                if (container && modal) {
+                    container.innerHTML = imgUrls.map(url => `<img src="${url.trim()}" class="img-fluid mb-2">`).join('');
+                    modal.style.display = 'flex';
+                }
+            };
+        });
+
+        const closeBtn = document.querySelector('.close-modal');
+        if (closeBtn && modal) {
+            closeBtn.onclick = () => modal.style.display = 'none';
+            modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+        }
     }
 });
