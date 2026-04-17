@@ -121,19 +121,27 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const data = Object.fromEntries(new FormData(resForm));
                 try {
                     await sb.from('reservations').insert([data]);
-                    // Corregido el email de destino
+                    // 2. Intentar enviar el email (Formsubmit)
                     fetch("https://formsubmit.co/ajax/sukunaamalevolentkitchen@gmail.com", {
-                        method: "POST", headers: { 'Content-Type': 'application/json' },
+                        method: "POST", 
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                         body: JSON.stringify(data)
-                    }).catch(() => {});
+                    }).then(res => console.log("📧 Formsubmit respuesta:", res))
+                      .catch(e => console.error("❌ Error email:", e));
                     
-                    alert("🩸 Reserva confirmada. Tu alma y tu mesa están aseguradas.");
+                    // Mostrar resumen de la reserva al usuario
+                    const resumen = `🩸 RESERVA CONFIRMADA 🩸\n\nNombre: ${data.nombre}\nMesa: ${data.mesa}\nHora: ${data.fecha_hora.replace('T', ' ')}`;
+                    alert(resumen);
+                    
                     resForm.reset();
                     
-                    // Refrescar calendario automáticamente
-                    const activeDay = document.querySelector('.calendar-day.active');
-                    if (activeDay) updateTables(activeDay.textContent);
-                } catch (err) { alert("Error: " + err.message); }
+                    // FORZAR REFRESCO: Volver a cargar mesas tras 500ms para asegurar que Supabase se actualizó
+                    setTimeout(() => {
+                        const activeDay = document.querySelector('.calendar-day.active');
+                        if (activeDay) updateTables(activeDay.textContent);
+                    }, 500);
+
+                } catch (err) { alert("❌ Error: " + err.message); }
             };
         }
     }
