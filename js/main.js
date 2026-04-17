@@ -215,16 +215,38 @@ document.addEventListener('DOMContentLoaded', () => {
     async function updateTables(day) {
         if (!tablesContainer) return;
         tablesContainer.innerHTML = '';
+        
+        // Obtener la hora seleccionada
+        let selectedHour = 12;
+        let selectedMinutes = 0;
+        if (fechaHoraInput && fechaHoraInput.value) {
+            const dt = new Date(fechaHoraInput.value);
+            selectedHour = dt.getHours();
+            selectedMinutes = dt.getMinutes();
+        }
+
         const reservations = await getReservations();
+
         for (let i = 1; i <= 15; i++) {
             const mesaName = i === 15 ? "Mesa 15 (Especial para Cumpleaños)" : `Mesa ${i}`;
-            const isReserved = reservations.some(r => {
-                const rDate = new Date(r.fecha_hora);
-                return rDate.getDate() == day && rDate.getMonth() == 3 && (r.mesa === mesaName || r.mesa === `Mesa ${i}`);
+            
+            const isReserved = reservations.some(res => {
+                const resDate = new Date(res.fecha_hora);
+                const isSameDay = resDate.getDate() == day && resDate.getMonth() == 3 && resDate.getFullYear() == 2026;
+                
+                if (isSameDay && (res.mesa === mesaName || res.mesa === `Mesa ${i}`)) {
+                    // Check if the reservation is within 1 hour of the selected time
+                    const resTotalMinutes = resDate.getHours() * 60 + resDate.getMinutes();
+                    const selectedTotalMinutes = selectedHour * 60 + selectedMinutes;
+                    return Math.abs(resTotalMinutes - selectedTotalMinutes) < 60;
+                }
+                return false;
             });
+
             const dot = document.createElement('div');
             dot.className = isReserved ? 'table-dot reserved' : 'table-dot';
             dot.textContent = i;
+            dot.title = isReserved ? "Ocupada" : "Libre";
             tablesContainer.appendChild(dot);
         }
     }
@@ -243,5 +265,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const fd = new FormData(reservaForm);
             saveReservation(Object.fromEntries(fd));
         };
+    }
+
+    if (fechaHoraInput) {
+        fechaHoraInput.addEventListener('change', () => {
+            const activeDay = document.querySelector('.calendar-day.active');
+            if (activeDay) updateTables(activeDay.textContent);
+        });
     }
 });
