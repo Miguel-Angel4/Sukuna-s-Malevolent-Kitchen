@@ -19,10 +19,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- 1. NAVEGACIÓN Y SESIÓN ---
     const navLoginBtn = document.getElementById('nav-login');
     if (navLoginBtn && sb) {
-        sb.auth.getSession().then(({ data: { session } }) => {
+        // Usar onAuthStateChange para detectar sesión en TODAS las páginas de forma fiable
+        sb.auth.onAuthStateChange((event, session) => {
             if (session) {
                 navLoginBtn.innerHTML = `<strong>Mi Cuenta</strong>`;
                 navLoginBtn.href = "cuenta.html";
+            } else {
+                navLoginBtn.innerHTML = `Iniciar Sesión`;
+                navLoginBtn.href = "login.html";
             }
         });
     }
@@ -128,19 +132,25 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = Object.fromEntries(formData);
 
             try {
-                // 1. GUARDAR EN SUPABASE
-                const { error: sbError } = await sb.from('reservations').insert([data]);
+                // 1. GUARDAR EN SUPABASE (solo los campos de la tabla, sin campos de email)
+                const supabaseData = {
+                    nombre: data.nombre,
+                    email: data.email,
+                    telefono: data.telefono,
+                    fecha_hora: data.fecha_hora,
+                    personas: data.personas,
+                    mesa: data.mesa,
+                    peticiones: data.peticiones || ''
+                };
+                const { error: sbError } = await sb.from('reservations').insert([supabaseData]);
                 if (sbError) throw sbError;
 
-                // 2. ENVIAR EMAIL (FORM SUBMIT AJAX)
-                // Añadimos campos de control para FormSubmit
+                // 2. ENVIAR EMAIL (campos extra solo para Formsubmit, no van a la BD)
                 const emailData = {
-                    ...data,
+                    ...supabaseData,
                     _subject: "¡Nueva Reserva en Sukuna's Kitchen!",
-                    _captcha: "false",
-                    _template: "table"
+                    _captcha: "false"
                 };
-
                 fetch("https://formsubmit.co/ajax/sukunaamalevolentkitchen@gmail.com", {
                     method: "POST",
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -151,15 +161,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 .catch(err => console.error("❌ Fallo email:", err));
 
                 // 3. CONFIRMACIÓN Y REFRESCO
-                const info = `🩸 RESERVA CONFIRMADA 🩸\n\nNombre: ${data.nombre}\nMesa: ${data.mesa}\nFecha: ${data.fecha_hora}`;
-                alert(info);
+                alert(`🩸 RESERVA CONFIRMADA 🩸\n\nNombre: ${data.nombre}\nMesa: ${data.mesa}\nFecha: ${data.fecha_hora}`);
                 resForm.reset();
-                
-                // Forzar actualización del calendario
                 const activeDay = document.querySelector('.calendar-day.active');
-                if (activeDay) {
-                    setTimeout(() => updateTables(activeDay.textContent), 800);
-                }
+                if (activeDay) setTimeout(() => updateTables(activeDay.textContent), 800);
 
             } catch (err) {
                 alert("❌ Error: " + err.message);
