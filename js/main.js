@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 emailFormData.append('mesa',       data.mesa);
                 emailFormData.append('peticiones', data.peticiones || 'Ninguna');
 
-                fetch("https://getform.io/f/b8sn8gw0v8z", {
+                fetch("https://app.forminit.com/f/b8sn8gw0v8z", {
                     method: "POST",
                     body: emailFormData,
                     headers: { "Accept": "application/json" }
