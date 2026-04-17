@@ -1,4 +1,4 @@
-﻿// ========================================
+// ========================================
 // Sukuna's Malevolent Kitchen - Main JavaScript
 // ========================================
 
@@ -191,27 +191,16 @@ if ('loading' in HTMLImageElement.prototype) {
     document.body.appendChild(script);
 }
 
-// Add hover effect sound (optional - commented out by default)
-/*
-const hoverSound = new Audio('path/to/hover-sound.mp3');
-document.querySelectorAll('.botoncarta, .botonempleado, .card-comida').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-        hoverSound.currentTime = 0;
-        hoverSound.play().catch(e => console.log('Audio play prevented'));
-    });
-});
-*/
-
 // Console welcome message
-console.log('%cðŸ”¥ Sukuna\'s Malevolent Kitchen ðŸ”¥', 'color: #f0404e; font-size: 24px; font-weight: bold;');
-console.log('%cWelcome to our domain! ðŸ‘‘', 'color: #f1dc1e; font-size: 16px;');
+console.log('%c🔥 Sukuna\'s Malevolent Kitchen 🔥', 'color: #f0404e; font-size: 24px; font-weight: bold;');
+console.log('%cWelcome to our domain! 👑', 'color: #f1dc1e; font-size: 16px;');
 
 // Performance monitoring (optional)
 window.addEventListener('load', () => {
     if ('performance' in window) {
         const perfData = window.performance.timing;
         const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
-        console.log(`âš¡ Page loaded in ${pageLoadTime}ms`);
+        console.log(`⚡ Page loaded in ${pageLoadTime}ms`);
     }
 });
 
@@ -221,7 +210,7 @@ document.querySelectorAll('a[href="#empleos"], a[href="#faq"], a[href="#contacto
         e.preventDefault();
         // Future: Add modal or redirect logic here
         console.log(`Link clicked: ${link.textContent.trim()}`);
-        alert(`Funcionalidad "${link.textContent.trim()}" prÃ³ximamente disponible`);
+        alert(`Funcionalidad "${link.textContent.trim()}" próximamente disponible`);
     });
 });
 
@@ -279,137 +268,118 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// --- SISTEMA DE AUTENTICACION (LOGIN / REGISTRO) ---
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Mostrar estado de sesión en el Nav
+// --- SISTEMA DE AUTENTICACION (SUPABASE AUTH) ---
+document.addEventListener('DOMContentLoaded', async () => {
     const navLoginBtn = document.getElementById('nav-login');
-    const currentUser = JSON.parse(localStorage.getItem('sukuna_user'));
+    
+    // Función para actualizar el nav según el estado de la sesión
+    async function updateNav() {
+        if (!supabase || SUPABASE_ANON_KEY === "TU_ANON_KEY_AQUI") {
+            const currentUser = JSON.parse(localStorage.getItem('sukuna_user'));
+            if (currentUser && navLoginBtn) {
+                navLoginBtn.innerHTML = `<strong>Mi Cuenta</strong>`;
+                navLoginBtn.href = "cuenta.html";
+                navLoginBtn.classList.add('logged-in');
+            }
+            return;
+        }
 
-    if (currentUser && navLoginBtn) {
-        // En lugar de cerrar sesión directo, llevamos a Mi Cuenta
-        navLoginBtn.innerHTML = `<strong>Mi Cuenta</strong>`;
-        navLoginBtn.href = "cuenta.html";
-        navLoginBtn.classList.add('logged-in');
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session && navLoginBtn) {
+            navLoginBtn.innerHTML = `<strong>Mi Cuenta</strong>`;
+            navLoginBtn.href = "cuenta.html";
+            navLoginBtn.classList.add('logged-in');
+        } else if (navLoginBtn) {
+            navLoginBtn.innerHTML = `Iniciar sesión`;
+            navLoginBtn.href = "login.html";
+            navLoginBtn.classList.remove('logged-in');
+        }
     }
+
+    await updateNav();
 
     // 2. Lógica específica de login.html
     const authForm = document.getElementById('auth-form');
     if (authForm) {
-        // Redirigir si ya está logueado
-        if (currentUser) {
-            window.location.href = "cuenta.html";
-            return;
-        }
-
         const emailInput = document.getElementById('auth-email');
         const passInput = document.getElementById('auth-password');
-        const toggleFormBtn = document.getElementById('toggle-form');
         const formTitle = document.getElementById('form-title');
-        const formSubtitle = document.getElementById('form-subtitle');
         const mainBtn = document.getElementById('main-btn');
-        const toggleText = document.getElementById('toggle-text');
         const authMessage = document.getElementById('auth-message');
         const googleBtn = document.getElementById('google-btn');
 
-        let isLoginMode = true; // true = Login, false = Registro
+        let isLoginMode = true;
 
-        // Cambiar entre Login y Registro
         const setupToggleButton = () => {
             const btn = document.getElementById('toggle-form');
             if (btn) {
                 btn.onclick = (e) => {
                     e.preventDefault();
                     isLoginMode = !isLoginMode;
-                    authMessage.classList.add('d-none');
-
                     if (isLoginMode) {
                         formTitle.textContent = "INICIAR SESIÓN";
-                        formSubtitle.textContent = "Bienvenido de nuevo al Dominio.";
                         mainBtn.textContent = "Entrar";
-                        toggleText.innerHTML = '¿No tienes cuenta? <a href="#" id="toggle-form" style="color:#B31B1B; font-weight:bold;">Créala aquí</a>';
                     } else {
                         formTitle.textContent = "NUEVA CUENTA";
-                        formSubtitle.textContent = "Sella tu juramento para entrar.";
                         mainBtn.textContent = "Registrarse";
-                        toggleText.innerHTML = '¿Ya tienes cuenta? <a href="#" id="toggle-form" style="color:#B31B1B; font-weight:bold;">Inicia sesión</a>';
                     }
-                    setupToggleButton(); // Re-vincula el evento al nuevo link
                 };
             }
         };
         setupToggleButton();
 
         const showMessage = (msg, isError = true) => {
+            if (!authMessage) return;
             authMessage.textContent = msg;
             authMessage.className = `alert mt-3 text-center ${isError ? 'alert-danger' : 'alert-success'}`;
             authMessage.classList.remove('d-none');
         };
 
-        // Enviar Formulario
-        authForm.onsubmit = (e) => {
+        authForm.onsubmit = async (e) => {
             e.preventDefault();
+            if (!supabase || SUPABASE_ANON_KEY === "TU_ANON_KEY_AQUI") {
+                showMessage("❌ Supabase no está configurado (falta la Key).");
+                return;
+            }
             const email = emailInput.value.trim();
             const pass = passInput.value.trim();
 
-            if (!email || !pass) return;
-
-            // Simulamos DB en localStorage
-            localStorage.setItem('sukuna_db', localStorage.getItem('sukuna_db') || JSON.stringify({}));
-            const db = JSON.parse(localStorage.getItem('sukuna_db'));
-
             if (isLoginMode) {
-                if (!db[email]) {
-                    showMessage("❌ No existe cuenta con este correo.");
-                } else if (db[email].password !== pass) {
-                    showMessage("❌ Contraseña incorrecta.");
-                } else {
-                    showMessage("✅ Autenticado. Entrando al Dominio...", false);
-                    localStorage.setItem('sukuna_user', JSON.stringify({ email: email }));
+                const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
+                if (error) showMessage("❌ " + error.message);
+                else {
+                    showMessage("✅ Autenticado. Entrando...", false);
                     setTimeout(() => { window.location.href = "cuenta.html"; }, 1500);
                 }
             } else {
-                if (db[email]) {
-                    showMessage("❌ Este correo ya está registrado.");
-                } else {
-                    db[email] = { password: pass, name: "", bio: "", photo: "" };
-                    localStorage.setItem('sukuna_db', JSON.stringify(db));
-                    showMessage("✅ Cuenta creada. Bienvenido al Dominio.", false);
-                    localStorage.setItem('sukuna_user', JSON.stringify({ email: email }));
-                    setTimeout(() => { window.location.href = "cuenta.html"; }, 1500);
-                }
+                const { error } = await supabase.auth.signUp({ email, password: pass });
+                if (error) showMessage("❌ " + error.message);
+                else showMessage("✅ Registro enviado. Revisa tu email para confirmar.", false);
             }
         };
 
-        // Botón de Google (Simulado)
-        googleBtn.onclick = () => {
-            const googleEmail = prompt("🔒 [Simulación Google Login]\nIntroduce tu email de Google:");
-            if (googleEmail && googleEmail.includes('@')) {
-                showMessage(`✅ Iniciando sesión con Google (${googleEmail})...`, false);
-                localStorage.setItem('sukuna_user', JSON.stringify({ email: googleEmail, google: true }));
-                
-                // Asegurar que existe en la DB simulada
-                localStorage.setItem('sukuna_db', localStorage.getItem('sukuna_db') || JSON.stringify({}));
-                const db = JSON.parse(localStorage.getItem('sukuna_db'));
-                if (!db[googleEmail]) {
-                    db[googleEmail] = { password: "google_account", name: "", bio: "", photo: "" };
-                    localStorage.setItem('sukuna_db', JSON.stringify(db));
-                }
-
-                setTimeout(() => { window.location.href = "cuenta.html"; }, 1200);
-            }
-        };
+        if (googleBtn) {
+            googleBtn.onclick = async () => {
+                if (!supabase || SUPABASE_ANON_KEY === "TU_ANON_KEY_AQUI") return;
+                const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
+                if (error) showMessage("❌ " + error.message);
+            };
+        }
     }
 
     // 3. Lógica específica de cuenta.html
     const profileForm = document.getElementById('profile-form');
     if (profileForm) {
-        if (!currentUser) {
+        if (!supabase || SUPABASE_ANON_KEY === "TU_ANON_KEY_AQUI") {
             window.location.href = "login.html";
             return;
         }
 
-        const db = JSON.parse(localStorage.getItem('sukuna_db') || "{}");
-        const userData = db[currentUser.email] || {};
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+            window.location.href = "login.html";
+            return;
+        }
 
         const emailField = document.getElementById('profile-email');
         const nameField = document.getElementById('profile-name');
@@ -419,68 +389,125 @@ document.addEventListener('DOMContentLoaded', () => {
         const profileMsg = document.getElementById('profile-msg');
         const logoutLink = document.getElementById('logout-link');
 
-        // Cargar datos actuales
-        emailField.value = currentUser.email;
-        nameField.value = userData.name || "";
-        bioField.value = userData.bio || "";
-        if (userData.photo) {
-            displayImg.src = userData.photo;
+        // Cargar perfil desde tabla 'profiles'
+        const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+        
+        if (emailField) emailField.value = user.email;
+        if (profile) {
+            if (nameField) nameField.value = profile.name || "";
+            if (bioField) bioField.value = profile.bio || "";
+            if (profile.photo && displayImg) displayImg.src = profile.photo;
         }
 
-        // Manejar subida de foto (Simulada con Base64)
-        uploadInput.onchange = (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    displayImg.src = event.target.result;
-                };
-                reader.readAsDataURL(file);
+        if (uploadInput) {
+            uploadInput.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        if (displayImg) displayImg.src = event.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+        }
+
+        profileForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const updates = {
+                id: user.id,
+                name: nameField.value.trim(),
+                bio: bioField.value.trim(),
+                photo: displayImg.src,
+                updated_at: new Date()
+            };
+
+            const { error } = await supabase.from('profiles').upsert(updates);
+            if (error) {
+                if (profileMsg) {
+                    profileMsg.textContent = "❌ " + error.message;
+                    profileMsg.className = "alert alert-danger mt-3 text-center";
+                    profileMsg.classList.remove('d-none');
+                }
+            } else {
+                if (profileMsg) {
+                    profileMsg.textContent = "✅ Perfil actualizado.";
+                    profileMsg.className = "alert alert-success mt-3 text-center";
+                    profileMsg.classList.remove('d-none');
+                }
             }
         };
 
-        // Guardar cambios
-        profileForm.onsubmit = (e) => {
+        const doLogout = async (e) => {
             e.preventDefault();
-            
-            userData.name = nameField.value.trim();
-            userData.bio = bioField.value.trim();
-            userData.photo = displayImg.src;
-
-            db[currentUser.email] = userData;
-            localStorage.setItem('sukuna_db', JSON.stringify(db));
-
-            profileMsg.textContent = "✅ Perfil actualizado correctamente.";
-            profileMsg.className = "alert alert-success mt-3 text-center";
-            profileMsg.classList.remove('d-none');
-
-            setTimeout(() => {
-                profileMsg.classList.add('d-none');
-            }, 3000);
-        };
-
-                // Logout
-        const doLogout = (e) => {
-            e.preventDefault();
-            if(confirm("¿Estás seguro de que deseas abandonar el Dominio?")){
-                localStorage.removeItem('sukuna_user');
+            if (confirm("¿Estás seguro de que deseas abandonar el Dominio?")) {
+                await supabase.auth.signOut();
                 window.location.href = "home.html";
             }
         };
-        if(logoutLink) logoutLink.onclick = doLogout;
+        if (logoutLink) logoutLink.onclick = doLogout;
         const logoutSide = document.getElementById('logout-link-side');
-        if(logoutSide) logoutSide.onclick = doLogout;
+        if (logoutSide) logoutSide.onclick = doLogout;
     }
 });
 
 
 // --- Logica del Widget de Calendario Mensual (Reserva) ---
+const SUPABASE_URL = "https://wxbjrpqpomekvyuhlwdg.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_hshzjtEiSun_NwmqZgYkAw_ulq_v7aN"; // Reemplaza esto con tu clave real
+
+const supabase = typeof supabase !== 'undefined' ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+const RESERVATIONS_KEY = 'sukuna_reservations';
+
+async function getReservations() {
+    if (!supabase || SUPABASE_ANON_KEY === "TU_ANON_KEY_AQUI") return JSON.parse(localStorage.getItem(RESERVATIONS_KEY) || "[]");
+    
+    const { data, error } = await supabase
+        .from('reservations')
+        .select('*');
+        
+    if (error) {
+        console.error("Error fetching reservations:", error);
+        return JSON.parse(localStorage.getItem(RESERVATIONS_KEY) || "[]");
+    }
+    return data;
+}
+
+async function saveReservation(reservation) {
+    if (supabase && SUPABASE_ANON_KEY !== "TU_ANON_KEY_AQUI") {
+        const { error } = await supabase
+            .from('reservations')
+            .insert([reservation]);
+        if (error) console.error("Error saving to Supabase:", error);
+    }
+    
+    const reservations = JSON.parse(localStorage.getItem(RESERVATIONS_KEY) || "[]");
+    reservations.push(reservation);
+    localStorage.setItem(RESERVATIONS_KEY, JSON.stringify(reservations));
+}
+
+function initDefaultReservations() {
+    if (!localStorage.getItem(RESERVATIONS_KEY)) {
+        const defaults = [
+            { nombre: "Satoru Gojo", fecha_hora: "2026-04-14T14:00", mesa: "Mesa 1", personas: 2 },
+            { nombre: "Maki Zenin", fecha_hora: "2026-04-14T21:00", mesa: "Mesa 10", personas: 4 },
+            { nombre: "Panda", fecha_hora: "2026-04-15T13:30", mesa: "Mesa 3", personas: 1 }
+        ];
+        localStorage.setItem(RESERVATIONS_KEY, JSON.stringify(defaults));
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    initDefaultReservations();
+
     const toggle = document.getElementById('calendarToggle');
     const widget = document.getElementById('calendarWidget');
     const calendarDays = document.querySelectorAll('.calendar-day:not(.other-month)');
     const tablesContainer = document.getElementById('tablesContainer');
     const statusTitle = document.getElementById('status-title');
+    const fechaHoraInput = document.getElementById('fecha_hora');
+    const reservaForm = document.getElementById('form-reserva');
 
     if (toggle && widget) {
         toggle.addEventListener('click', (e) => {
@@ -495,17 +522,49 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function updateTables(dayNumber) {
+    async function updateTables(dayNumber) {
         if (!tablesContainer) return;
         tablesContainer.innerHTML = '';
-        if (statusTitle) statusTitle.textContent = "Estado para el dia " + dayNumber;
+        
+        let selectedTime = "12:00"; 
+        let selectedMonth = "04";    
+        let selectedYear = "2026";
+        
+        if (fechaHoraInput && fechaHoraInput.value) {
+            const dt = new Date(fechaHoraInput.value);
+            selectedTime = dt.getHours().toString().padStart(2, '0') + ":" + dt.getMinutes().toString().padStart(2, '0');
+        }
+
+        if (statusTitle) statusTitle.textContent = `Estado para el día ${dayNumber} a las ${selectedTime}`;
+
+        const reservations = await getReservations();
 
         for (let i = 1; i <= 15; i++) {
-            const isReserved = (Math.sin(dayNumber * i) > 0.3);
+            const mesaName = i === 15 ? "Mesa 15 (Especial para Cumpleaños)" : `Mesa ${i}`;
+            
+            const isReserved = reservations.some(res => {
+                const resDate = new Date(res.fecha_hora);
+                const day = parseInt(dayNumber);
+                const isSameDay = resDate.getFullYear() == 2026 && 
+                                  resDate.getMonth() == 3 && 
+                                  resDate.getDate() == day;
+
+                if (isSameDay && (res.mesa === mesaName || res.mesa === `Mesa ${i}`)) {
+                    if (fechaHoraInput && fechaHoraInput.value) {
+                        const checkDate = new Date(`${selectedYear}-${selectedMonth}-${day.toString().padStart(2, '0')}T${selectedTime}`);
+                        const diffMs = Math.abs(resDate - checkDate);
+                        const diffMins = diffMs / (1000 * 60);
+                        return diffMins < 60; 
+                    }
+                    return true;
+                }
+                return false;
+            });
+
             const dot = document.createElement('div');
             dot.className = isReserved ? 'table-dot reserved' : 'table-dot';
             dot.textContent = i;
-            dot.title = isReserved ? ("Mesa " + i + " - Reservada") : ("Mesa " + i + " - Libre");
+            dot.title = isReserved ? (`${mesaName} - Reservada`) : (`${mesaName} - Libre`);
             tablesContainer.appendChild(dot);
         }
     }
@@ -518,7 +577,47 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateTables(dayBtn.textContent);
             });
         });
-        updateTables(14); // Dia actual por defecto
+        
+        let initialDay = 14;
+        if (fechaHoraInput && fechaHoraInput.value) {
+            initialDay = new Date(fechaHoraInput.value).getDate();
+            calendarDays.forEach(d => {
+                if(parseInt(d.textContent) === initialDay) d.classList.add('active');
+            });
+        }
+        updateTables(initialDay); 
+    }
+
+    if (reservaForm) {
+        reservaForm.addEventListener('submit', () => {
+            const formData = new FormData(reservaForm);
+            const reservation = {
+                nombre: formData.get('nombre'),
+                email: formData.get('email'),
+                telefono: formData.get('telefono'),
+                fecha_hora: formData.get('fecha_hora'),
+                personas: formData.get('personas'),
+                mesa: formData.get('mesa'),
+                peticiones: formData.get('peticiones')
+            };
+            saveReservation(reservation);
+        });
+    }
+
+    if (fechaHoraInput) {
+        fechaHoraInput.addEventListener('change', () => {
+            const dt = new Date(fechaHoraInput.value);
+            if (dt.getFullYear() === 2026 && dt.getMonth() === 3) {
+                const day = dt.getDate();
+                calendarDays.forEach(d => {
+                    if (parseInt(d.textContent) === day) {
+                        d.click();
+                    }
+                });
+            } else {
+                const activeDay = document.querySelector('.calendar-day.active');
+                if (activeDay) updateTables(activeDay.textContent);
+            }
+        });
     }
 });
-
