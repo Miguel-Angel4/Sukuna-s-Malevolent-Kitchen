@@ -5,7 +5,19 @@
 // --- CONFIGURACIÓN DE SUPABASE ---
 const SUPABASE_URL = "https://wxbjrpqpomekvyuhlwdg.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_hshzjtEiSun_NwmqZgYkAw_ulq_v7aN";
-const supabase = typeof supabase !== 'undefined' ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+// Usamos un nombre distinto para evitar conflictos con el objeto global de la librería
+let sb = null;
+try {
+    if (typeof supabase !== 'undefined') {
+        sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        console.log("✅ Supabase conectado");
+    } else {
+        console.error("❌ Librería Supabase no encontrada. Revisa el script en el HTML.");
+    }
+} catch (e) {
+    console.error("❌ Error al inicializar Supabase:", e);
+}
 
 // --- FUNCIONES GLOBALES ---
 function createBloodParticles() {
@@ -21,7 +33,6 @@ function createBloodParticles() {
     }
 }
 
-// Slider logic
 let currentSlide = 0;
 function goToSlide(idx) {
     const sliderUl = document.getElementById('sliderUl');
@@ -37,12 +48,13 @@ function goToSlide(idx) {
 
 // --- LOGICA PRINCIPAL (AL CARGAR DOM) ---
 document.addEventListener('DOMContentLoaded', async () => {
+    console.log("🚀 DOM Cargado");
     createBloodParticles();
 
     // 1. Navegación y Sesión
     const navLoginBtn = document.getElementById('nav-login');
-    if (navLoginBtn && supabase) {
-        const { data: { session } } = await supabase.auth.getSession();
+    if (navLoginBtn && sb) {
+        const { data: { session } } = await sb.auth.getSession();
         if (session) {
             navLoginBtn.innerHTML = `<strong>Mi Cuenta</strong>`;
             navLoginBtn.href = "cuenta.html";
@@ -52,43 +64,53 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 2. Google Login (Universal para cualquier página con botón Google)
     const googleBtn = document.getElementById('google-btn');
-    if (googleBtn && supabase) {
-        googleBtn.onclick = (e) => {
+    if (googleBtn && sb) {
+        console.log("🎯 Botón Google detectado");
+        googleBtn.addEventListener('click', async (e) => {
             e.preventDefault();
-            supabase.auth.signInWithOAuth({ 
+            console.log("🔄 Iniciando OAuth con Google...");
+            const { error } = await sb.auth.signInWithOAuth({ 
                 provider: 'google',
                 options: { redirectTo: window.location.origin + '/cuenta.html' }
             });
-        };
+            if (error) alert("Error: " + error.message);
+        });
     }
 
     // 3. Formulario de Login (login.html)
     const authForm = document.getElementById('auth-form');
-    if (authForm && supabase) {
-        authForm.onsubmit = async (e) => {
+    if (authForm && sb) {
+        console.log("🎯 Formulario de Login detectado");
+        authForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('auth-email').value.trim();
             const pass = document.getElementById('auth-password').value.trim();
-            const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
             const msg = document.getElementById('auth-message');
+            
+            console.log("🔐 Intentando login para:", email);
+            const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+            
             if (error) {
                 msg.textContent = "❌ " + error.message;
                 msg.classList.remove('d-none');
             } else {
                 window.location.href = "cuenta.html";
             }
-        };
+        });
     }
 
     // 4. Formulario de Registro (registro.html)
     const registerForm = document.getElementById('register-form');
-    if (registerForm && supabase) {
-        registerForm.onsubmit = async (e) => {
+    if (registerForm && sb) {
+        console.log("🎯 Formulario de Registro detectado");
+        registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('reg-email').value.trim();
             const pass = document.getElementById('reg-password').value.trim();
-            const { data, error } = await supabase.auth.signUp({ email, password: pass });
             const msg = document.getElementById('reg-message');
+            
+            console.log("📝 Intentando registro para:", email);
+            const { data, error } = await sb.auth.signUp({ email, password: pass });
             
             if (error) {
                 msg.textContent = "❌ " + error.message;
@@ -102,16 +124,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 registerForm.reset();
             }
             msg.classList.remove('d-none');
-        };
+        });
     }
 
     // 5. Gestión de Perfil (cuenta.html)
     const profileForm = document.getElementById('profile-form');
-    if (profileForm && supabase) {
-        const { data: { user } } = await supabase.auth.getUser();
+    if (profileForm && sb) {
+        const { data: { user } } = await sb.auth.getUser();
         if (!user) { window.location.href = "login.html"; return; }
 
-        const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+        const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
         if (profile) {
             document.getElementById('profile-name').value = profile.name || "";
             document.getElementById('profile-bio').value = profile.bio || "";
@@ -121,7 +143,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         profileForm.onsubmit = async (e) => {
             e.preventDefault();
-            const { error } = await supabase.from('profiles').upsert({
+            const { error } = await sb.from('profiles').upsert({
                 id: user.id,
                 name: document.getElementById('profile-name').value.trim(),
                 bio: document.getElementById('profile-bio').value.trim(),
@@ -138,7 +160,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (logoutBtn) {
             logoutBtn.onclick = async (e) => {
                 e.preventDefault();
-                await supabase.auth.signOut();
+                await sb.auth.signOut();
                 window.location.href = "home.html";
             };
         }
@@ -149,10 +171,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const fechaHoraInput = document.getElementById('fecha_hora');
     const calendarDays = document.querySelectorAll('.calendar-day:not(.other-month)');
 
-    if (tablesContainer) {
+    if (tablesContainer && sb) {
         async function updateTables(day) {
             tablesContainer.innerHTML = '';
-            const { data: reservations } = await supabase.from('reservations').select('*');
+            const { data: reservations } = await sb.from('reservations').select('*');
             
             let selHour = 12, selMin = 0;
             if (fechaHoraInput && fechaHoraInput.value) {
@@ -199,7 +221,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             reservaForm.onsubmit = async (e) => {
                 e.preventDefault();
                 const fd = new FormData(reservaForm);
-                await supabase.from('reservations').insert([Object.fromEntries(fd)]);
+                await sb.from('reservations').insert([Object.fromEntries(fd)]);
                 alert("Reserva realizada con éxito");
                 reservaForm.reset();
             };
