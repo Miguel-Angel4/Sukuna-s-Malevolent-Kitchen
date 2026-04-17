@@ -1,9 +1,14 @@
 // ========================================
-// Sukuna's Malevolent Kitchen - Main JavaScript (Final Robust Version)
+// Sukuna's Malevolent Kitchen - Main JavaScript
 // ========================================
 
 const SUPABASE_URL = "https://wxbjrpqpomekvyuhlwdg.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_hshzjtEiSun_NwmqZgYkAw_ulq_v7aN";
+
+// EmailJS config (rellena con tus credenciales de emailjs.com)
+const EMAILJS_SERVICE_ID  = "service_sukuna";     // <-- cambia esto
+const EMAILJS_TEMPLATE_ID = "template_reserva";   // <-- cambia esto
+const EMAILJS_PUBLIC_KEY  = "TU_PUBLIC_KEY";      // <-- cambia esto
 
 let sb = null;
 try {
@@ -11,15 +16,17 @@ try {
         sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         console.log("✅ Supabase conectado");
     }
-} catch (e) { console.error("❌ Error inicialización Supabase:", e); }
+} catch (e) { console.error("❌ Error Supabase:", e); }
+
+// updateTables en ámbito global para que todos los bloques puedan usarla
+let updateTables = async (day) => {};
 
 document.addEventListener('DOMContentLoaded', async () => {
     console.log("🚀 DOM Cargado");
 
-    // --- 1. NAVEGACIÓN Y SESIÓN ---
+    // --- 1. NAVEGACIÓN ---
     const navLoginBtn = document.getElementById('nav-login');
     if (navLoginBtn && sb) {
-        // Usar onAuthStateChange para detectar sesión en TODAS las páginas de forma fiable
         sb.auth.onAuthStateChange((event, session) => {
             if (session) {
                 navLoginBtn.innerHTML = `<strong>Mi Cuenta</strong>`;
@@ -43,185 +50,216 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
     }
 
-    // --- 3. LOGIN / REGISTRO ---
+    // --- 3. LOGIN ---
     const authForm = document.getElementById('auth-form');
     if (authForm && sb) {
         authForm.onsubmit = async (e) => {
             e.preventDefault();
             const email = document.getElementById('auth-email').value.trim();
-            const pass = document.getElementById('auth-password').value.trim();
-            const msg = document.getElementById('auth-message');
+            const pass  = document.getElementById('auth-password').value.trim();
+            const msg   = document.getElementById('auth-message');
             const { error } = await sb.auth.signInWithPassword({ email, password: pass });
             if (error) { msg.textContent = "❌ " + error.message; msg.classList.remove('d-none'); }
             else { window.location.href = "cuenta.html"; }
         };
+
+        const forgotBtn = document.getElementById('forgot-password');
+        if (forgotBtn) {
+            forgotBtn.onclick = async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('auth-email').value.trim();
+                const msg   = document.getElementById('auth-message');
+                if (!email) { alert("Introduce tu email primero."); return; }
+                const { error } = await sb.auth.resetPasswordForEmail(email, {
+                    redirectTo: window.location.origin + '/cuenta.html',
+                });
+                msg.textContent = error ? "❌ " + error.message : "✅ Email de recuperación enviado.";
+                msg.classList.remove('d-none');
+            };
+        }
     }
 
-    // --- 4. CALENDARIO Y RESERVAS ---
-    const calendarToggle = document.getElementById('calendarToggle');
-    const calendarWidget = document.getElementById('calendarWidget');
+    // --- 4. REGISTRO ---
+    const regForm = document.getElementById('register-form');
+    if (regForm && sb) {
+        regForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('reg-email').value.trim();
+            const pass  = document.getElementById('reg-password').value.trim();
+            const msg   = document.getElementById('reg-message');
+            const { data, error } = await sb.auth.signUp({ email, password: pass });
+            if (error) msg.textContent = "❌ " + error.message;
+            else if (data.user?.identities?.length === 0) msg.textContent = "⚠️ Ya existe.";
+            else msg.textContent = "✅ Cuenta creada.";
+            msg.classList.remove('d-none');
+        };
+    }
+
+    // --- 5. CALENDARIO Y RESERVAS ---
+    const calendarToggle  = document.getElementById('calendarToggle');
+    const calendarWidget  = document.getElementById('calendarWidget');
     if (calendarToggle && calendarWidget) {
         calendarToggle.onclick = () => calendarWidget.classList.toggle('active');
     }
 
     const tablesContainer = document.getElementById('tablesContainer');
-    if (tablesContainer && sb) {
-        const widgetHour = document.getElementById('widget-hour');
-        
-        const updateTables = async (day) => {
-            if (!tablesContainer) return;
-            tablesContainer.innerHTML = '<span style="color:red">Cargando...</span>';
-            
-            // Forzar descarga fresca de Supabase
-            const { data: reservations, error } = await sb.from('reservations').select('*');
-            if (error) console.error("Error al cargar mesas:", error);
+    const widgetHour      = document.getElementById('widget-hour');
 
-            let h = 14, m = 0;
-            if (widgetHour?.value) [h, m] = widgetHour.value.split(':').map(Number);
-            
-            tablesContainer.innerHTML = '';
-            for (let i = 1; i <= 15; i++) {
-                const mesaNombre = i === 15 ? "Mesa 15 (Especial para Cumpleaños)" : `Mesa ${i}`;
-                
-                const isBusy = (reservations || []).some(r => {
-                    const resMesa = String(r.mesa).trim().toLowerCase();
-                    const targetMesa = mesaNombre.trim().toLowerCase();
-                    const simpleMesa = `mesa ${i}`;
+    // Definir updateTables globalmente
+    updateTables = async (day) => {
+        if (!tablesContainer || !sb) return;
+        tablesContainer.innerHTML = '<span style="color:#aaa;font-size:0.8rem">Cargando...</span>';
 
-                    const d = new Date(r.fecha_hora);
-                    const dayMatch = d.getUTCDate() == day || d.getDate() == day;
-                    const monthMatch = d.getUTCMonth() === 3 || d.getMonth() === 3;
-                    
-                    // EXACTAMENTE 1 hora de bloqueo (60 minutos)
-                    const resTotalMinutes = d.getUTCHours() * 60 + d.getUTCMinutes();
-                    const targetTotalMinutes = h * 60 + m;
-                    const timeMatch = Math.abs(resTotalMinutes - targetTotalMinutes) < 60;
+        const { data: reservations, error } = await sb.from('reservations').select('*');
+        if (error) { console.error("Error mesas:", error); return; }
 
-                    return dayMatch && monthMatch && timeMatch && (resMesa === targetMesa || resMesa === simpleMesa);
-                });
+        let h = 14, m = 0;
+        if (widgetHour?.value) [h, m] = widgetHour.value.split(':').map(Number);
 
-                const dot = document.createElement('div');
-                dot.className = `table-dot ${isBusy ? 'reserved' : ''}`;
-                dot.textContent = i;
-                dot.title = isBusy ? "Mesa Ocupada" : "Mesa Libre";
-                tablesContainer.appendChild(dot);
-            }
+        tablesContainer.innerHTML = '';
+        for (let i = 1; i <= 15; i++) {
+            const mesaNombre = i === 15 ? "Mesa 15 (Especial para Cumpleaños)" : `Mesa ${i}`;
+            const isBusy = (reservations || []).some(r => {
+                const resMesa  = String(r.mesa).trim().toLowerCase();
+                const baseMesa = `mesa ${i}`;
+                const fullMesa = mesaNombre.trim().toLowerCase();
+
+                const d = new Date(r.fecha_hora);
+                // Comprobar día (UTC y local para robustez)
+                const dayMatch   = d.getUTCDate() == day || d.getDate() == day;
+                const monthMatch = d.getUTCMonth() === 3 || d.getMonth() === 3; // Abril
+
+                // Bloqueo de exactamente 1 hora (60 min)
+                const resMin    = d.getUTCHours() * 60 + d.getUTCMinutes();
+                const targetMin = h * 60 + m;
+                const timeMatch = Math.abs(resMin - targetMin) < 60;
+
+                return dayMatch && monthMatch && timeMatch && (resMesa === baseMesa || resMesa === fullMesa);
+            });
+
+            const dot = document.createElement('div');
+            dot.className = `table-dot ${isBusy ? 'reserved' : ''}`;
+            dot.textContent = i;
+            dot.title = isBusy ? "Ocupada" : "Libre";
+            tablesContainer.appendChild(dot);
+        }
+    };
+
+    // Asignar eventos a los días del calendario
+    document.querySelectorAll('.calendar-day:not(.other-month)').forEach(d => {
+        d.onclick = () => {
+            document.querySelectorAll('.calendar-day').forEach(x => x.classList.remove('active'));
+            d.classList.add('active');
+            const title = document.getElementById('status-title');
+            if (title) title.textContent = `Estado para el día ${d.textContent}`;
+            updateTables(d.textContent);
         };
+    });
 
-        document.querySelectorAll('.calendar-day:not(.other-month)').forEach(d => {
-            d.onclick = () => {
-                document.querySelectorAll('.calendar-day').forEach(x => x.classList.remove('active'));
-                d.classList.add('active');
-                const title = document.getElementById('status-title');
-                if (title) title.textContent = `Estado para el día ${d.textContent}`;
-                updateTables(d.textContent);
-            };
-        });
-        
-        // Carga inicial
-        updateTables(14);
+    if (widgetHour) {
+        widgetHour.onchange = () => {
+            const active = document.querySelector('.calendar-day.active');
+            if (active) updateTables(active.textContent);
+        };
     }
 
+    // Carga inicial del calendario
+    if (tablesContainer) updateTables(14);
+
+    // --- 6. FORMULARIO DE RESERVA ---
     const resForm = document.getElementById('form-reserva');
     if (resForm && sb) {
         resForm.onsubmit = async (e) => {
             e.preventDefault();
-            const formData = new FormData(resForm);
-            const data = Object.fromEntries(formData);
+            const fd   = new FormData(resForm);
+            const data = Object.fromEntries(fd);
 
             try {
-                // 1. GUARDAR EN SUPABASE (solo los campos de la tabla, sin campos de email)
+                // 1. GUARDAR EN SUPABASE
                 const supabaseData = {
-                    nombre: data.nombre,
-                    email: data.email,
-                    telefono: data.telefono,
+                    nombre:     data.nombre,
+                    email:      data.email,
+                    telefono:   data.telefono,
                     fecha_hora: data.fecha_hora,
-                    personas: data.personas,
-                    mesa: data.mesa,
+                    personas:   parseInt(data.personas),
+                    mesa:       data.mesa,
                     peticiones: data.peticiones || ''
                 };
                 const { error: sbError } = await sb.from('reservations').insert([supabaseData]);
                 if (sbError) throw sbError;
 
-                // 2. ENVIAR EMAIL con formulario oculto (método fiable desde Vercel)
-                const hiddenForm = document.createElement('form');
-                hiddenForm.method = 'POST';
-                hiddenForm.action = 'https://formsubmit.co/sukunaamalevolentkitchen@gmail.com';
-                hiddenForm.target = '_blank'; // Abre en nueva pestaña para no salir de la página
-                hiddenForm.style.display = 'none';
+                // 2. ENVIAR EMAIL con EmailJS
+                if (typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY !== 'TU_PUBLIC_KEY') {
+                    emailjs.init(EMAILJS_PUBLIC_KEY);
+                    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                        to_email:   'sukunaamalevolentkitchen@gmail.com',
+                        nombre:     data.nombre,
+                        email:      data.email,
+                        telefono:   data.telefono,
+                        fecha_hora: data.fecha_hora,
+                        personas:   data.personas,
+                        mesa:       data.mesa,
+                        peticiones: data.peticiones || 'Ninguna'
+                    }).then(() => console.log("📧 Email enviado"))
+                      .catch(e => console.error("❌ Email error:", e));
+                }
 
-                const emailFields = {
-                    ...supabaseData,
-                    _subject: "\u00a1Nueva Reserva en Sukuna's Kitchen!",
-                    _captcha: 'false',
-                    _next: window.location.href
-                };
-                Object.entries(emailFields).forEach(([k, v]) => {
-                    const input = document.createElement('input');
-                    input.type = 'hidden'; input.name = k; input.value = v || '';
-                    hiddenForm.appendChild(input);
-                });
-                document.body.appendChild(hiddenForm);
-                hiddenForm.submit();
-                setTimeout(() => document.body.removeChild(hiddenForm), 2000);
-
-                // 3. CONFIRMACIÓN Y REFRESCO
-                alert(`🩸 RESERVA CONFIRMADA 🩸\n\nNombre: ${data.nombre}\nMesa: ${data.mesa}\nFecha: ${data.fecha_hora}`);
+                // 3. CONFIRMACIÓN
+                alert(`🩸 RESERVA CONFIRMADA 🩸\n\nNombre: ${data.nombre}\nMesa: ${data.mesa}\nFecha: ${data.fecha_hora.replace('T', ' ')}\nPersonas: ${data.personas}`);
                 resForm.reset();
+
+                // 4. REFRESCAR CALENDARIO
                 const activeDay = document.querySelector('.calendar-day.active');
-                if (activeDay) setTimeout(() => updateTables(activeDay.textContent), 800);
+                if (activeDay) setTimeout(() => updateTables(activeDay.textContent), 600);
 
             } catch (err) {
+                console.error("Error reserva:", err);
                 alert("❌ Error: " + err.message);
             }
         };
     }
 
-    // --- 5. CUENTA (cuenta.html) ---
+    // --- 7. CUENTA (cuenta.html) ---
     const profileForm = document.getElementById('profile-form');
     if (profileForm && sb) {
         sb.auth.getUser().then(async ({ data: { user } }) => {
             if (!user) return;
             const emailIn = document.getElementById('profile-email');
-            const nameIn = document.getElementById('profile-name');
-            const bioIn = document.getElementById('profile-bio');
-            const img = document.getElementById('display-profile-img');
+            const nameIn  = document.getElementById('profile-name');
+            const bioIn   = document.getElementById('profile-bio');
+            const img     = document.getElementById('display-profile-img');
 
             if (emailIn) { emailIn.value = user.email; emailIn.readOnly = true; }
 
             const { data: prof } = await sb.from('profiles').select('*').eq('id', user.id).single();
             if (prof) {
                 if (nameIn) nameIn.value = prof.name || "";
-                if (bioIn) bioIn.value = prof.bio || "";
+                if (bioIn)  bioIn.value  = prof.bio  || "";
                 if (img && prof.photo) img.src = prof.photo;
             } else {
                 const m = user.user_metadata;
-                if (nameIn && m?.full_name) nameIn.value = m.full_name;
-                if (img && m?.avatar_url) img.src = m.avatar_url;
+                if (nameIn && m?.full_name)  nameIn.value = m.full_name;
+                if (img    && m?.avatar_url) img.src      = m.avatar_url;
             }
 
             const up = document.getElementById('profile-upload');
             if (up && img) {
                 up.onchange = (e) => {
                     const f = e.target.files[0];
-                    if (f) {
-                        const r = new FileReader();
-                        r.onload = (ev) => img.src = ev.target.result;
-                        r.readAsDataURL(f);
-                    }
+                    if (f) { const r = new FileReader(); r.onload = ev => img.src = ev.target.result; r.readAsDataURL(f); }
                 };
             }
 
             profileForm.onsubmit = async (e) => {
                 e.preventDefault();
-                await sb.from('profiles').upsert({
+                const { error } = await sb.from('profiles').upsert({
                     id: user.id,
                     name: nameIn?.value || "",
-                    bio: bioIn?.value || "",
-                    photo: img?.src || "",
+                    bio:  bioIn?.value  || "",
+                    photo: img?.src     || "",
                     updated_at: new Date()
                 });
-                alert("¡Identidad Guardada!");
+                alert(error ? "❌ Error: " + error.message : "¡Identidad Guardada!");
             };
         });
 
@@ -235,15 +273,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // --- 6. CARTA ---
+    // --- 8. CARTA ---
     const categoryCards = document.querySelectorAll('.card-comida');
-    const menuDisplay = document.getElementById('menu-display');
+    const menuDisplay   = document.getElementById('menu-display');
     if (categoryCards.length > 0 && menuDisplay) {
         categoryCards.forEach(card => {
             card.onclick = () => {
-                const cat = card.getAttribute('data-category');
-                document.querySelectorAll('.menu-category').forEach(s => s.style.display = 'none');
+                const cat    = card.getAttribute('data-category');
                 const target = document.getElementById(`sec-${cat}`);
+                document.querySelectorAll('.menu-category').forEach(s => s.style.display = 'none');
                 if (target) {
                     target.style.display = 'block';
                     menuDisplay.style.display = 'block';
