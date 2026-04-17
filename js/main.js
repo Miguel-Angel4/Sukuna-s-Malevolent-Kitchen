@@ -198,7 +198,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 emailFormData.append('mesa',       data.mesa);
                 emailFormData.append('peticiones', data.peticiones || 'Ninguna');
 
-                fetch("https://app.forminit.com/f/b8sn8gw0v8z", {
+                // Usar ruta proxy de Vercel para evitar CORS
+                fetch("/api/reserva-submit", {
                     method: "POST",
                     body: emailFormData,
                     headers: { "Accept": "application/json" }

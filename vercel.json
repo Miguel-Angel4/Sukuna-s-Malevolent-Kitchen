@@ -20,6 +20,10 @@
   ],
   "routes": [
     {
+      "src": "/api/reserva-submit",
+      "dest": "https://app.forminit.com/f/b8sn8gw0v8z"
+    },
+    {
       "src": "/api/form-submit",
       "dest": "https://formsubmit.co/sukunaamalevolentkitchen@gmail.com"
     },
