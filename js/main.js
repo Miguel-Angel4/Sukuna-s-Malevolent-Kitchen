@@ -190,6 +190,38 @@ document.addEventListener('DOMContentLoaded', async () => {
                 window.location.href = "home.html";
             };
         }
+
+        // --- Lógica de recuperación de contraseña ---
+        if (window.location.hash.includes('type=recovery')) {
+            const recoveryModal = document.getElementById('recovery-modal');
+            const saveBtn = document.getElementById('save-new-password');
+            const newPassInput = document.getElementById('new-password');
+            const recMsg = document.getElementById('recovery-msg');
+
+            if (recoveryModal) {
+                recoveryModal.style.display = 'flex';
+                saveBtn.onclick = async () => {
+                    const newPass = newPassInput.value.trim();
+                    if (newPass.length < 6) {
+                        recMsg.textContent = "❌ Mínimo 6 caracteres";
+                        recMsg.className = "alert alert-danger mt-3";
+                        recMsg.classList.remove('d-none');
+                        return;
+                    }
+
+                    const { error } = await sb.auth.updateUser({ password: newPass });
+                    if (error) {
+                        recMsg.textContent = "❌ " + error.message;
+                        recMsg.className = "alert alert-danger mt-3";
+                    } else {
+                        recMsg.textContent = "✅ Contraseña actualizada. Redirigiendo...";
+                        recMsg.className = "alert alert-success mt-3";
+                        setTimeout(() => window.location.href = "cuenta.html", 2000);
+                    }
+                    recMsg.classList.remove('d-none');
+                };
+            }
+        }
     }
 
     // 6. Reservas (reserva.html)
