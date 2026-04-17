@@ -268,13 +268,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
     }
 
-    if (tablesContainer && sb) {
+        const widgetHourInput = document.getElementById('widget-hour');
+
         async function updateTables(day) {
             tablesContainer.innerHTML = '';
             const { data: reservations } = await sb.from('reservations').select('*');
             
             let selHour = 12, selMin = 0;
-            if (fechaHoraInput && fechaHoraInput.value) {
+            // Prioridad al selector del widget si se está usando, si no, al del formulario principal
+            if (widgetHourInput && widgetHourInput.value) {
+                [selHour, selMin] = widgetHourInput.value.split(':').map(Number);
+            } else if (fechaHoraInput && fechaHoraInput.value) {
                 const dt = new Date(fechaHoraInput.value);
                 selHour = dt.getHours(); selMin = dt.getMinutes();
             }
@@ -293,6 +297,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const dot = document.createElement('div');
                 dot.className = isReserved ? 'table-dot reserved' : 'table-dot';
                 dot.textContent = i;
+                dot.title = isReserved ? `Ocupada a las ${selHour}:${selMin.toString().padStart(2,'0')}` : "Libre";
                 tablesContainer.appendChild(dot);
             }
         }
@@ -311,6 +316,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             fechaHoraInput.addEventListener('change', () => {
                 const activeDay = document.querySelector('.calendar-day.active');
                 if (activeDay) updateTables(activeDay.textContent);
+                // Sincronizar widget con formulario principal
+                if (widgetHourInput && fechaHoraInput.value) {
+                    const dt = new Date(fechaHoraInput.value);
+                    widgetHourInput.value = `${dt.getHours().toString().padStart(2,'0')}:${dt.getMinutes().toString().padStart(2,'0')}`;
+                }
+            });
+        }
+
+        if (widgetHourInput) {
+            widgetHourInput.addEventListener('change', () => {
+                const activeDay = document.querySelector('.calendar-day.active');
+                if (activeDay) updateTables(activeDay.textContent);
             });
         }
 
@@ -318,10 +335,31 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (reservaForm) {
             reservaForm.onsubmit = async (e) => {
                 e.preventDefault();
-                const fd = new FormData(reservaForm);
-                await sb.from('reservations').insert([Object.fromEntries(fd)]);
-                alert("Reserva realizada con éxito");
-                reservaForm.reset();
+                const formData = new FormData(reservaForm);
+                const dataObj = Object.fromEntries(formData);
+
+                try {
+                    // 1. Guardar en Supabase
+                    const { error: sbError } = await sb.from('reservations').insert([dataObj]);
+                    if (sbError) throw sbError;
+
+                    // 2. Enviar a Formsubmit (Email)
+                    // Usamos el email del usuario para Formsubmit (miguelangel261106@gmail.com)
+                    await fetch("https://formsubmit.co/ajax/miguelangel261106@gmail.com", {
+                        method: "POST",
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify(dataObj)
+                    });
+
+                    alert("🩸 Reserva confirmada en el Dominio. Recibirás un correo en breve.");
+                    reservaForm.reset();
+                    const activeDay = document.querySelector('.calendar-day.active');
+                    if (activeDay) updateTables(activeDay.textContent);
+
+                } catch (err) {
+                    console.error("Error en reserva:", err);
+                    alert("❌ Error al procesar la reserva: " + err.message);
+                }
             };
         }
     }
