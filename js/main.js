@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- 1. NAVEGACIÓN ---
     const navLoginBtn = document.getElementById('nav-login');
     if (navLoginBtn && sb) {
-        sb.auth.onAuthStateChange((event, session) => {
+        const updateNav = (session) => {
             if (session) {
                 navLoginBtn.innerHTML = `<strong>Mi Cuenta</strong>`;
                 navLoginBtn.href = "cuenta.html";
@@ -35,7 +35,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 navLoginBtn.innerHTML = `Iniciar Sesión`;
                 navLoginBtn.href = "login.html";
             }
-        });
+        };
+
+        // 1. Check inicial (para que salga rápido al cargar)
+        const { data: { session } } = await sb.auth.getSession();
+        updateNav(session);
+
+        // 2. Escuchar cambios (login/logout)
+        sb.auth.onAuthStateChange((_event, session) => updateNav(session));
     }
 
     // --- 2. GOOGLE LOGIN ---
