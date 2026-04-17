@@ -108,26 +108,84 @@ document.addEventListener('DOMContentLoaded', async () => {
             };
         });
         updateTables(14);
+
+        const resForm = document.getElementById('form-reserva');
+        if (resForm) {
+            resForm.onsubmit = async (e) => {
+                e.preventDefault();
+                const data = Object.fromEntries(new FormData(resForm));
+                try {
+                    await sb.from('reservations').insert([data]);
+                    fetch("https://formsubmit.co/ajax/miguelangel261106@gmail.com", {
+                        method: "POST", headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    }).catch(() => {});
+                    alert("Reserva confirmada");
+                    resForm.reset();
+                } catch (err) { alert("Error: " + err.message); }
+            };
+        }
     }
 
-    const resForm = document.getElementById('form-reserva');
-    if (resForm && sb) {
-        resForm.onsubmit = async (e) => {
-            e.preventDefault();
-            const data = Object.fromEntries(new FormData(resForm));
-            try {
-                await sb.from('reservations').insert([data]);
-                fetch("https://formsubmit.co/ajax/miguelangel261106@gmail.com", {
-                    method: "POST", headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                }).catch(() => {});
-                alert("Reserva confirmada");
-                resForm.reset();
-            } catch (err) { alert("Error: " + err.message); }
-        };
+    // --- 5. CUENTA (cuenta.html) ---
+    const profileForm = document.getElementById('profile-form');
+    if (profileForm && sb) {
+        sb.auth.getUser().then(async ({ data: { user } }) => {
+            if (!user) return;
+            const emailIn = document.getElementById('profile-email');
+            const nameIn = document.getElementById('profile-name');
+            const bioIn = document.getElementById('profile-bio');
+            const img = document.getElementById('display-profile-img');
+
+            if (emailIn) { emailIn.value = user.email; emailIn.readOnly = true; }
+
+            const { data: prof } = await sb.from('profiles').select('*').eq('id', user.id).single();
+            if (prof) {
+                if (nameIn) nameIn.value = prof.name || "";
+                if (bioIn) bioIn.value = prof.bio || "";
+                if (img && prof.photo) img.src = prof.photo;
+            } else {
+                const m = user.user_metadata;
+                if (nameIn && m?.full_name) nameIn.value = m.full_name;
+                if (img && m?.avatar_url) img.src = m.avatar_url;
+            }
+
+            const up = document.getElementById('profile-upload');
+            if (up && img) {
+                up.onchange = (e) => {
+                    const f = e.target.files[0];
+                    if (f) {
+                        const r = new FileReader();
+                        r.onload = (ev) => img.src = ev.target.result;
+                        r.readAsDataURL(f);
+                    }
+                };
+            }
+
+            profileForm.onsubmit = async (e) => {
+                e.preventDefault();
+                await sb.from('profiles').upsert({
+                    id: user.id,
+                    name: nameIn?.value || "",
+                    bio: bioIn?.value || "",
+                    photo: img?.src || "",
+                    updated_at: new Date()
+                });
+                alert("¡Identidad Guardada!");
+            };
+        });
+
+        const logoutBtn = document.getElementById('logout-link') || document.getElementById('logout-link-side');
+        if (logoutBtn) {
+            logoutBtn.onclick = async (e) => {
+                e.preventDefault();
+                await sb.auth.signOut();
+                window.location.href = "home.html";
+            };
+        }
     }
 
-    // --- 5. CARTA ---
+    // --- 6. CARTA ---
     const categoryCards = document.querySelectorAll('.card-comida');
     const menuDisplay = document.getElementById('menu-display');
     if (categoryCards.length > 0 && menuDisplay) {
