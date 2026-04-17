@@ -48,21 +48,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Actualizar Nav según sesión
     const navLoginBtn = document.getElementById('nav-login');
-    if (navLoginBtn) {
-        if (supabase) {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                navLoginBtn.innerHTML = `<strong>Mi Cuenta</strong>`;
-                navLoginBtn.href = "cuenta.html";
-                navLoginBtn.classList.add('logged-in');
-            }
-        } else {
-            const currentUser = JSON.parse(localStorage.getItem('sukuna_user'));
-            if (currentUser) {
-                navLoginBtn.innerHTML = `<strong>Mi Cuenta</strong>`;
-                navLoginBtn.href = "cuenta.html";
-                navLoginBtn.classList.add('logged-in');
-            }
+    if (navLoginBtn && supabase) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+            navLoginBtn.innerHTML = `<strong>Mi Cuenta</strong>`;
+            navLoginBtn.href = "cuenta.html";
+            navLoginBtn.classList.add('logged-in');
         }
     }
 
@@ -91,21 +82,30 @@ document.addEventListener('DOMContentLoaded', async () => {
             setTimeout(() => modalImagen.style.display = 'none', 300);
         });
     }
+
+    // Google Sign In (Universal)
+    const googleBtn = document.getElementById('google-btn');
+    if (googleBtn && supabase) {
+        googleBtn.onclick = () => supabase.auth.signInWithOAuth({ 
+            provider: 'google',
+            options: {
+                redirectTo: window.location.origin + '/cuenta.html'
+            }
+        });
+    }
 });
 
 // --- LÓGICA DE AUTENTICACIÓN ---
 document.addEventListener('DOMContentLoaded', async () => {
     // Login Form
     const authForm = document.getElementById('auth-form');
-    if (authForm) {
+    if (authForm && supabase) {
         const emailInput = document.getElementById('auth-email');
         const passInput = document.getElementById('auth-password');
         const authMessage = document.getElementById('auth-message');
-        const googleBtn = document.getElementById('google-btn');
 
         authForm.onsubmit = async (e) => {
             e.preventDefault();
-            if (!supabase) return;
             const { error } = await supabase.auth.signInWithPassword({
                 email: emailInput.value.trim(),
                 password: passInput.value.trim()
@@ -117,45 +117,29 @@ document.addEventListener('DOMContentLoaded', async () => {
                 window.location.href = "cuenta.html";
             }
         };
-
-        if (googleBtn) {
-            googleBtn.onclick = () => supabase.auth.signInWithOAuth({ provider: 'google' });
-        }
     }
 
     // Register Form
     const registerForm = document.getElementById('register-form');
-    if (registerForm) {
+    if (registerForm && supabase) {
         const regEmailInput = document.getElementById('reg-email');
         const regPassInput = document.getElementById('reg-password');
         const regMessage = document.getElementById('reg-message');
 
-        function showRegMessage(text, isError = true) {
-            regMessage.textContent = text;
-            regMessage.className = isError ? "alert alert-danger mt-3 text-center" : "alert alert-success mt-3 text-center";
-            regMessage.classList.remove('d-none');
-        }
-
         registerForm.onsubmit = async (e) => {
             e.preventDefault();
-            if (!supabase) {
-                showRegMessage("❌ Error: Supabase no está conectado.");
-                return;
-            }
-            const email = regEmailInput.value.trim();
-            const pass = regPassInput.value.trim();
-
-            const { data, error } = await supabase.auth.signUp({ 
-                email, 
-                password: pass
+            const { error } = await supabase.auth.signUp({
+                email: regEmailInput.value.trim(),
+                password: regPassInput.value.trim()
             });
-
             if (error) {
-                showRegMessage("❌ " + error.message);
-            } else if (data.user && data.user.identities && data.user.identities.length === 0) {
-                showRegMessage("⚠️ Este correo ya está registrado. Intenta iniciar sesión.");
+                regMessage.textContent = "❌ " + error.message;
+                regMessage.className = "alert alert-danger mt-3 text-center";
+                regMessage.classList.remove('d-none');
             } else {
-                showRegMessage("✅ ¡Petición enviada! Si no recibes el email de confirmación en 1 minuto: \n1. Revisa SPAM. \n2. Ve a tu Dashboard de Supabase -> Auth -> Providers -> Email y DESACTIVA 'Confirm Email' para pruebas.", false);
+                regMessage.textContent = "✅ ¡Registro completado! Ya puedes iniciar sesión.";
+                regMessage.className = "alert alert-success mt-3 text-center";
+                regMessage.classList.remove('d-none');
                 registerForm.reset();
             }
         };
@@ -163,8 +147,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Profile Page
     const profileForm = document.getElementById('profile-form');
-    if (profileForm) {
-        if (!supabase) return;
+    if (profileForm && supabase) {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) { window.location.href = "login.html"; return; }
 
@@ -227,7 +210,6 @@ async function saveReservation(res) {
 document.addEventListener('DOMContentLoaded', () => {
     const calendarDays = document.querySelectorAll('.calendar-day:not(.other-month)');
     const tablesContainer = document.getElementById('tablesContainer');
-    const fechaHoraInput = document.getElementById('fecha_hora');
     const reservaForm = document.getElementById('form-reserva');
 
     async function updateTables(day) {
