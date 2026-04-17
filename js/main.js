@@ -188,14 +188,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const { error: sbError } = await sb.from('reservations').insert([supabaseData]);
                 if (sbError) throw sbError;
 
-                // Proxy serverless de Vercel → Forminit (sin CORS)
+                // Formatear los datos como x-www-form-urlencoded para Forminit
+                const params = new URLSearchParams();
+                Object.entries(supabaseData).forEach(([k, v]) => {
+                    params.append(k, v);
+                });
+
+                // Proxy simple de Vercel → Forminit (sin CORS)
                 fetch("/api/reserva-submit", {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json",
+                        "Content-Type": "application/x-www-form-urlencoded",
                         "Accept": "application/json"
                     },
-                    body: JSON.stringify(supabaseData)
+                    body: params.toString()
                 })
                 .then(r => console.log("📧 Forminit enviado:", r.status))
                 .catch(e => console.warn("⚠️ Forminit no disponible:", e));
