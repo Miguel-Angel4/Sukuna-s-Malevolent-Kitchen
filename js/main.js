@@ -1,5 +1,5 @@
 // ========================================
-// Sukuna's Malevolent Kitchen - Main JavaScript (Stable Version)
+// Sukuna's Malevolent Kitchen - Main JavaScript (Blindado)
 // ========================================
 
 const SUPABASE_URL = "https://wxbjrpqpomekvyuhlwdg.supabase.co";
@@ -11,30 +11,27 @@ try {
         sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         console.log("✅ Supabase conectado");
     }
-} catch (e) { console.error("❌ Error inicialización:", e); }
+} catch (e) { console.error("❌ Error inicialización Supabase:", e); }
 
 document.addEventListener('DOMContentLoaded', async () => {
     console.log("🚀 DOM Cargado");
 
     // --- 1. NAVEGACIÓN Y SESIÓN ---
-    const setupNav = async () => {
-        const navLoginBtn = document.getElementById('nav-login');
-        if (navLoginBtn && sb) {
-            const { data: { session } } = await sb.auth.getSession();
+    const navLoginBtn = document.getElementById('nav-login');
+    if (navLoginBtn && sb) {
+        sb.auth.getSession().then(({ data: { session } }) => {
             if (session) {
                 navLoginBtn.innerHTML = `<strong>Mi Cuenta</strong>`;
                 navLoginBtn.href = "cuenta.html";
             }
-        }
-    };
-    setupNav();
+        });
+    }
 
-    // --- 2. GOOGLE LOGIN (UNIVERSAL) ---
+    // --- 2. GOOGLE LOGIN ---
     const googleBtn = document.getElementById('google-btn');
     if (googleBtn && sb) {
         googleBtn.onclick = async (e) => {
             e.preventDefault();
-            console.log("🔄 OAuth Google...");
             await sb.auth.signInWithOAuth({ 
                 provider: 'google',
                 options: { redirectTo: window.location.origin + '/cuenta.html' }
@@ -42,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
     }
 
-    // --- 3. LOGIN (login.html) ---
+    // --- 3. LOGIN / REGISTRO ---
     const authForm = document.getElementById('auth-form');
     if (authForm && sb) {
         authForm.onsubmit = async (e) => {
@@ -51,29 +48,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             const pass = document.getElementById('auth-password').value.trim();
             const msg = document.getElementById('auth-message');
             const { error } = await sb.auth.signInWithPassword({ email, password: pass });
-            if (error) {
-                msg.textContent = "❌ " + error.message;
-                msg.classList.remove('d-none');
-            } else { window.location.href = "cuenta.html"; }
+            if (error) { msg.textContent = "❌ " + error.message; msg.classList.remove('d-none'); }
+            else { window.location.href = "cuenta.html"; }
         };
-
-        const forgotBtn = document.getElementById('forgot-password');
-        if (forgotBtn) {
-            forgotBtn.onclick = async (e) => {
-                e.preventDefault();
-                const email = document.getElementById('auth-email').value.trim();
-                const msg = document.getElementById('auth-message');
-                if (!email) { alert("Introduce tu email"); return; }
-                const { error } = await sb.auth.resetPasswordForEmail(email, {
-                    redirectTo: window.location.origin + '/cuenta.html',
-                });
-                msg.textContent = error ? "❌ " + error.message : "✅ Email enviado.";
-                msg.classList.remove('d-none');
-            };
-        }
     }
 
-    // --- 4. REGISTRO (registro.html) ---
     const regForm = document.getElementById('register-form');
     if (regForm && sb) {
         regForm.onsubmit = async (e) => {
@@ -89,61 +68,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
     }
 
-    // --- 5. CUENTA (cuenta.html) ---
-    const profileForm = document.getElementById('profile-form');
-    if (profileForm && sb) {
-        const { data: { user } } = await sb.auth.getUser();
-        if (user) {
-            const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
-            if (profile) {
-                document.getElementById('profile-name').value = profile.name || "";
-                document.getElementById('profile-bio').value = profile.bio || "";
-                if (profile.photo) document.getElementById('display-profile-img').src = profile.photo;
-            }
-            document.getElementById('profile-email').value = user.email;
-
-            // Foto de perfil
-            const uploadInput = document.getElementById('profile-upload');
-            if (uploadInput) {
-                uploadInput.onchange = (e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (ev) => document.getElementById('display-profile-img').src = ev.target.result;
-                        reader.readAsDataURL(file);
-                    }
-                };
-            }
-
-            profileForm.onsubmit = async (e) => {
-                e.preventDefault();
-                await sb.from('profiles').upsert({
-                    id: user.id,
-                    name: document.getElementById('profile-name').value.trim(),
-                    bio: document.getElementById('profile-bio').value.trim(),
-                    photo: document.getElementById('display-profile-img').src,
-                    updated_at: new Date()
-                });
-                alert("Perfil actualizado");
-            };
-        }
-
-        // Recuperación
-        if (window.location.hash.includes('type=recovery')) {
-            const modal = document.getElementById('recovery-modal');
-            if (modal) {
-                modal.style.display = 'flex';
-                document.getElementById('save-new-password').onclick = async () => {
-                    const pass = document.getElementById('new-password').value;
-                    const { error } = await sb.auth.updateUser({ password: pass });
-                    alert(error ? "Error: " + error.message : "Contraseña actualizada");
-                    if (!error) window.location.href = "cuenta.html";
-                };
-            }
-        }
-    }
-
-    // --- 6. RESERVAS (reserva.html) ---
+    // --- 4. CALENDARIO Y RESERVAS ---
     const calendarToggle = document.getElementById('calendarToggle');
     const calendarWidget = document.getElementById('calendarWidget');
     if (calendarToggle && calendarWidget) {
@@ -153,23 +78,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     const tablesContainer = document.getElementById('tablesContainer');
     if (tablesContainer && sb) {
         const widgetHour = document.getElementById('widget-hour');
-        const mainDate = document.getElementById('fecha_hora');
-        
         const updateTables = async (day) => {
-            tablesContainer.innerHTML = ' Cargando...';
+            tablesContainer.innerHTML = '...';
             const { data: reservations } = await sb.from('reservations').select('*');
-            let hour = 14, min = 0;
-            if (widgetHour?.value) [hour, min] = widgetHour.value.split(':').map(Number);
+            let h = 14, m = 0;
+            if (widgetHour?.value) [h, m] = widgetHour.value.split(':').map(Number);
             
             tablesContainer.innerHTML = '';
             for (let i = 1; i <= 15; i++) {
                 const mesa = i === 15 ? "Mesa 15 (Especial para Cumpleaños)" : `Mesa ${i}`;
-                const isBusy = reservations?.some(r => {
+                const busy = reservations?.some(r => {
                     const d = new Date(r.fecha_hora);
-                    return d.getDate() == day && Math.abs((d.getHours()*60+d.getMinutes()) - (hour*60+min)) < 60 && r.mesa === mesa;
+                    return d.getDate() == day && Math.abs((d.getHours()*60+d.getMinutes()) - (h*60+m)) < 60 && r.mesa === mesa;
                 });
                 const dot = document.createElement('div');
-                dot.className = `table-dot ${isBusy ? 'reserved' : ''}`;
+                dot.className = `table-dot ${busy ? 'reserved' : ''}`;
                 dot.textContent = i;
                 tablesContainer.appendChild(dot);
             }
@@ -179,92 +102,68 @@ document.addEventListener('DOMContentLoaded', async () => {
             d.onclick = () => {
                 document.querySelectorAll('.calendar-day').forEach(x => x.classList.remove('active'));
                 d.classList.add('active');
-                const statusTitle = document.getElementById('status-title');
-                if (statusTitle) statusTitle.textContent = `Estado para el día ${d.textContent}`;
+                const title = document.getElementById('status-title');
+                if (title) title.textContent = `Estado para el día ${d.textContent}`;
                 updateTables(d.textContent);
             };
         });
+        updateTables(14);
+    }
 
-        if (widgetHour) widgetHour.onchange = () => {
-            const active = document.querySelector('.calendar-day.active');
-            if (active) updateTables(active.textContent);
+    const resForm = document.getElementById('form-reserva');
+    if (resForm && sb) {
+        resForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(resForm));
+            try {
+                await sb.from('reservations').insert([data]);
+                fetch("https://formsubmit.co/ajax/miguelangel261106@gmail.com", {
+                    method: "POST", headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                }).catch(() => {});
+                alert("Reserva confirmada");
+                resForm.reset();
+            } catch (err) { alert("Error: " + err.message); }
         };
+    }
 
-        const resForm = document.getElementById('form-reserva');
-        if (resForm) {
-            resForm.onsubmit = async (e) => {
-                e.preventDefault();
-                const data = Object.fromEntries(new FormData(resForm));
-                try {
-                    // 1. Siempre guardar en Supabase primero
-                    const { error: sbError } = await sb.from('reservations').insert([data]);
-                    if (sbError) throw sbError;
-
-                    // 2. Intentar enviar el email (Formsubmit)
-                    try {
-                        await fetch("https://formsubmit.co/ajax/miguelangel261106@gmail.com", {
-                            method: "POST", 
-                            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                            body: JSON.stringify(data)
-                        });
-                    } catch (emailErr) {
-                        console.warn("⚠️ El aviso por email falló, pero la reserva se guardó:", emailErr);
-                    }
-
-                    alert("🩸 Reserva confirmada en el Dominio.");
-                    resForm.reset();
-                } catch (err) { 
-                    console.error("Error en reserva:", err);
-                    alert("❌ Error al guardar la reserva: " + err.message); 
-                }
-            };
-        }
-    // --- 7. CARTA (carta.html) ---
-    const menuDisplay = document.getElementById('menu-display');
+    // --- 5. CARTA ---
     const categoryCards = document.querySelectorAll('.card-comida');
-    const btnVolver = document.getElementById('btn-volver');
-    const modal = document.getElementById('image-modal');
-
+    const menuDisplay = document.getElementById('menu-display');
     if (categoryCards.length > 0 && menuDisplay) {
         categoryCards.forEach(card => {
             card.onclick = () => {
-                const category = card.getAttribute('data-category');
-                // Ocultar todas las secciones
-                document.querySelectorAll('.menu-category').forEach(sec => sec.style.display = 'none');
-                // Mostrar la seleccionada
-                const target = document.getElementById(`sec-${category}`);
+                const cat = card.getAttribute('data-category');
+                document.querySelectorAll('.menu-category').forEach(s => s.style.display = 'none');
+                const target = document.getElementById(`sec-${cat}`);
                 if (target) {
                     target.style.display = 'block';
                     menuDisplay.style.display = 'block';
-                    document.querySelector('.seccion-comida').parentElement.style.display = 'none';
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    document.querySelectorAll('.seccion-comida').forEach(s => s.style.display = 'none');
                 }
             };
         });
 
+        const btnVolver = document.getElementById('btn-volver');
         if (btnVolver) {
             btnVolver.onclick = () => {
                 menuDisplay.style.display = 'none';
-                document.querySelector('.seccion-comida').parentElement.style.display = 'block';
+                document.querySelectorAll('.seccion-comida').forEach(s => s.style.display = 'block');
             };
         }
 
-        // Lógica de Modales de Imagen
+        const modal = document.getElementById('image-modal');
         document.querySelectorAll('.menu-item').forEach(item => {
             item.onclick = () => {
-                const imgUrls = item.getAttribute('data-img').split(',');
-                const container = document.getElementById('modal-img-container');
-                if (container && modal) {
-                    container.innerHTML = imgUrls.map(url => `<img src="${url.trim()}" class="img-fluid mb-2">`).join('');
+                const imgs = item.getAttribute('data-img')?.split(',') || [];
+                const cont = document.getElementById('modal-img-container');
+                if (cont && modal) {
+                    cont.innerHTML = imgs.map(u => `<img src="${u.trim()}" class="img-fluid mb-2">`).join('');
                     modal.style.display = 'flex';
                 }
             };
         });
-
-        const closeBtn = document.querySelector('.close-modal');
-        if (closeBtn && modal) {
-            closeBtn.onclick = () => modal.style.display = 'none';
-            modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
-        }
+        const close = document.querySelector('.close-modal');
+        if (close && modal) close.onclick = () => modal.style.display = 'none';
     }
 });
