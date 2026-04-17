@@ -6,10 +6,6 @@ const nextConfig = {
         source: '/api/form-submit',
         destination: 'https://formsubmit.co/sukunaamalevolentkitchen@gmail.com',
       },
-      {
-        source: '/',
-        destination: '/home.html',
-      },
     ]
   },
 }
