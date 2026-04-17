@@ -16,10 +16,6 @@
     {
       "src": "img/**",
       "use": "@vercel/static"
-    },
-    {
-      "src": "api/*.js",
-      "use": "@vercel/node"
     }
   ],
   "routes": [
