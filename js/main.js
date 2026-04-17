@@ -97,6 +97,32 @@ document.addEventListener('DOMContentLoaded', async () => {
                 window.location.href = "cuenta.html";
             }
         });
+
+        // Forgot Password logic
+        const forgotBtn = document.getElementById('forgot-password');
+        forgotBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value.trim();
+            const msg = document.getElementById('auth-message');
+            
+            if (!email) {
+                msg.textContent = "❌ Por favor, introduce tu email primero.";
+                msg.classList.remove('d-none');
+                return;
+            }
+
+            const { error } = await sb.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.origin + '/cuenta.html',
+            });
+
+            if (error) {
+                msg.textContent = "❌ " + error.message;
+            } else {
+                msg.textContent = "✅ Email de recuperación enviado. Revisa tu bandeja de entrada.";
+                msg.className = "alert alert-success mt-3 text-center";
+            }
+            msg.classList.remove('d-none');
+        });
     }
 
     // 4. Formulario de Registro (registro.html)
