@@ -188,21 +188,23 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const { error: sbError } = await sb.from('reservations').insert([supabaseData]);
                 if (sbError) throw sbError;
 
-                // 2. ENVIAR EMAIL con EmailJS
-                if (typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY !== 'TU_PUBLIC_KEY') {
-                    emailjs.init(EMAILJS_PUBLIC_KEY);
-                    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-                        to_email:   'sukunaamalevolentkitchen@gmail.com',
-                        nombre:     data.nombre,
-                        email:      data.email,
-                        telefono:   data.telefono,
-                        fecha_hora: data.fecha_hora,
-                        personas:   data.personas,
-                        mesa:       data.mesa,
-                        peticiones: data.peticiones || 'Ninguna'
-                    }).then(() => console.log("📧 Email enviado"))
-                      .catch(e => console.error("❌ Email error:", e));
-                }
+                // 2. ENVIAR NOTIFICACIÓN A FORMINIT
+                const emailFormData = new FormData();
+                emailFormData.append('nombre',     data.nombre);
+                emailFormData.append('email',      data.email);
+                emailFormData.append('telefono',   data.telefono);
+                emailFormData.append('fecha_hora', data.fecha_hora);
+                emailFormData.append('personas',   data.personas);
+                emailFormData.append('mesa',       data.mesa);
+                emailFormData.append('peticiones', data.peticiones || 'Ninguna');
+
+                fetch("https://getform.io/f/b8sn8gw0v8z", {
+                    method: "POST",
+                    body: emailFormData,
+                    headers: { "Accept": "application/json" }
+                })
+                .then(r => console.log("📧 Forminit enviado:", r.status))
+                .catch(e => console.warn("⚠️ Forminit no disponible:", e));
 
                 // 3. CONFIRMACIÓN
                 alert(`🩸 RESERVA CONFIRMADA 🩸\n\nNombre: ${data.nombre}\nMesa: ${data.mesa}\nFecha: ${data.fecha_hora.replace('T', ' ')}\nPersonas: ${data.personas}`);
