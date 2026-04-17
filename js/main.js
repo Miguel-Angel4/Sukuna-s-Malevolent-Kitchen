@@ -178,6 +178,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         document.getElementById('profile-email').value = user.email;
 
+        // Lógica para subir foto de perfil
+        const uploadInput = document.getElementById('profile-upload');
+        const displayImg = document.getElementById('display-profile-img');
+        if (uploadInput && displayImg) {
+            uploadInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        displayImg.src = event.target.result;
+                        console.log("📸 Imagen cargada localmente");
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
         profileForm.onsubmit = async (e) => {
             e.preventDefault();
             const { error } = await sb.from('profiles').upsert({
