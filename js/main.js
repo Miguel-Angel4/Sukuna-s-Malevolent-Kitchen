@@ -312,17 +312,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const setupToggleButton = () => {
             const btn = document.getElementById('toggle-form');
+            const toggleText = document.getElementById('toggle-text');
+            const formSubtitle = document.getElementById('form-subtitle');
+            
             if (btn) {
                 btn.onclick = (e) => {
                     e.preventDefault();
                     isLoginMode = !isLoginMode;
                     if (isLoginMode) {
                         formTitle.textContent = "INICIAR SESIÓN";
+                        if (formSubtitle) formSubtitle.textContent = "Bienvenido de nuevo al Dominio.";
                         mainBtn.textContent = "Entrar";
+                        if (toggleText) toggleText.innerHTML = '¿No tienes cuenta? <a href="#" id="toggle-form" style="color:#B31B1B; font-weight:bold;">Créala aquí</a>';
                     } else {
                         formTitle.textContent = "NUEVA CUENTA";
+                        if (formSubtitle) formSubtitle.textContent = "Sella tu juramento para entrar.";
                         mainBtn.textContent = "Registrarse";
+                        if (toggleText) toggleText.innerHTML = '¿Ya tienes cuenta? <a href="#" id="toggle-form" style="color:#B31B1B; font-weight:bold;">Inicia sesión</a>';
                     }
+                    setupToggleButton(); // Re-vincula el evento al nuevo link
                 };
             }
         };
