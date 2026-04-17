@@ -130,21 +130,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         const regPassInput = document.getElementById('reg-password');
         const regMessage = document.getElementById('reg-message');
 
+        function showRegMessage(text, isError = true) {
+            regMessage.textContent = text;
+            regMessage.className = isError ? "alert alert-danger mt-3 text-center" : "alert alert-success mt-3 text-center";
+            regMessage.classList.remove('d-none');
+        }
+
         registerForm.onsubmit = async (e) => {
             e.preventDefault();
-            if (!supabase) return;
-            const { error } = await supabase.auth.signUp({
-                email: regEmailInput.value.trim(),
-                password: regPassInput.value.trim()
+            if (!supabase) {
+                showRegMessage("❌ Error: Supabase no está conectado.");
+                return;
+            }
+            const email = regEmailInput.value.trim();
+            const pass = regPassInput.value.trim();
+
+            const { data, error } = await supabase.auth.signUp({ 
+                email, 
+                password: pass
             });
+
             if (error) {
-                regMessage.textContent = "❌ " + error.message;
-                regMessage.className = "alert alert-danger mt-3 text-center";
-                regMessage.classList.remove('d-none');
+                showRegMessage("❌ " + error.message);
+            } else if (data.user && data.user.identities && data.user.identities.length === 0) {
+                showRegMessage("⚠️ Este correo ya está registrado. Intenta iniciar sesión.");
             } else {
-                regMessage.textContent = "✅ Cuenta creada. REVISA TU EMAIL para confirmar antes de entrar.";
-                regMessage.className = "alert alert-success mt-3 text-center";
-                regMessage.classList.remove('d-none');
+                showRegMessage("✅ ¡Petición enviada! Si no recibes el email de confirmación en 1 minuto: \n1. Revisa SPAM. \n2. Ve a tu Dashboard de Supabase -> Auth -> Providers -> Email y DESACTIVA 'Confirm Email' para pruebas.", false);
                 registerForm.reset();
             }
         };
