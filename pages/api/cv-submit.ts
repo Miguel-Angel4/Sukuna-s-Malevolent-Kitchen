@@ -1,10 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import formidable from 'formidable'
-import fs from 'fs'
 
 export const config = {
   api: {
-    bodyParser: false, // Desactivamos el body parser para manejar el multipart manualmente
+    bodyParser: false,
   },
 }
 
@@ -14,15 +12,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    // Reenviamos la petición directamente a Forminit
-    // Usamos fetch de Node.js que puede recibir el stream req
+    // Reenviamos la petición a Forminit usando el stream bruto
     const response = await fetch('https://forminit.com/f/b8sn8gw0v8z', {
       method: 'POST',
       headers: {
         'content-type': req.headers['content-type'] as string,
         'accept': 'application/json'
       },
-      // @ts-ignore - En Node.js fetch acepta el stream req como body
+      // @ts-ignore
       body: req,
       duplex: 'half'
     })
