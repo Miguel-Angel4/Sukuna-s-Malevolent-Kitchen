@@ -62,19 +62,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // 2. Google Login (Universal para cualquier página con botón Google)
+    // 2. Google Login (Universal)
     const googleBtn = document.getElementById('google-btn');
+    console.log("🔍 Buscando botón Google:", googleBtn ? "Encontrado" : "No encontrado");
+    
     if (googleBtn && sb) {
-        console.log("🎯 Botón Google detectado");
-        googleBtn.addEventListener('click', async (e) => {
+        console.log("🎯 Botón Google listo para recibir clicks");
+        googleBtn.onclick = async (e) => {
             e.preventDefault();
-            console.log("🔄 Iniciando OAuth con Google...");
-            const { error } = await sb.auth.signInWithOAuth({ 
-                provider: 'google',
-                options: { redirectTo: window.location.origin + '/cuenta.html' }
-            });
-            if (error) alert("Error: " + error.message);
-        });
+            console.log("🔄 Click detectado en Google Btn. Iniciando OAuth...");
+            try {
+                const { error } = await sb.auth.signInWithOAuth({ 
+                    provider: 'google',
+                    options: { 
+                        redirectTo: window.location.origin + '/cuenta.html' 
+                    }
+                });
+                if (error) {
+                    console.error("❌ Error en OAuth:", error.message);
+                    alert("Error Google: " + error.message);
+                }
+            } catch (err) {
+                console.error("❌ Excepción en OAuth:", err);
+            }
+        };
     }
 
     // 3. Formulario de Login (login.html)
