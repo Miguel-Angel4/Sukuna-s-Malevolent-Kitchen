@@ -173,7 +173,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Carga inicial del calendario
     if (tablesContainer) updateTables(14);
 
-    // --- 6. FORMULARIO DE RESERVA ---
+    // --- 6. FORMULARIO DE EMPLEO ---
+    const cvForm = document.getElementById('form-empleo');
+    const cvFormStatus = document.getElementById('cv-form-status');
+    if (cvForm && cvFormStatus) {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('sent') === '1') {
+            cvFormStatus.classList.remove('d-none');
+            cvFormStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    }
+
+    // --- 7. FORMULARIO DE RESERVA ---
     const resForm = document.getElementById('form-reserva');
     if (resForm && sb) {
         resForm.onsubmit = async (e) => {
@@ -228,7 +240,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
     }
 
-    // --- 7. CUENTA (cuenta.html) ---
+    // --- 8. CUENTA (cuenta.html) ---
     const profileForm = document.getElementById('profile-form');
     if (profileForm && sb) {
         sb.auth.getUser().then(async ({ data: { user } }) => {
@@ -282,7 +294,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // --- 8. CARTA ---
+    // --- 9. CARTA ---
     const categoryCards = document.querySelectorAll('.card-comida');
     const menuDisplay   = document.getElementById('menu-display');
     if (categoryCards.length > 0 && menuDisplay) {
