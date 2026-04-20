@@ -176,13 +176,46 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- 6. FORMULARIO DE EMPLEO ---
     const cvForm = document.getElementById('form-empleo');
     const cvFormStatus = document.getElementById('cv-form-status');
-    if (cvForm && cvFormStatus) {
-        const params = new URLSearchParams(window.location.search);
-        if (params.get('sent') === '1') {
-            cvFormStatus.classList.remove('d-none');
-            cvFormStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
+    if (cvForm && cvFormStatus && typeof Forminit !== 'undefined') {
+        const cvButton = cvForm.querySelector('button[type="submit"]');
+        const cvButtonText = cvButton ? cvButton.textContent : "";
+        const forminit = new Forminit();
+
+        cvForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            cvFormStatus.className = 'alert alert-info mb-4';
+            cvFormStatus.textContent = 'Enviando candidatura...';
+
+            if (cvButton) {
+                cvButton.disabled = true;
+                cvButton.textContent = 'Enviando...';
+            }
+
+            try {
+                const formData = new FormData(cvForm);
+                const { error } = await forminit.submit('b8sn8gw0v8z', formData);
+
+                if (error) {
+                    throw new Error(error.message || 'No se pudo enviar el formulario.');
+                }
+
+                cvFormStatus.className = 'alert alert-success mb-4';
+                cvFormStatus.textContent = 'Hemos recibido tu candidatura correctamente. Revisaremos tu CV muy pronto.';
+                cvForm.reset();
+            } catch (err) {
+                cvFormStatus.className = 'alert alert-danger mb-4';
+                cvFormStatus.textContent = err.message || 'No se pudo enviar tu candidatura.';
+            } finally {
+                if (cvButton) {
+                    cvButton.disabled = false;
+                    cvButton.textContent = cvButtonText;
+                }
+
+                cvFormStatus.classList.remove('d-none');
+                cvFormStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
     }
 
     // --- 7. FORMULARIO DE RESERVA ---
