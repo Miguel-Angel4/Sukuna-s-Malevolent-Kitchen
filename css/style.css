@@ -1912,6 +1912,74 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     background: var(--sukuna-blood);
 }
 
+.cv-preview {
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid rgba(139, 0, 0, 0.45);
+    border-radius: 12px;
+    background: rgba(12, 12, 12, 0.72);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+.cv-preview-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.85rem;
+    color: var(--blanco);
+}
+
+.cv-preview-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.cv-preview-meta {
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 0.9rem;
+}
+
+.cv-preview-body {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.cv-preview-image,
+.cv-preview-frame {
+    width: 100%;
+    border: 1px solid rgba(139, 0, 0, 0.35);
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.cv-preview-image {
+    max-height: 340px;
+    object-fit: contain;
+}
+
+.cv-preview-frame {
+    min-height: 340px;
+}
+
+.cv-preview-note {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.92rem;
+}
+
+.cv-preview-link {
+    color: #f1dc1e;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.cv-preview-link:hover {
+    color: #fff0a6;
+}
+
 /* Label effects */
 .input-sukuna:focus+.form-label {
     color: var(--blanco);

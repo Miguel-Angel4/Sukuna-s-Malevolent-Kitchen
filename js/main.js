@@ -176,46 +176,123 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- 6. FORMULARIO DE EMPLEO ---
     const cvForm = document.getElementById('form-empleo');
     const cvFormStatus = document.getElementById('cv-form-status');
-    if (cvForm && cvFormStatus && typeof Forminit !== 'undefined') {
-        const cvButton = cvForm.querySelector('button[type="submit"]');
-        const cvButtonText = cvButton ? cvButton.textContent : "";
-        const forminit = new Forminit();
+    if (cvForm && cvFormStatus) {
+        const cvInput = document.getElementById('cv');
+        const cvPreview = document.getElementById('cv-preview');
+        const cvPreviewBody = document.getElementById('cv-preview-body');
+        const cvPreviewMeta = document.getElementById('cv-preview-meta');
+        let cvPreviewUrl = null;
 
-        cvForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            cvFormStatus.className = 'alert alert-info mb-4';
-            cvFormStatus.textContent = 'Enviando candidatura...';
-
-            if (cvButton) {
-                cvButton.disabled = true;
-                cvButton.textContent = 'Enviando...';
+        const resetCvPreview = () => {
+            if (cvPreviewUrl) {
+                URL.revokeObjectURL(cvPreviewUrl);
+                cvPreviewUrl = null;
             }
 
-            try {
-                const formData = new FormData(cvForm);
-                const { error } = await forminit.submit('b8sn8gw0v8z', formData);
+            if (cvPreviewBody) cvPreviewBody.innerHTML = "";
+            if (cvPreviewMeta) cvPreviewMeta.textContent = "";
+            if (cvPreview) cvPreview.classList.add('d-none');
+        };
 
-                if (error) {
-                    throw new Error(error.message || 'No se pudo enviar el formulario.');
-                }
+        const formatFileSize = (bytes) => {
+            if (bytes < 1024) return `${bytes} B`;
+            if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+            return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+        };
 
-                cvFormStatus.className = 'alert alert-success mb-4';
-                cvFormStatus.textContent = 'Hemos recibido tu candidatura correctamente. Revisaremos tu CV muy pronto.';
-                cvForm.reset();
-            } catch (err) {
-                cvFormStatus.className = 'alert alert-danger mb-4';
-                cvFormStatus.textContent = err.message || 'No se pudo enviar tu candidatura.';
-            } finally {
+        const renderCvPreview = (file) => {
+            resetCvPreview();
+
+            if (!file || !cvPreview || !cvPreviewBody || !cvPreviewMeta) return;
+
+            cvPreviewUrl = URL.createObjectURL(file);
+            cvPreviewMeta.textContent = `${file.name} - ${formatFileSize(file.size)}`;
+
+            if (file.type.startsWith('image/')) {
+                const img = document.createElement('img');
+                img.src = cvPreviewUrl;
+                img.alt = 'Vista previa de la imagen seleccionada';
+                img.className = 'cv-preview-image';
+                cvPreviewBody.appendChild(img);
+            } else if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+                const frame = document.createElement('iframe');
+                frame.src = cvPreviewUrl;
+                frame.className = 'cv-preview-frame';
+                frame.title = 'Vista previa del PDF seleccionado';
+
+                const note = document.createElement('p');
+                note.className = 'cv-preview-note';
+                note.textContent = 'Si tu navegador no muestra el PDF aqui, puedes abrirlo en otra pestana.';
+
+                const link = document.createElement('a');
+                link.href = cvPreviewUrl;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.className = 'cv-preview-link';
+                link.textContent = 'Abrir PDF';
+
+                cvPreviewBody.appendChild(frame);
+                cvPreviewBody.appendChild(note);
+                cvPreviewBody.appendChild(link);
+            } else {
+                const note = document.createElement('p');
+                note.className = 'cv-preview-note';
+                note.textContent = 'Archivo seleccionado correctamente. Este tipo de archivo no tiene vista previa en el navegador.';
+                cvPreviewBody.appendChild(note);
+            }
+
+            cvPreview.classList.remove('d-none');
+        };
+
+        if (cvInput) {
+            cvInput.addEventListener('change', (e) => {
+                const file = e.target.files && e.target.files[0] ? e.target.files[0] : null;
+                renderCvPreview(file);
+            });
+        }
+
+        if (typeof Forminit !== 'undefined') {
+            const cvButton = cvForm.querySelector('button[type="submit"]');
+            const cvButtonText = cvButton ? cvButton.textContent : "";
+            const forminit = new Forminit();
+
+            cvForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                cvFormStatus.className = 'alert alert-info mb-4';
+                cvFormStatus.textContent = 'Enviando candidatura...';
+
                 if (cvButton) {
-                    cvButton.disabled = false;
-                    cvButton.textContent = cvButtonText;
+                    cvButton.disabled = true;
+                    cvButton.textContent = 'Enviando...';
                 }
 
-                cvFormStatus.classList.remove('d-none');
-                cvFormStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        });
+                try {
+                    const formData = new FormData(cvForm);
+                    const { error } = await forminit.submit('b8sn8gw0v8z', formData);
+
+                    if (error) {
+                        throw new Error(error.message || 'No se pudo enviar el formulario.');
+                    }
+
+                    cvFormStatus.className = 'alert alert-success mb-4';
+                    cvFormStatus.textContent = 'Hemos recibido tu candidatura correctamente. Revisaremos tu CV muy pronto.';
+                    cvForm.reset();
+                    resetCvPreview();
+                } catch (err) {
+                    cvFormStatus.className = 'alert alert-danger mb-4';
+                    cvFormStatus.textContent = err.message || 'No se pudo enviar tu candidatura.';
+                } finally {
+                    if (cvButton) {
+                        cvButton.disabled = false;
+                        cvButton.textContent = cvButtonText;
+                    }
+
+                    cvFormStatus.classList.remove('d-none');
+                    cvFormStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+        }
     }
 
     // --- 7. FORMULARIO DE RESERVA ---
