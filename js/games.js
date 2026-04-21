@@ -275,7 +275,9 @@ function createKokusenTarget(yuji, combo, targetX, targetY) {
     circle.onclick = () => {
         if (activeGame !== 'kokusen') return;
 
-        const currentSize = parseInt(ring.style.width, 10);
+        // Usar getComputedStyle para obtener el ancho REAL durante la animación
+        const currentWidth = window.getComputedStyle(ring).width;
+        const currentSize = parseInt(currentWidth, 10);
         
         if (currentSize <= 66 && currentSize >= 54) { 
             // PERFECTO: El aro coincide con el círculo (60px +/- 6px)
