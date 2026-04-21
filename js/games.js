@@ -242,7 +242,7 @@ function createKokusenTarget(yuji, combo, targetX, targetY) {
     circle.style.width = '60px';
     circle.style.height = '60px';
     circle.style.borderRadius = '50%';
-    circle.style.border = '3px solid #000';
+    circle.style.border = '3px solid #87CEEB';
     circle.style.background = 'rgba(0,0,100,0.3)';
     circle.style.left = `${targetX + combo.circleOffset.x}px`;
     circle.style.top = `${targetY + combo.circleOffset.y}px`;
@@ -305,6 +305,8 @@ function createKokusenTarget(yuji, combo, targetX, targetY) {
 
     registerGameTimeout(() => {
         if (circle.parentNode) {
+            score -= 5; // Penalización por no darle al círculo
+            updateDisplays();
             circle.remove();
             yuji.remove();
             spawnKokusenCircle();
