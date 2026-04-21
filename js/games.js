@@ -276,17 +276,22 @@ function createKokusenTarget(yuji, combo, targetX, targetY) {
         if (activeGame !== 'kokusen') return;
 
         const currentSize = parseInt(ring.style.width, 10);
-        if (currentSize < 75 && currentSize > 45) {
+        
+        if (currentSize <= 66 && currentSize >= 54) { 
+            // PERFECTO: El aro coincide con el círculo (60px +/- 6px)
             score += 10;
-            // Mostrar Black Flash sprite
             yuji.src = combo.flashFrame;
             showBlackFlashEffect(targetX + combo.effectOffset.x, targetY + combo.effectOffset.y);
-
-            // Mantener el sprite un momento antes de quitarlo
+            
             registerGameTimeout(() => {
                 if (yuji.isConnected) yuji.remove();
             }, 500);
+        } else if (currentSize > 66 && currentSize <= 115) {
+            // BIEN: Le diste antes de que se cerrara (Entre 66px y 115px)
+            score += 2;
+            yuji.remove();
         } else {
+            // MAL: Demasiado tarde o clicaste cuando casi había desaparecido
             score -= 5;
             yuji.remove();
         }
