@@ -13,6 +13,7 @@ let gameInterval;
 let activeGame = null;
 let pendingGameTimeouts = [];
 let kokusenAttackCount = 0;
+let kokusenStreak = 0;
 
 const KOKUSEN_COMBOS = {
     odd: {
@@ -67,6 +68,7 @@ function stopGame() {
     timer = 0;
     score = 0;
     kokusenAttackCount = 0;
+    kokusenStreak = 0;
 }
 
 function updateDisplays() {
@@ -236,6 +238,11 @@ function playKokusenSequence(sprite, combo, onComplete) {
 function createKokusenTarget(yuji, combo, targetX, targetY) {
     if (activeGame !== 'kokusen' || !yuji.isConnected) return;
 
+    // Calcular velocidad basada en la racha (streak)
+    const baseDuration = 1000;
+    const speedMultiplier = Math.pow(0.85, kokusenStreak); // 15% más rápido por cada Black Flash
+    const currentDuration = Math.max(300, baseDuration * speedMultiplier);
+
     const circle = document.createElement('div');
     circle.className = 'kokusen-target';
     circle.style.position = 'absolute';
@@ -257,7 +264,7 @@ function createKokusenTarget(yuji, combo, targetX, targetY) {
     ring.style.border = '2px solid #B31B1B';
     ring.style.top = '-30px';
     ring.style.left = '-30px';
-    ring.style.transition = 'all 1s linear';
+    ring.style.transition = `all ${currentDuration}ms linear`;
 
     circle.appendChild(ring);
     container.appendChild(circle);
@@ -275,13 +282,13 @@ function createKokusenTarget(yuji, combo, targetX, targetY) {
     circle.onclick = () => {
         if (activeGame !== 'kokusen') return;
 
-        // Usar getComputedStyle para obtener el ancho REAL durante la animación
         const currentWidth = window.getComputedStyle(ring).width;
         const currentSize = parseInt(currentWidth, 10);
         
         if (currentSize <= 66 && currentSize >= 54) { 
-            // PERFECTO: El aro coincide con el círculo (60px +/- 6px)
+            // PERFECTO: El aro coincide con el círculo
             score += 10;
+            kokusenStreak++; // Aumentar racha
             yuji.src = combo.flashFrame;
             showBlackFlashEffect(targetX + combo.effectOffset.x, targetY + combo.effectOffset.y);
             
@@ -289,12 +296,14 @@ function createKokusenTarget(yuji, combo, targetX, targetY) {
                 if (yuji.isConnected) yuji.remove();
             }, 500);
         } else if (currentSize > 66 && currentSize <= 115) {
-            // BIEN: Le diste antes de que se cerrara (Entre 66px y 115px)
+            // BIEN: Le diste antes de que se cerrara
             score += 2;
+            kokusenStreak = 0; // Reiniciar racha
             yuji.remove();
         } else {
-            // MAL: Demasiado tarde o clicaste cuando casi había desaparecido
+            // MAL: Demasiado tarde
             score -= 5;
+            kokusenStreak = 0; // Reiniciar racha
             yuji.remove();
         }
 
@@ -305,13 +314,14 @@ function createKokusenTarget(yuji, combo, targetX, targetY) {
 
     registerGameTimeout(() => {
         if (circle.parentNode) {
-            score -= 5; // Penalización por no darle al círculo
+            score -= 5;
+            kokusenStreak = 0; // Reiniciar racha por omisión
             updateDisplays();
             circle.remove();
             yuji.remove();
             spawnKokusenCircle();
         }
-    }, 1200);
+    }, currentDuration + 200);
 }
 
 function spawnKokusenCircle() {
