@@ -464,6 +464,15 @@ function startTodo() {
         updateDisplays();
         playTodoSequence();
     };
+
+    gameInterval = setInterval(() => {
+        timer -= 1;
+        updateDisplays();
+        if (timer <= 0) {
+            alert(`¡Increíble Brother! Puntos: ${score}. Descuento del 10%: BROTHER10`);
+            stopGame();
+        }
+    }, 1000);
 }
 
 function showClapEffect(x, y) {
@@ -482,16 +491,6 @@ function showClapEffect(x, y) {
     
     container.appendChild(clap);
     setTimeout(() => clap.remove(), 500);
-}
-
-    gameInterval = setInterval(() => {
-        timer -= 1;
-        updateDisplays();
-        if (timer <= 0) {
-            alert(`¡Increíble Brother! Puntos: ${score}. Descuento del 10%: BROTHER10`);
-            stopGame();
-        }
-    }, 1000);
 }
 
 // ------------------------------------------
