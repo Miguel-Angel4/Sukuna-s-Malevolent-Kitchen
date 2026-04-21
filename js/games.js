@@ -14,6 +14,14 @@ let activeGame = null;
 let pendingGameTimeouts = [];
 let kokusenAttackCount = 0;
 let kokusenStreak = 0;
+let todoClickCount = 0;
+
+const TODO_SEQUENCE = [
+    'img/Todo sprite base.png',
+    'img/Todo sprite preparandose.png',
+    'img/Todo sprite levantandose.png',
+    'img/Todo sprite palmada.png'
+];
 
 const KOKUSEN_COMBOS = {
     odd: {
@@ -69,6 +77,7 @@ function stopGame() {
     score = 0;
     kokusenAttackCount = 0;
     kokusenStreak = 0;
+    todoClickCount = 0;
 }
 
 function updateDisplays() {
@@ -394,37 +403,86 @@ function showBlackFlashEffect(x, y) {
 // ------------------------------------------
 function startTodo() {
     modal.style.display = 'flex';
-    container.innerHTML = '<img src="img/game_todo.png" id="todo-sprite" style="position:absolute; width:100px; cursor:pointer; image-rendering:pixelated;">';
-    timer = 60;
+    container.innerHTML = `
+        <div id="todo-container" style="position:relative; width:100%; height:100%;">
+            <img src="img/Todo sprite base.png" id="todo-sprite" 
+                 style="position:absolute; width:150px; height:150px; cursor:pointer; 
+                        image-rendering:pixelated; object-fit:contain; z-index:10;">
+        </div>
+    `;
+    
+    timer = 30;
     score = 0;
+    todoClickCount = 0;
     activeGame = 'todo';
     updateDisplays();
 
     const sprite = document.getElementById('todo-sprite');
+    let isAnimating = false;
 
     const moveTodo = () => {
-        sprite.style.left = Math.random() * 700 + 'px';
-        sprite.style.top = Math.random() * 500 + 'px';
+        const x = Math.random() * (container.clientWidth - 160);
+        const y = Math.random() * (container.clientHeight - 160);
+        sprite.style.left = x + 'px';
+        sprite.style.top = y + 'px';
+    };
+
+    const playTodoSequence = () => {
+        if (!activeGame || !sprite.isConnected) return;
+        
+        let frame = 0;
+        const currentSpeed = Math.max(40, 200 - (todoClickCount * 10)); // Más rápido cada vez
+
+        const nextFrame = () => {
+            if (frame < TODO_SEQUENCE.length) {
+                sprite.src = TODO_SEQUENCE[frame];
+                
+                // En el último frame (la palmada), nos movemos
+                if (frame === TODO_SEQUENCE.length - 1) {
+                    moveTodo();
+                    showClapEffect(parseInt(sprite.style.left), parseInt(sprite.style.top));
+                }
+                
+                frame++;
+                registerGameTimeout(nextFrame, currentSpeed);
+            } else {
+                isAnimating = false;
+                sprite.src = TODO_SEQUENCE[0]; // Volver a base
+            }
+        };
+        nextFrame();
     };
 
     moveTodo();
 
     sprite.onclick = () => {
-        score++;
+        if (isAnimating) return;
+        
+        isAnimating = true;
+        score += 5;
+        todoClickCount++;
         updateDisplays();
-        // Teleport
-        moveTodo();
-        // Play clap sound simulation visual
-        const clap = document.createElement('div');
-        clap.textContent = '¡CLAP!';
-        clap.style.position = 'absolute';
-        clap.style.left = sprite.style.left;
-        clap.style.top = sprite.style.top;
-        clap.style.color = '#B31B1B';
-        clap.style.fontWeight = 'bold';
-        container.appendChild(clap);
-        setTimeout(() => clap.remove(), 500);
+        playTodoSequence();
     };
+}
+
+function showClapEffect(x, y) {
+    const clap = document.createElement('div');
+    clap.textContent = '\u00a1CLAP!';
+    clap.style.position = 'absolute';
+    clap.style.left = (x + 40) + 'px';
+    clap.style.top = (y - 20) + 'px';
+    clap.style.color = '#FFD700';
+    clap.style.fontWeight = 'bold';
+    clap.style.fontSize = '24px';
+    clap.style.textShadow = '0 0 10px #000';
+    clap.style.pointerEvents = 'none';
+    clap.style.zIndex = '20';
+    clap.style.animation = 'clap-float 0.5s ease-out forwards';
+    
+    container.appendChild(clap);
+    setTimeout(() => clap.remove(), 500);
+}
 
     gameInterval = setInterval(() => {
         timer -= 1;
