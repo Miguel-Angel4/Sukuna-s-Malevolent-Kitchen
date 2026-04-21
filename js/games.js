@@ -11,14 +11,62 @@ let timer = 0;
 let score = 0;
 let gameInterval;
 let activeGame = null;
+let pendingGameTimeouts = [];
+let kokusenAttackCount = 0;
+
+const KOKUSEN_COMBOS = {
+    odd: {
+        frames: [
+            'img/Itadori sprite base.png',
+            'img/Itadori sprite guardia.png',
+            'img/Itadori sprite preparando pu\u00f1etazo.png',
+            'img/Itadori sprite golpeando.png',
+            'img/Itadori sprite black flash pu\u00f1etazo.png'
+        ],
+        frameDuration: 110,
+        circleOffset: { x: 86, y: 20 },
+        effectOffset: { x: 118, y: 52 }
+    },
+    even: {
+        frames: [
+            'img/Itadori sprite base.png',
+            'img/Itadori sprite preparando patada.png',
+            'img/Itadori sprite pateando.png',
+            'img/Itadori sprite black flash patada.png'
+        ],
+        frameDuration: 130,
+        circleOffset: { x: 74, y: 60 },
+        effectOffset: { x: 110, y: 95 }
+    }
+};
+
+function registerGameTimeout(callback, delay) {
+    const timeoutId = setTimeout(() => {
+        pendingGameTimeouts = pendingGameTimeouts.filter((id) => id !== timeoutId);
+        callback();
+    }, delay);
+
+    pendingGameTimeouts.push(timeoutId);
+    return timeoutId;
+}
+
+function clearPendingGameTimeouts() {
+    pendingGameTimeouts.forEach((timeoutId) => clearTimeout(timeoutId));
+    pendingGameTimeouts = [];
+}
 
 function stopGame() {
     modal.style.display = 'none';
     container.innerHTML = '';
     clearInterval(gameInterval);
+    clearPendingGameTimeouts();
+    container.style.transform = 'translate(0, 0)';
+    container.style.animation = 'none';
+    window.onkeydown = null;
     activeGame = null;
     timer = 0;
     score = 0;
+    kokusenAttackCount = 0;
 }
 
 function updateDisplays() {
@@ -35,6 +83,7 @@ function startKokusen() {
     timer = 40;
     score = 0;
     activeGame = 'kokusen';
+    kokusenAttackCount = 0;
     updateDisplays();
 
     gameInterval = setInterval(() => {
@@ -49,7 +98,7 @@ function startKokusen() {
     spawnKokusenCircle();
 }
 
-function spawnKokusenCircle() {
+function oldSpawnKokusenCircle() {
     if (activeGame !== 'kokusen') return;
 
     // Crear sprite de Yuji atacando
@@ -137,7 +186,7 @@ function spawnKokusenCircle() {
     }, 200);
 }
 
-function showBlackFlashEffect(x, y) {
+function oldShowBlackFlashEffect(x, y) {
     const flash = document.createElement('div');
     flash.style.position = 'absolute';
     flash.style.left = x + 'px';
@@ -161,6 +210,153 @@ function showBlackFlashEffect(x, y) {
     setTimeout(() => container.style.transform = 'translate(0, 0)', 100);
 
     setTimeout(() => flash.remove(), 400);
+}
+
+function playKokusenSequence(sprite, combo, onComplete) {
+    let frameIndex = 0;
+    sprite.src = combo.frames[frameIndex];
+
+    const showNextFrame = () => {
+        if (activeGame !== 'kokusen' || !sprite.isConnected) return;
+
+        frameIndex += 1;
+        if (frameIndex >= combo.frames.length) {
+            onComplete();
+            return;
+        }
+
+        sprite.src = combo.frames[frameIndex];
+        registerGameTimeout(showNextFrame, combo.frameDuration);
+    };
+
+    registerGameTimeout(showNextFrame, combo.frameDuration);
+}
+
+function createKokusenTarget(yuji, combo, targetX, targetY) {
+    if (activeGame !== 'kokusen' || !yuji.isConnected) return;
+
+    const circle = document.createElement('div');
+    circle.className = 'kokusen-target';
+    circle.style.position = 'absolute';
+    circle.style.width = '60px';
+    circle.style.height = '60px';
+    circle.style.borderRadius = '50%';
+    circle.style.border = '3px solid #000';
+    circle.style.background = 'rgba(0,0,100,0.3)';
+    circle.style.left = `${targetX + combo.circleOffset.x}px`;
+    circle.style.top = `${targetY + combo.circleOffset.y}px`;
+    circle.style.cursor = 'pointer';
+    circle.style.zIndex = '10';
+
+    const ring = document.createElement('div');
+    ring.style.position = 'absolute';
+    ring.style.width = '120px';
+    ring.style.height = '120px';
+    ring.style.borderRadius = '50%';
+    ring.style.border = '2px solid #B31B1B';
+    ring.style.top = '-30px';
+    ring.style.left = '-30px';
+    ring.style.transition = 'all 1s linear';
+
+    circle.appendChild(ring);
+    container.appendChild(circle);
+
+    registerGameTimeout(() => {
+        ring.style.width = '60px';
+        ring.style.height = '60px';
+        ring.style.top = '0px';
+        ring.style.left = '0px';
+    }, 10);
+
+    circle.onclick = () => {
+        if (activeGame !== 'kokusen') return;
+
+        const currentSize = parseInt(ring.style.width, 10);
+        if (currentSize < 75 && currentSize > 45) {
+            score += 10;
+            showBlackFlashEffect(targetX + combo.effectOffset.x, targetY + combo.effectOffset.y);
+        } else {
+            score -= 5;
+        }
+
+        updateDisplays();
+        circle.remove();
+        yuji.remove();
+        spawnKokusenCircle();
+    };
+
+    registerGameTimeout(() => {
+        if (circle.parentNode) {
+            circle.remove();
+            yuji.remove();
+            spawnKokusenCircle();
+        }
+    }, 1200);
+}
+
+function spawnKokusenCircle() {
+    if (activeGame !== 'kokusen') return;
+
+    kokusenAttackCount += 1;
+    const combo = kokusenAttackCount % 2 === 1 ? KOKUSEN_COMBOS.odd : KOKUSEN_COMBOS.even;
+    const spriteWidth = 140;
+    const spriteHeight = 140;
+    const containerWidth = container.clientWidth || 800;
+    const containerHeight = container.clientHeight || 600;
+
+    const yuji = document.createElement('img');
+    yuji.style.position = 'absolute';
+    yuji.style.width = `${spriteWidth}px`;
+    yuji.style.height = `${spriteHeight}px`;
+    yuji.style.objectFit = 'contain';
+    yuji.style.imageRendering = 'pixelated';
+    yuji.style.pointerEvents = 'none';
+    yuji.style.zIndex = '5';
+
+    const startX = Math.random() > 0.5 ? -spriteWidth : containerWidth + 20;
+    const startY = Math.random() * Math.max(1, containerHeight - spriteHeight - 40);
+    const targetX = 20 + Math.random() * Math.max(1, containerWidth - spriteWidth - 100);
+    const targetY = 20 + Math.random() * Math.max(1, containerHeight - spriteHeight - 100);
+    const travelDuration = combo.frames.length * combo.frameDuration + 80;
+
+    yuji.style.left = `${startX}px`;
+    yuji.style.top = `${startY}px`;
+    yuji.style.transition = `left ${travelDuration}ms cubic-bezier(0.2, 0.8, 0.2, 1), top ${travelDuration}ms cubic-bezier(0.2, 0.8, 0.2, 1)`;
+    container.appendChild(yuji);
+
+    registerGameTimeout(() => {
+        yuji.style.left = `${targetX}px`;
+        yuji.style.top = `${targetY}px`;
+    }, 30);
+
+    playKokusenSequence(yuji, combo, () => createKokusenTarget(yuji, combo, targetX, targetY));
+}
+
+function showBlackFlashEffect(x, y) {
+    const flash = document.createElement('div');
+    flash.style.position = 'absolute';
+    flash.style.left = x + 'px';
+    flash.style.top = y + 'px';
+    flash.style.width = '2px';
+    flash.style.height = '2px';
+    flash.style.background = '#fff';
+    flash.style.boxShadow = '0 0 40px 20px #000, 0 0 100px 40px #B31B1B';
+    flash.style.borderRadius = '50%';
+    flash.style.zIndex = '100';
+    flash.style.pointerEvents = 'none';
+
+    flash.style.boxShadow += ', 20px -20px 0 #B31B1B, -20px 20px 0 #B31B1B';
+
+    container.appendChild(flash);
+    container.style.transform = 'translate(5px, 5px)';
+
+    registerGameTimeout(() => {
+        if (activeGame) container.style.transform = 'translate(-5px, -5px)';
+    }, 50);
+    registerGameTimeout(() => {
+        if (activeGame) container.style.transform = 'translate(0, 0)';
+    }, 100);
+    registerGameTimeout(() => flash.remove(), 400);
 }
 
 // ------------------------------------------
