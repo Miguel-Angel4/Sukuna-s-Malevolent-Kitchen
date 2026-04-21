@@ -23,7 +23,7 @@ const KOKUSEN_COMBOS = {
             'img/Itadori sprite golpeando.png',
             'img/Itadori sprite black flash pu\u00f1etazo.png'
         ],
-        frameDuration: 110,
+        frameDuration: 220,
         circleOffset: { x: 86, y: 20 },
         effectOffset: { x: 118, y: 52 }
     },
@@ -34,7 +34,7 @@ const KOKUSEN_COMBOS = {
             'img/Itadori sprite pateando.png',
             'img/Itadori sprite black flash patada.png'
         ],
-        frameDuration: 130,
+        frameDuration: 240,
         circleOffset: { x: 74, y: 60 },
         effectOffset: { x: 110, y: 95 }
     }
@@ -317,7 +317,7 @@ function spawnKokusenCircle() {
     const startY = Math.random() * Math.max(1, containerHeight - spriteHeight - 40);
     const targetX = 20 + Math.random() * Math.max(1, containerWidth - spriteWidth - 100);
     const targetY = 20 + Math.random() * Math.max(1, containerHeight - spriteHeight - 100);
-    const travelDuration = combo.frames.length * combo.frameDuration + 80;
+    const travelDuration = combo.frames.length * combo.frameDuration + 220;
 
     yuji.style.left = `${startX}px`;
     yuji.style.top = `${startY}px`;
