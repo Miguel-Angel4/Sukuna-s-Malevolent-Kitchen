@@ -262,12 +262,15 @@ function createKokusenTarget(yuji, combo, targetX, targetY) {
     circle.appendChild(ring);
     container.appendChild(circle);
 
+    // Forzar un reflujo (reflow) para asegurar que el navegador registre el tamaño inicial antes de la transición
+    void ring.offsetHeight;
+
     registerGameTimeout(() => {
         ring.style.width = '60px';
         ring.style.height = '60px';
         ring.style.top = '0px';
         ring.style.left = '0px';
-    }, 10);
+    }, 20);
 
     circle.onclick = () => {
         if (activeGame !== 'kokusen') return;
