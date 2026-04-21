@@ -23,7 +23,7 @@ const KOKUSEN_COMBOS = {
         ],
         attackFrame: 'img/Itadori sprite golpeando.png',
         flashFrame: 'img/Itadori sprite black flash pu\u00f1etazo.png',
-        frameDuration: 300, // <--- CAMBIA ESTE VALOR PARA AJUSTAR LA VELOCIDAD (Menor = Más rápido)
+        frameDuration: 350, // <--- CAMBIA ESTE VALOR PARA AJUSTAR LA VELOCIDAD (Menor = Más rápido)
         circleOffset: { x: 154, y: 70 },
         effectOffset: { x: 184, y: 100 }
     },
@@ -108,7 +108,7 @@ function oldSpawnKokusenCircle() {
     yuji.style.width = '100px';
     yuji.style.imageRendering = 'pixelated';
     yuji.style.transition = 'all 0.3s ease-out';
-    
+
     // Posición inicial (fuera o en el borde)
     const startX = Math.random() > 0.5 ? -100 : 800;
     const startY = Math.random() * 500;
@@ -125,7 +125,7 @@ function oldSpawnKokusenCircle() {
         yuji.style.left = targetX + 'px';
         yuji.style.top = targetY + 'px';
         yuji.src = 'img/game_yuji_punch.png'; // Cambiar a pose de golpe
-        
+
         // Crear el círculo de timing en el punto del golpe
         const circle = document.createElement('div');
         circle.className = 'kokusen-target';
@@ -149,7 +149,7 @@ function oldSpawnKokusenCircle() {
         ring.style.top = '-30px';
         ring.style.left = '-30px';
         ring.style.transition = 'all 1s linear';
-        
+
         circle.appendChild(ring);
         container.appendChild(circle);
 
@@ -198,12 +198,12 @@ function oldShowBlackFlashEffect(x, y) {
     flash.style.borderRadius = '50%';
     flash.style.zIndex = '100';
     flash.style.pointerEvents = 'none';
-    
+
     // Rayos rojos simulados con sombras múltiples
     flash.style.boxShadow += ', 20px -20px 0 #B31B1B, -20px 20px 0 #B31B1B';
 
     container.appendChild(flash);
-    
+
     // Efecto de sacudida
     container.style.transform = 'translate(5px, 5px)';
     setTimeout(() => container.style.transform = 'translate(-5px, -5px)', 50);
@@ -278,7 +278,7 @@ function createKokusenTarget(yuji, combo, targetX, targetY) {
             // Mostrar Black Flash sprite
             yuji.src = combo.flashFrame;
             showBlackFlashEffect(targetX + combo.effectOffset.x, targetY + combo.effectOffset.y);
-            
+
             // Mantener el sprite un momento antes de quitarlo
             registerGameTimeout(() => {
                 if (yuji.isConnected) yuji.remove();
@@ -379,12 +379,12 @@ function startTodo() {
     updateDisplays();
 
     const sprite = document.getElementById('todo-sprite');
-    
+
     const moveTodo = () => {
         sprite.style.left = Math.random() * 700 + 'px';
         sprite.style.top = Math.random() * 500 + 'px';
     };
-    
+
     moveTodo();
 
     sprite.onclick = () => {
@@ -428,7 +428,7 @@ function startGojo() {
     intentos = 6;
     palabraOculta = PALABRAS[Math.floor(Math.random() * PALABRAS.length)];
     palabraAdivinada = Array(palabraOculta.length).fill("_");
-    
+
     renderHangman();
 }
 
@@ -487,7 +487,7 @@ function startSukuna() {
             <button class="botoncarta mt-5" onclick="cutSukuna()">CORTAR (ESPACIO)</button>
         </div>
     `;
-    
+
     timer = 30;
     score = 0;
     activeGame = 'sukuna';
@@ -511,13 +511,13 @@ function startSukuna() {
         }
     }, 20);
 
-    window.onkeydown = (e) => { if(e.code === 'Space') cutSukuna(); };
+    window.onkeydown = (e) => { if (e.code === 'Space') cutSukuna(); };
 }
 
 function cutSukuna() {
     const pointer = document.getElementById('slider-pointer');
     const pos = parseFloat(pointer.style.left);
-    
+
     // Crear efecto de tajo
     const slash = document.createElement('div');
     slash.style.position = 'absolute';
@@ -530,7 +530,7 @@ function cutSukuna() {
     slash.style.transform = `rotate(${Math.random() * 20 - 10}deg)`;
     slash.style.zIndex = '50';
     container.appendChild(slash);
-    
+
     setTimeout(() => slash.remove(), 200);
 
     if (pos > 45 && pos < 55) {
@@ -572,16 +572,16 @@ function spinJackpot() {
     const r2 = document.getElementById('reel2');
     const r3 = document.getElementById('reel3');
     const btn = document.getElementById('spin-btn');
-    
+
     btn.disabled = true;
-    
+
     let cycles = 0;
     const interval = setInterval(() => {
         r1.textContent = symbols[Math.floor(Math.random() * symbols.length)];
         r2.textContent = symbols[Math.floor(Math.random() * symbols.length)];
         r3.textContent = symbols[Math.floor(Math.random() * symbols.length)];
         cycles++;
-        
+
         if (cycles > 20) {
             clearInterval(interval);
             btn.disabled = false;
