@@ -16,25 +16,25 @@ let kokusenAttackCount = 0;
 
 const KOKUSEN_COMBOS = {
     odd: {
-        frames: [
+        prepFrames: [
             'img/Itadori sprite base.png',
             'img/Itadori sprite guardia.png',
-            'img/Itadori sprite preparando pu\u00f1etazo.png',
-            'img/Itadori sprite golpeando.png',
-            'img/Itadori sprite black flash pu\u00f1etazo.png'
+            'img/Itadori sprite preparando pu\u00f1etazo.png'
         ],
-        frameDuration: 220,
+        attackFrame: 'img/Itadori sprite golpeando.png',
+        flashFrame: 'img/Itadori sprite black flash pu\u00f1etazo.png',
+        frameDuration: 400,
         circleOffset: { x: 217, y: 138 },
         effectOffset: { x: 247, y: 168 }
     },
     even: {
-        frames: [
+        prepFrames: [
             'img/Itadori sprite base.png',
-            'img/Itadori sprite preparando patada.png',
-            'img/Itadori sprite pateando.png',
-            'img/Itadori sprite black flash patada.png'
+            'img/Itadori sprite preparando patada.png'
         ],
-        frameDuration: 240,
+        attackFrame: 'img/Itadori sprite pateando.png',
+        flashFrame: 'img/Itadori sprite black flash patada.png',
+        frameDuration: 420,
         circleOffset: { x: 228, y: 160 },
         effectOffset: { x: 258, y: 190 }
     }
@@ -214,18 +214,19 @@ function oldShowBlackFlashEffect(x, y) {
 
 function playKokusenSequence(sprite, combo, onComplete) {
     let frameIndex = 0;
-    sprite.src = combo.frames[frameIndex];
+    sprite.src = combo.prepFrames[frameIndex];
 
     const showNextFrame = () => {
         if (activeGame !== 'kokusen' || !sprite.isConnected) return;
 
         frameIndex += 1;
-        if (frameIndex >= combo.frames.length) {
+        if (frameIndex >= combo.prepFrames.length) {
+            sprite.src = combo.attackFrame;
             onComplete();
             return;
         }
 
-        sprite.src = combo.frames[frameIndex];
+        sprite.src = combo.prepFrames[frameIndex];
         registerGameTimeout(showNextFrame, combo.frameDuration);
     };
 
@@ -274,14 +275,21 @@ function createKokusenTarget(yuji, combo, targetX, targetY) {
         const currentSize = parseInt(ring.style.width, 10);
         if (currentSize < 75 && currentSize > 45) {
             score += 10;
+            // Mostrar Black Flash sprite
+            yuji.src = combo.flashFrame;
             showBlackFlashEffect(targetX + combo.effectOffset.x, targetY + combo.effectOffset.y);
+            
+            // Mantener el sprite un momento antes de quitarlo
+            registerGameTimeout(() => {
+                if (yuji.isConnected) yuji.remove();
+            }, 500);
         } else {
             score -= 5;
+            yuji.remove();
         }
 
         updateDisplays();
         circle.remove();
-        yuji.remove();
         spawnKokusenCircle();
     };
 
@@ -317,7 +325,7 @@ function spawnKokusenCircle() {
     const startY = Math.random() * Math.max(1, containerHeight - spriteHeight - 40);
     const targetX = 20 + Math.random() * Math.max(1, containerWidth - spriteWidth - 100);
     const targetY = 20 + Math.random() * Math.max(1, containerHeight - spriteHeight - 100);
-    const travelDuration = combo.frames.length * combo.frameDuration + 220;
+    const travelDuration = (combo.prepFrames.length + 1) * combo.frameDuration + 220;
 
     yuji.style.left = `${startX}px`;
     yuji.style.top = `${startY}px`;
