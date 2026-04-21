@@ -24,7 +24,7 @@ const KOKUSEN_COMBOS = {
         ],
         attackFrame: 'img/Itadori sprite golpeando.png',
         flashFrame: 'img/Itadori sprite black flash pu\u00f1etazo.png',
-        frameDuration: 350, // <--- CAMBIA ESTE VALOR PARA AJUSTAR LA VELOCIDAD (Menor = Más rápido)
+        frameDuration: 310, // <--- CAMBIA ESTE VALOR PARA AJUSTAR LA VELOCIDAD (Menor = Más rápido)
         circleOffset: { x: 154, y: 70 },
         effectOffset: { x: 184, y: 100 }
     },
@@ -35,7 +35,7 @@ const KOKUSEN_COMBOS = {
         ],
         attackFrame: 'img/Itadori sprite pateando.png',
         flashFrame: 'img/Itadori sprite black flash patada.png',
-        frameDuration: 320, // <--- CAMBIA ESTE VALOR PARA AJUSTAR LA VELOCIDAD
+        frameDuration: 310, // <--- CAMBIA ESTE VALOR PARA AJUSTAR LA VELOCIDAD
         circleOffset: { x: 154, y: 70 },
         effectOffset: { x: 184, y: 100 }
     }
