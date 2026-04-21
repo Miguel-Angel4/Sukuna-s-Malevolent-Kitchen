@@ -24,8 +24,8 @@ const KOKUSEN_COMBOS = {
         attackFrame: 'img/Itadori sprite golpeando.png',
         flashFrame: 'img/Itadori sprite black flash pu\u00f1etazo.png',
         frameDuration: 400,
-        circleOffset: { x: 217, y: 138 },
-        effectOffset: { x: 247, y: 168 }
+        circleOffset: { x: 154, y: 70 },
+        effectOffset: { x: 184, y: 100 }
     },
     even: {
         prepFrames: [
@@ -35,8 +35,8 @@ const KOKUSEN_COMBOS = {
         attackFrame: 'img/Itadori sprite pateando.png',
         flashFrame: 'img/Itadori sprite black flash patada.png',
         frameDuration: 420,
-        circleOffset: { x: 228, y: 160 },
-        effectOffset: { x: 258, y: 190 }
+        circleOffset: { x: 154, y: 70 },
+        effectOffset: { x: 184, y: 100 }
     }
 };
 
@@ -307,8 +307,8 @@ function spawnKokusenCircle() {
 
     kokusenAttackCount += 1;
     const combo = kokusenAttackCount % 2 === 1 ? KOKUSEN_COMBOS.odd : KOKUSEN_COMBOS.even;
-    const spriteWidth = 300;
-    const spriteHeight = 400;
+    const spriteWidth = 200;
+    const spriteHeight = 200;
     const containerWidth = container.clientWidth || 800;
     const containerHeight = container.clientHeight || 600;
 
