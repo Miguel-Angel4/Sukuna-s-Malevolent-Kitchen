@@ -406,7 +406,7 @@ function startTodo() {
     container.innerHTML = `
         <div id="todo-container" style="position:relative; width:100%; height:100%;">
             <img src="img/Todo sprite base.png" id="todo-sprite" 
-                 style="position:absolute; width:250px; height:250px; cursor:pointer; 
+                 style="position:absolute; width:200px; height:200px; cursor:pointer; 
                         image-rendering:pixelated; object-fit:contain; z-index:10;">
         </div>
     `;
@@ -421,8 +421,8 @@ function startTodo() {
     let isAnimating = false;
 
     const moveTodo = () => {
-        const x = Math.random() * (container.clientWidth - 260);
-        const y = Math.random() * (container.clientHeight - 260);
+        const x = Math.random() * (container.clientWidth - 210);
+        const y = Math.random() * (container.clientHeight - 210);
         sprite.style.left = x + 'px';
         sprite.style.top = y + 'px';
     };
@@ -431,15 +431,14 @@ function startTodo() {
         if (!activeGame || !sprite.isConnected) return;
         
         let frame = 0;
-        const currentSpeed = Math.max(40, 200 - (todoClickCount * 10)); // Más rápido cada vez
+        const currentSpeed = Math.max(40, 150 - (todoClickCount * 8)); // Un poco más rápido
 
         const nextFrame = () => {
             if (frame < TODO_SEQUENCE.length) {
                 sprite.src = TODO_SEQUENCE[frame];
                 
-                // En el último frame (la palmada), nos movemos
+                // En el frame de la palmada (último frame), mostramos el efecto
                 if (frame === TODO_SEQUENCE.length - 1) {
-                    moveTodo();
                     showClapEffect(parseInt(sprite.style.left), parseInt(sprite.style.top));
                 }
                 
@@ -462,6 +461,7 @@ function startTodo() {
         score += 5;
         todoClickCount++;
         updateDisplays();
+        moveTodo(); // Teletransportar inmediatamente al hacer click
         playTodoSequence();
     };
 
