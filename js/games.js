@@ -406,7 +406,7 @@ function startTodo() {
     container.innerHTML = `
         <div id="todo-container" style="position:relative; width:100%; height:100%;">
             <img src="img/Todo sprite base.png" id="todo-sprite" 
-                 style="position:absolute; width:200px; height:200px; cursor:pointer; 
+                 style="position:absolute; width:120px; height:120px; cursor:pointer; 
                         image-rendering:pixelated; object-fit:contain; z-index:10;">
         </div>
     `;
@@ -421,47 +421,52 @@ function startTodo() {
     let isAnimating = false;
 
     const moveTodo = () => {
-        const x = Math.random() * (container.clientWidth - 210);
-        const y = Math.random() * (container.clientHeight - 210);
+        const x = Math.random() * (container.clientWidth - 130);
+        const y = Math.random() * (container.clientHeight - 130);
         sprite.style.left = x + 'px';
         sprite.style.top = y + 'px';
     };
+
+    let currentSequenceTimeout = null;
 
     const playTodoSequence = () => {
         if (!activeGame || !sprite.isConnected) return;
         
         let frame = 0;
-        const currentSpeed = Math.max(40, 150 - (todoClickCount * 8)); // Un poco más rápido
+        // Velocidad base más lenta para permitir reacción, se acelera con los puntos
+        const currentSpeed = Math.max(60, 300 - (todoClickCount * 10));
 
         const nextFrame = () => {
+            if (!activeGame || !sprite.isConnected) return;
+
             if (frame < TODO_SEQUENCE.length) {
                 sprite.src = TODO_SEQUENCE[frame];
-                
-                // En el frame de la palmada (último frame), mostramos el efecto
-                if (frame === TODO_SEQUENCE.length - 1) {
-                    showClapEffect(parseInt(sprite.style.left), parseInt(sprite.style.top));
-                }
-                
                 frame++;
-                registerGameTimeout(nextFrame, currentSpeed);
+                currentSequenceTimeout = registerGameTimeout(nextFrame, currentSpeed);
             } else {
-                isAnimating = false;
-                sprite.src = TODO_SEQUENCE[0]; // Volver a base
+                // Se completó la animación sin click: penalización
+                score = Math.max(0, score - 3);
+                updateDisplays();
+                moveTodo();
+                playTodoSequence();
             }
         };
         nextFrame();
     };
 
     moveTodo();
+    playTodoSequence(); // Iniciar automáticamente el bucle
 
     sprite.onclick = () => {
-        if (isAnimating) return;
+        if (!activeGame) return;
         
-        isAnimating = true;
-        score += 5;
+        // Click exitoso: premio y teletransporte
+        clearPendingGameTimeouts(); // Detener la animación actual
+        score += 10;
         todoClickCount++;
         updateDisplays();
-        moveTodo(); // Teletransportar inmediatamente al hacer click
+        showClapEffect(parseInt(sprite.style.left), parseInt(sprite.style.top));
+        moveTodo();
         playTodoSequence();
     };
 
