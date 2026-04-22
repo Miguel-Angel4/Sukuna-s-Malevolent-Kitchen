@@ -15,6 +15,7 @@ let pendingGameTimeouts = [];
 let kokusenAttackCount = 0;
 let kokusenStreak = 0;
 let todoClickCount = 0;
+let todoCurrentSpeed = 450;
 
 const TODO_SEQUENCE = [
     'img/Todo sprite base.png',
@@ -78,6 +79,7 @@ function stopGame() {
     kokusenAttackCount = 0;
     kokusenStreak = 0;
     todoClickCount = 0;
+    todoCurrentSpeed = 450;
 }
 
 function updateDisplays() {
@@ -414,6 +416,7 @@ function startTodo() {
     timer = 30;
     score = 0;
     todoClickCount = 0;
+    todoCurrentSpeed = 450; // Velocidad inicial más lenta
     activeGame = 'todo';
     updateDisplays();
 
@@ -433,8 +436,6 @@ function startTodo() {
         if (!activeGame || !sprite.isConnected) return;
         
         let frame = 0;
-        // Velocidad base más lenta para permitir reacción, se acelera con los puntos
-        const currentSpeed = Math.max(60, 300 - (todoClickCount * 10));
 
         const nextFrame = () => {
             if (!activeGame || !sprite.isConnected) return;
@@ -442,10 +443,11 @@ function startTodo() {
             if (frame < TODO_SEQUENCE.length) {
                 sprite.src = TODO_SEQUENCE[frame];
                 frame++;
-                currentSequenceTimeout = registerGameTimeout(nextFrame, currentSpeed);
+                currentSequenceTimeout = registerGameTimeout(nextFrame, todoCurrentSpeed);
             } else {
-                // Se completó la animación sin click: penalización
+                // Se completó la animación sin click: penalización y se hace más lento
                 score = Math.max(0, score - 3);
+                todoCurrentSpeed = Math.min(600, todoCurrentSpeed + 40); // Se hace más lento
                 updateDisplays();
                 moveTodo();
                 playTodoSequence();
@@ -460,10 +462,11 @@ function startTodo() {
     sprite.onclick = () => {
         if (!activeGame) return;
         
-        // Click exitoso: premio y teletransporte
-        clearPendingGameTimeouts(); // Detener la animación actual
+        // Click exitoso: premio, teletransporte y se hace más rápido
+        clearPendingGameTimeouts(); 
         score += 10;
         todoClickCount++;
+        todoCurrentSpeed = Math.max(60, todoCurrentSpeed - 25); // Se hace más rápido
         updateDisplays();
         showClapEffect(parseInt(sprite.style.left), parseInt(sprite.style.top));
         moveTodo();
