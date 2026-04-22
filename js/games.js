@@ -15,7 +15,7 @@ let pendingGameTimeouts = [];
 let kokusenAttackCount = 0;
 let kokusenStreak = 0;
 let todoClickCount = 0;
-let todoCurrentSpeed = 450;
+let todoCurrentSpeed = 300;
 
 const TODO_SEQUENCE = [
     'img/Todo sprite base.png',
@@ -79,7 +79,7 @@ function stopGame() {
     kokusenAttackCount = 0;
     kokusenStreak = 0;
     todoClickCount = 0;
-    todoCurrentSpeed = 450;
+    todoCurrentSpeed = 300;
 }
 
 function updateDisplays() {
@@ -416,7 +416,7 @@ function startTodo() {
     timer = 30;
     score = 0;
     todoClickCount = 0;
-    todoCurrentSpeed = 450; // Velocidad inicial más lenta
+    todoCurrentSpeed = 300; // Velocidad inicial algo más rápida
     activeGame = 'todo';
     updateDisplays();
 
