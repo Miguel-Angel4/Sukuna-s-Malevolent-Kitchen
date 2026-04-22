@@ -406,7 +406,7 @@ function startTodo() {
     container.innerHTML = `
         <div id="todo-container" style="position:relative; width:100%; height:100%;">
             <img src="img/Todo sprite base.png" id="todo-sprite" 
-                 style="position:absolute; width:150px; height:150px; cursor:pointer; 
+                 style="position:absolute; width:250px; height:250px; cursor:pointer; 
                         image-rendering:pixelated; object-fit:contain; z-index:10;">
         </div>
     `;
@@ -421,8 +421,8 @@ function startTodo() {
     let isAnimating = false;
 
     const moveTodo = () => {
-        const x = Math.random() * (container.clientWidth - 160);
-        const y = Math.random() * (container.clientHeight - 160);
+        const x = Math.random() * (container.clientWidth - 260);
+        const y = Math.random() * (container.clientHeight - 260);
         sprite.style.left = x + 'px';
         sprite.style.top = y + 'px';
     };
