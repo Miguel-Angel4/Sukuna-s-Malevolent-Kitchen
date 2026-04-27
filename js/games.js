@@ -597,26 +597,24 @@ function startSukuna() {
 
     gameInterval = setInterval(() => {
         timer -= 0.02;
-        pos += dir * 2.5; // Un poco más rápido para compensar la barra más grande
+        pos += dir * 2.2; // Velocidad ligeramente reducida para mejor control
         
         if (pos >= 100 || pos <= 0) {
             dir *= -1;
-            // Cambiar lugar de la zona roja al llegar al extremo
-            hitZonePos = Math.random() * 60 + 20; // Entre 20% y 80%
+            hitZonePos = Math.random() * 70 + 15; // Rango un poco más centrado
             hitZone.style.left = hitZonePos + '%';
         }
         
         pointer.style.left = pos + '%';
         updateDisplays();
 
-        // Rango de detección dinámico (aprox 10% de ancho)
-        const inRange = pos > (hitZonePos - 6) && pos < (hitZonePos + 6);
+        // Rango visual (coincide con el ancho del hit-zone)
+        const inRange = pos > (hitZonePos - 8) && pos < (hitZonePos + 8);
 
         if (!isAnimatingAction) {
             if (inRange) {
                 sprite.src = 'img/Sukuna sprite corte.png';
-            } else if ((dir > 0 && pos > (hitZonePos - 20) && pos <= (hitZonePos - 6)) || 
-                       (dir < 0 && pos < (hitZonePos + 20) && pos >= (hitZonePos + 6))) {
+            } else if (Math.abs(pos - hitZonePos) < 25) {
                 sprite.src = 'img/Sukuna sprite preparado.png';
             } else {
                 sprite.src = 'img/Sukuna sprite base.png';
@@ -637,6 +635,7 @@ function startSukuna() {
     };
 
     window.cutSukuna = function () {
+        // No bloquear el click si no estamos en medio de una risa de fallo
         if (isAnimatingAction && sprite.src.includes('riendo')) return;
         
         const currentPos = parseFloat(pointer.style.left);
@@ -653,23 +652,24 @@ function startSukuna() {
         slash.style.transform = `rotate(${Math.random() * 20 - 10}deg)`;
         slash.style.zIndex = '50';
         container.appendChild(slash);
-        setTimeout(() => slash.remove(), 200);
+        setTimeout(() => slash.remove(), 150);
 
-        if (currentPos > (hitZonePos - 7) && currentPos < (hitZonePos + 7)) {
+        // HIT DETECTION: Rango mucho más generoso (+/- 12%)
+        if (Math.abs(currentPos - hitZonePos) < 12) {
             score += 15;
             isAnimatingAction = true;
             sprite.src = 'img/Sukuna sprite preparado.png';
             setTimeout(() => {
                 if (activeGame === 'sukuna') {
                     sprite.src = 'img/Sukuna sprite corte.png';
-                    container.style.transform = 'scale(1.08)';
+                    container.style.transform = 'scale(1.1)';
                     setTimeout(() => container.style.transform = 'scale(1)', 100);
                 }
-            }, 80);
+            }, 50);
 
             setTimeout(() => {
                 isAnimatingAction = false;
-            }, 300);
+            }, 200); // Bloqueo de éxito muy corto
         } else {
             score -= 10;
             isAnimatingAction = true;
@@ -680,7 +680,7 @@ function startSukuna() {
                     sprite.classList.remove('laugh-anim');
                     isAnimatingAction = false;
                 }
-            }, 700);
+            }, 500); // Bloqueo de fallo reducido
         }
         updateDisplays();
     };
