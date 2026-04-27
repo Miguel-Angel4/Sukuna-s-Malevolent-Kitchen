@@ -599,11 +599,16 @@ function startSukuna() {
         pointer.style.left = pos + '%';
         updateDisplays();
 
-        // Si pasa por la zona roja (45-55 aprox), animación de corte
+        // Lógica de animación automática: Preparado -> Corte -> Base
         if (!isAnimatingAction) {
-            if (pos > 45 && pos < 55) {
+            if (pos > 43 && pos < 57) {
+                // Zona roja: Corte
                 sprite.src = 'img/Sukuna sprite corte.png';
+            } else if ((dir > 0 && pos > 25 && pos <= 43) || (dir < 0 && pos < 75 && pos >= 57)) {
+                // Aproximándose: Preparado
+                sprite.src = 'img/Sukuna sprite preparado.png';
             } else {
+                // Lejos: Base
                 sprite.src = 'img/Sukuna sprite base.png';
             }
         }
@@ -617,14 +622,13 @@ function startSukuna() {
     window.onkeydown = (e) => {
         if (e.code === 'Space') {
             e.preventDefault();
-            cutSukuna();
+            window.cutSukuna();
         }
     };
 
     window.cutSukuna = function () {
-        if (isAnimatingAction) return;
-        isAnimatingAction = true;
-
+        if (isAnimatingAction && sprite.src.includes('riendo')) return; // Permitir cortar si no está riendo
+        
         const pointer = document.getElementById('slider-pointer');
         const pos = parseFloat(pointer.style.left);
 
@@ -635,29 +639,32 @@ function startSukuna() {
         slash.style.height = '4px';
         slash.style.background = '#fff';
         slash.style.boxShadow = '0 0 15px #B31B1B';
-        slash.style.top = Math.random() * 500 + 'px';
+        slash.style.top = Math.random() * 400 + 'px'; // Ajustado para que no se salga tanto
         slash.style.left = '0';
         slash.style.transform = `rotate(${Math.random() * 20 - 10}deg)`;
         slash.style.zIndex = '50';
         container.appendChild(slash);
         setTimeout(() => slash.remove(), 200);
 
-        if (pos > 45 && pos < 55) {
+        // Rango de acierto algo más amplio para evitar frustración
+        if (pos > 42 && pos < 58) {
             score += 15;
+            isAnimatingAction = true;
             sprite.src = 'img/Sukuna sprite preparado.png';
             setTimeout(() => {
                 if (activeGame === 'sukuna') {
                     sprite.src = 'img/Sukuna sprite corte.png';
-                    container.style.transform = 'scale(1.05)';
+                    container.style.transform = 'scale(1.08)';
                     setTimeout(() => container.style.transform = 'scale(1)', 100);
                 }
-            }, 100);
+            }, 80);
 
             setTimeout(() => {
                 isAnimatingAction = false;
-            }, 400);
+            }, 300);
         } else {
             score -= 10;
+            isAnimatingAction = true;
             sprite.src = 'img/Sukuna sprite riendo.png';
             sprite.classList.add('laugh-anim');
             setTimeout(() => {
@@ -665,7 +672,7 @@ function startSukuna() {
                     sprite.classList.remove('laugh-anim');
                     isAnimatingAction = false;
                 }
-            }, 800);
+            }, 700);
         }
         updateDisplays();
     };
