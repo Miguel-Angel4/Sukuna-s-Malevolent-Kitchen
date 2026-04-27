@@ -597,7 +597,7 @@ function startSukuna() {
 
     gameInterval = setInterval(() => {
         timer -= 0.02;
-        pos += dir * 3.5; // Velocidad aumentada a 3.5
+        pos += dir * 3.2; // Velocidad ajustada a 3.2
 
         if (pos >= 100 || pos <= 0) {
             dir *= -1;
