@@ -522,7 +522,7 @@ function startGojo() {
 function renderHangman() {
     container.innerHTML = `
         <div style="text-align:center; color:#fff; padding:50px;">
-            <img src="img/game_gojo.png" style="width:100px; margin-bottom:20px;">
+            <img src="img/Satoru Gojo Sprite.png" style="width:100px; margin-bottom:20px;">
             <div style="font-size:3rem; letter-spacing:10px; margin-bottom:30px;">${palabraAdivinada.join(" ")}</div>
             <div style="color:#B31B1B;">Vidas: ${"❤️".repeat(intentos)}</div>
             <div id="keyboard" style="margin-top:30px; display:grid; grid-template-columns: repeat(9, 1fr); gap:5px;"></div>
