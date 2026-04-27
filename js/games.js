@@ -719,8 +719,10 @@ function spinJackpot() {
 
     // Animación de baile
     sprite.classList.remove('hakari-float');
+    let danceFrame = 1;
     let danceInterval = setInterval(() => {
-        sprite.src = sprite.src.includes('dance 1') ? 'img/Hakari sprites dance 2.png' : 'img/Hakari sprites dance 1.png';
+        danceFrame = (danceFrame === 1) ? 2 : 1;
+        sprite.src = `img/Hakari sprites dance ${danceFrame}.png`;
     }, 150);
 
     let cycles = 0;
