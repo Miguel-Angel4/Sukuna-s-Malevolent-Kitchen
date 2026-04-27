@@ -692,31 +692,36 @@ function startSukuna() {
 function startHakari() {
     modal.style.display = 'flex';
     container.innerHTML = `
-        <div style="text-align:center; color:#fff; padding:50px;">
-            <img src="img/game_hakari.png" style="width:120px;">
-            <h2 style="color:#f1dc1e;">PRIVATE PURE LOVE TRAIN</h2>
-            <div style="display:flex; justify-content:center; gap:20px; font-size:5rem; margin:40px 0;">
-                <div id="reel1" class="glass-effect" style="width:100px; padding:20px;">?</div>
-                <div id="reel2" class="glass-effect" style="width:100px; padding:20px;">?</div>
-                <div id="reel3" class="glass-effect" style="width:100px; padding:20px;">?</div>
+        <div style="text-align:center; color:#fff; padding:20px;">
+            <img id="hakari-sprite" src="img/Hakari sprites feliz.png" class="hakari-float" style="width:150px; height:150px; object-fit:contain; margin-bottom:30px;">
+            <div id="slot-machine" style="font-size:4rem; margin-bottom:30px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px;">
+                <span id="reel1">?</span> <span id="reel2">?</span> <span id="reel3">?</span>
             </div>
-            <button id="spin-btn" class="botoncarta" onclick="spinJackpot()" style="font-size:1.5rem;">TIRAR PALANCA</button>
+            <button id="spin-btn" class="botoncarta mt-5" onclick="spinJackpot()">TIRAR DE LA PALANCA</button>
             <p class="mt-4">"Let's go gambling!"</p>
         </div>
     `;
+
     activeGame = 'hakari';
     score = 0;
     updateDisplays();
 }
 
 function spinJackpot() {
-    const symbols = ["💀", "🔥", "💎", "🎰", "❤️", "🤞"];
     const r1 = document.getElementById('reel1');
     const r2 = document.getElementById('reel2');
     const r3 = document.getElementById('reel3');
     const btn = document.getElementById('spin-btn');
+    const sprite = document.getElementById('hakari-sprite');
+    const symbols = ["💀", "🔥", "💎", "🎰", "❤️", "🤞"];
 
     btn.disabled = true;
+
+    // Animación de baile
+    sprite.classList.remove('hakari-float');
+    let danceInterval = setInterval(() => {
+        sprite.src = sprite.src.includes('dance 1') ? 'img/Hakari sprites dance 2.png' : 'img/Hakari sprites dance 1.png';
+    }, 150);
 
     let cycles = 0;
     const interval = setInterval(() => {
@@ -727,27 +732,18 @@ function spinJackpot() {
 
         if (cycles > 20) {
             clearInterval(interval);
+            clearInterval(danceInterval);
             btn.disabled = false;
-            if (r1.textContent === r2.textContent && r2.textContent === r3.textContent) {
-                container.style.animation = 'fever 0.2s infinite';
-                const feverText = document.createElement('div');
-                feverText.innerHTML = '<h1 style="color:#f1dc1e; font-size:5rem; text-shadow: 0 0 20px #fff;">JACKPOT!!</h1><p>LET\'S GO GAMBLING!</p>';
-                feverText.style.position = 'absolute';
-                feverText.style.top = '50%';
-                feverText.style.left = '50%';
-                feverText.style.transform = 'translate(-50%, -50%)';
-                feverText.style.zIndex = '1000';
-                container.appendChild(feverText);
+            sprite.src = 'img/Hakari sprites feliz.png';
+            sprite.classList.add('hakari-float');
 
-                setTimeout(() => {
-                    alert("¡JACKPOT! ¡ESTOY CON MI 10/10 FEMBOY! Descuento 50%: JACKPOT50");
-                    container.style.animation = 'none';
-                    stopGame();
-                }, 2000);
+            if (r1.textContent === r2.textContent && r2.textContent === r3.textContent) {
+                alert("¡JACKPOT! Descuento del 50%: JACKPOT50");
+                score = 1000;
             } else {
-                // Típico audio de perder o mensaje
                 console.log("Aw dangit!");
             }
+            updateDisplays();
         }
     }, 100);
 }

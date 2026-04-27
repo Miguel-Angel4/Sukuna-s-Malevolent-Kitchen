@@ -176,6 +176,10 @@ strong {
     animation: sukuna-laugh 0.3s ease-in-out infinite;
 }
 
+.hakari-float {
+    animation: float 2s ease-in-out infinite;
+}
+
 body.home {
     margin: 0;
     overflow-x: hidden;
