@@ -565,8 +565,8 @@ function guessLetter(l, btn) {
 function startSukuna() {
     modal.style.display = 'flex';
     container.innerHTML = `
-        <div style="text-align:center; color:#fff; padding:50px;">
-            <img src="img/game_sukuna.png" style="width:150px; margin-bottom:50px;">
+        <div style="text-align:center; color:#fff; padding:20px;">
+            <img id="sukuna-sprite" src="img/Sukuna sprite base.png" style="width:150px; height:150px; object-fit:contain; margin-bottom:50px; transition: transform 0.2s;">
             <div style="width:80%; height:20px; background:#333; margin:0 auto; position:relative; border-radius:10px;">
                 <div id="hit-zone" style="width:40px; height:100%; background:#B31B1B; position:absolute; left:50%; transform:translateX(-50%);"></div>
                 <div id="slider-pointer" style="width:10px; height:30px; background:#fff; position:absolute; top:-5px; left:0;"></div>
@@ -574,6 +574,14 @@ function startSukuna() {
             <button class="botoncarta mt-5" onclick="cutSukuna()">CORTAR (ESPACIO)</button>
         </div>
     `;
+
+    const sprite = document.getElementById('sukuna-sprite');
+    let isAnimatingAction = false;
+
+    // Secuencia inicial
+    setTimeout(() => { if (activeGame === 'sukuna') sprite.src = 'img/Sukuna sprite preparado.png'; }, 500);
+    setTimeout(() => { if (activeGame === 'sukuna') sprite.src = 'img/Sukuna sprite corte.png'; }, 1000);
+    setTimeout(() => { if (activeGame === 'sukuna') sprite.src = 'img/Sukuna sprite base.png'; }, 1500);
 
     timer = 30;
     score = 0;
@@ -583,7 +591,6 @@ function startSukuna() {
     let pos = 0;
     let dir = 1;
     const pointer = document.getElementById('slider-pointer');
-    const hitZone = document.getElementById('hit-zone');
 
     gameInterval = setInterval(() => {
         timer -= 0.02;
@@ -592,42 +599,76 @@ function startSukuna() {
         pointer.style.left = pos + '%';
         updateDisplays();
 
+        // Si pasa por la zona roja (45-55 aprox), animación de corte
+        if (!isAnimatingAction) {
+            if (pos > 45 && pos < 55) {
+                sprite.src = 'img/Sukuna sprite corte.png';
+            } else {
+                sprite.src = 'img/Sukuna sprite base.png';
+            }
+        }
+
         if (timer <= 0) {
             alert(`Santuario de Malévolo cerrado. Puntos: ${score}. Descuento del 20%: SANTUARIO20`);
             stopGame();
         }
     }, 20);
 
-    window.onkeydown = (e) => { if (e.code === 'Space') cutSukuna(); };
-}
+    window.onkeydown = (e) => {
+        if (e.code === 'Space') {
+            e.preventDefault();
+            cutSukuna();
+        }
+    };
 
-function cutSukuna() {
-    const pointer = document.getElementById('slider-pointer');
-    const pos = parseFloat(pointer.style.left);
+    window.cutSukuna = function () {
+        if (isAnimatingAction) return;
+        isAnimatingAction = true;
 
-    // Crear efecto de tajo
-    const slash = document.createElement('div');
-    slash.style.position = 'absolute';
-    slash.style.width = '100%';
-    slash.style.height = '4px';
-    slash.style.background = '#fff';
-    slash.style.boxShadow = '0 0 15px #B31B1B';
-    slash.style.top = Math.random() * 500 + 'px';
-    slash.style.left = '0';
-    slash.style.transform = `rotate(${Math.random() * 20 - 10}deg)`;
-    slash.style.zIndex = '50';
-    container.appendChild(slash);
+        const pointer = document.getElementById('slider-pointer');
+        const pos = parseFloat(pointer.style.left);
 
-    setTimeout(() => slash.remove(), 200);
+        // Crear efecto de tajo
+        const slash = document.createElement('div');
+        slash.style.position = 'absolute';
+        slash.style.width = '100%';
+        slash.style.height = '4px';
+        slash.style.background = '#fff';
+        slash.style.boxShadow = '0 0 15px #B31B1B';
+        slash.style.top = Math.random() * 500 + 'px';
+        slash.style.left = '0';
+        slash.style.transform = `rotate(${Math.random() * 20 - 10}deg)`;
+        slash.style.zIndex = '50';
+        container.appendChild(slash);
+        setTimeout(() => slash.remove(), 200);
 
-    if (pos > 45 && pos < 55) {
-        score += 50;
-        // Sacudida fuerte
-        container.style.transform = 'scale(1.05)';
-        setTimeout(() => container.style.transform = 'scale(1)', 100);
-    } else {
-        score -= 20;
-    }
+        if (pos > 45 && pos < 55) {
+            score += 15;
+            sprite.src = 'img/Sukuna sprite preparado.png';
+            setTimeout(() => {
+                if (activeGame === 'sukuna') {
+                    sprite.src = 'img/Sukuna sprite corte.png';
+                    container.style.transform = 'scale(1.05)';
+                    setTimeout(() => container.style.transform = 'scale(1)', 100);
+                }
+            }, 100);
+
+            setTimeout(() => {
+                isAnimatingAction = false;
+            }, 400);
+        } else {
+            score -= 10;
+            sprite.src = 'img/Sukuna sprite riendo.png';
+            sprite.classList.add('laugh-anim');
+            setTimeout(() => {
+                if (activeGame === 'sukuna') {
+                    sprite.classList.remove('laugh-anim');
+                    isAnimatingAction = false;
+                }
+            }, 800);
+        }
+        updateDisplays();
+    };
 }
 
 // ------------------------------------------

@@ -165,6 +165,17 @@ strong {
     }
 }
 
+@keyframes sukuna-laugh {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.1) rotate(5deg); }
+    50% { transform: scale(1.1) rotate(-5deg); }
+    75% { transform: scale(1.1) rotate(5deg); }
+}
+
+.laugh-anim {
+    animation: sukuna-laugh 0.3s ease-in-out infinite;
+}
+
 body.home {
     margin: 0;
     overflow-x: hidden;
