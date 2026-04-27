@@ -569,15 +569,17 @@ function startSukuna() {
         <div style="text-align:center; color:#fff; padding:20px;">
             <img id="sukuna-sprite" src="img/Sukuna sprite base.png" style="width:150px; height:150px; object-fit:contain; margin-bottom:50px; transition: transform 0.2s;">
             <div style="width:80%; height:20px; background:#333; margin:0 auto; position:relative; border-radius:10px;">
-                <div id="hit-zone" style="width:40px; height:100%; background:#B31B1B; position:absolute; left:50%; transform:translateX(-50%);"></div>
-                <div id="slider-pointer" style="width:10px; height:30px; background:#fff; position:absolute; top:-5px; left:0;"></div>
+                <div id="hit-zone" style="width:60px; height:100%; background:#B31B1B; position:absolute; left:50%; transform:translateX(-50%); border-radius:5px; box-shadow: 0 0 15px rgba(179, 27, 27, 0.5);"></div>
+                <div id="slider-pointer" style="width:10px; height:30px; background:#fff; position:absolute; top:-5px; left:0; border-radius:2px; box-shadow: 0 0 10px #fff;"></div>
             </div>
             <button class="botoncarta mt-5" onclick="cutSukuna()">CORTAR (ESPACIO)</button>
         </div>
     `;
 
     const sprite = document.getElementById('sukuna-sprite');
+    const hitZone = document.getElementById('hit-zone');
     let isAnimatingAction = false;
+    let hitZonePos = 50;
 
     // Secuencia inicial
     setTimeout(() => { if (activeGame === 'sukuna') sprite.src = 'img/Sukuna sprite preparado.png'; }, 500);
@@ -595,21 +597,28 @@ function startSukuna() {
 
     gameInterval = setInterval(() => {
         timer -= 0.02;
-        pos += dir * 2;
-        if (pos >= 100 || pos <= 0) dir *= -1;
+        pos += dir * 2.5; // Un poco más rápido para compensar la barra más grande
+        
+        if (pos >= 100 || pos <= 0) {
+            dir *= -1;
+            // Cambiar lugar de la zona roja al llegar al extremo
+            hitZonePos = Math.random() * 60 + 20; // Entre 20% y 80%
+            hitZone.style.left = hitZonePos + '%';
+        }
+        
         pointer.style.left = pos + '%';
         updateDisplays();
 
-        // Lógica de animación automática: Preparado -> Corte -> Base
+        // Rango de detección dinámico (aprox 10% de ancho)
+        const inRange = pos > (hitZonePos - 6) && pos < (hitZonePos + 6);
+
         if (!isAnimatingAction) {
-            if (pos > 43 && pos < 57) {
-                // Zona roja: Corte
+            if (inRange) {
                 sprite.src = 'img/Sukuna sprite corte.png';
-            } else if ((dir > 0 && pos > 25 && pos <= 43) || (dir < 0 && pos < 75 && pos >= 57)) {
-                // Aproximándose: Preparado
+            } else if ((dir > 0 && pos > (hitZonePos - 20) && pos <= (hitZonePos - 6)) || 
+                       (dir < 0 && pos < (hitZonePos + 20) && pos >= (hitZonePos + 6))) {
                 sprite.src = 'img/Sukuna sprite preparado.png';
             } else {
-                // Lejos: Base
                 sprite.src = 'img/Sukuna sprite base.png';
             }
         }
@@ -628,27 +637,25 @@ function startSukuna() {
     };
 
     window.cutSukuna = function () {
-        if (isAnimatingAction && sprite.src.includes('riendo')) return; // Permitir cortar si no está riendo
+        if (isAnimatingAction && sprite.src.includes('riendo')) return;
         
-        const pointer = document.getElementById('slider-pointer');
-        const pos = parseFloat(pointer.style.left);
+        const currentPos = parseFloat(pointer.style.left);
 
-        // Crear efecto de tajo
+        // Efecto de tajo
         const slash = document.createElement('div');
         slash.style.position = 'absolute';
         slash.style.width = '100%';
         slash.style.height = '4px';
         slash.style.background = '#fff';
         slash.style.boxShadow = '0 0 15px #B31B1B';
-        slash.style.top = Math.random() * 400 + 'px'; // Ajustado para que no se salga tanto
+        slash.style.top = Math.random() * 400 + 'px';
         slash.style.left = '0';
         slash.style.transform = `rotate(${Math.random() * 20 - 10}deg)`;
         slash.style.zIndex = '50';
         container.appendChild(slash);
         setTimeout(() => slash.remove(), 200);
 
-        // Rango de acierto algo más amplio para evitar frustración
-        if (pos > 42 && pos < 58) {
+        if (currentPos > (hitZonePos - 7) && currentPos < (hitZonePos + 7)) {
             score += 15;
             isAnimatingAction = true;
             sprite.src = 'img/Sukuna sprite preparado.png';
