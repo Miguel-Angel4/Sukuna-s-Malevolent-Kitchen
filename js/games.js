@@ -296,14 +296,14 @@ function createKokusenTarget(yuji, combo, targetX, targetY) {
 
         const currentWidth = window.getComputedStyle(ring).width;
         const currentSize = parseInt(currentWidth, 10);
-        
-        if (currentSize <= 66 && currentSize >= 54) { 
+
+        if (currentSize <= 66 && currentSize >= 54) {
             // PERFECTO: El aro coincide con el círculo
             score += 10;
             kokusenStreak++; // Aumentar racha
             yuji.src = combo.flashFrame;
             showBlackFlashEffect(targetX + combo.effectOffset.x, targetY + combo.effectOffset.y);
-            
+
             registerGameTimeout(() => {
                 if (yuji.isConnected) yuji.remove();
             }, 500);
@@ -413,7 +413,7 @@ function startTodo() {
                         image-rendering:pixelated; object-fit:contain; z-index:10;">
         </div>
     `;
-    
+
     timer = 30;
     score = 0;
     todoClickCount = 0;
@@ -435,7 +435,7 @@ function startTodo() {
 
     const playTodoSequence = () => {
         if (!activeGame || !sprite.isConnected) return;
-        
+
         let frame = 0;
 
         const nextFrame = () => {
@@ -462,9 +462,9 @@ function startTodo() {
 
     sprite.onclick = () => {
         if (!activeGame) return;
-        
+
         // Click exitoso: premio, teletransporte y se hace más rápido
-        clearPendingGameTimeouts(); 
+        clearPendingGameTimeouts();
         score += 10;
         todoClickCount++;
         todoCurrentSpeed = Math.max(60, todoCurrentSpeed - 25); // Se hace más rápido
@@ -497,7 +497,7 @@ function showClapEffect(x, y) {
     clap.style.pointerEvents = 'none';
     clap.style.zIndex = '20';
     clap.style.animation = 'clap-float 0.5s ease-out forwards';
-    
+
     container.appendChild(clap);
     setTimeout(() => clap.remove(), 500);
 }
@@ -597,14 +597,14 @@ function startSukuna() {
 
     gameInterval = setInterval(() => {
         timer -= 0.02;
-        pos += dir * 2.8; // Velocidad aumentada según solicitud
-        
+        pos += dir * 3.5; // Velocidad aumentada a 3.5
+
         if (pos >= 100 || pos <= 0) {
             dir *= -1;
             hitZonePos = Math.random() * 70 + 15; // Rango un poco más centrado
             hitZone.style.left = hitZonePos + '%';
         }
-        
+
         pointer.style.left = pos + '%';
         updateDisplays();
 
@@ -637,7 +637,7 @@ function startSukuna() {
     window.cutSukuna = function () {
         // No bloquear el click si no estamos en medio de una risa de fallo
         if (isAnimatingAction && sprite.src.includes('riendo')) return;
-        
+
         const currentPos = parseFloat(pointer.style.left);
 
         // Efecto de tajo
