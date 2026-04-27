@@ -2255,7 +2255,8 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     background: #000;
     border: 1px solid var(--border);
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     border-radius: 8px;
     box-shadow: 0 0 50px rgba(0,0,0,1);
 }
