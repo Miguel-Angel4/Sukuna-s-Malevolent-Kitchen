@@ -1,5 +1,6 @@
 // ==========================================
-// Sukuna's Malevolent Kitchen - Minigames JS
+// Sukuna's Malevolent Kitchen - Game Logic
+// Triggering rebuild
 // ==========================================
 
 const modal = document.getElementById('game-modal');
