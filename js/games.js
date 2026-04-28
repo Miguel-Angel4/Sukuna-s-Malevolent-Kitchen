@@ -104,7 +104,17 @@ function startKokusen() {
         timer -= 0.1;
         updateDisplays();
         if (timer <= 0) {
-            alert(`Juego terminado. Puntos: ${score}. ¡Has conseguido un 5% de descuento! Código: BLACKFLASH5`);
+            let discount = 0;
+            let code = "";
+            if (score >= 201) { discount = 15; code = "KOKUSEN15"; }
+            else if (score >= 101) { discount = 10; code = "KOKUSEN10"; }
+            else if (score >= 50) { discount = 5; code = "KOKUSEN5"; }
+
+            if (discount > 0) {
+                alert(`¡Juego terminado! Puntos: ${score}. Has conseguido un ${discount}% de descuento. Código: ${code}`);
+            } else {
+                alert(`Juego terminado. Puntos: ${score}. No has alcanzado el mínimo para un descuento. ¡Sigue entrenando!`);
+            }
             stopGame();
         }
     }, 100);
@@ -414,10 +424,10 @@ function startTodo() {
         </div>
     `;
 
-    timer = 30;
+    timer = 60;
     score = 0;
     todoClickCount = 0;
-    todoCurrentSpeed = 300; // Velocidad inicial algo más rápida
+    todoCurrentSpeed = 300; 
     activeGame = 'todo';
     updateDisplays();
 
@@ -478,7 +488,17 @@ function startTodo() {
         timer -= 1;
         updateDisplays();
         if (timer <= 0) {
-            alert(`¡Increíble Brother! Puntos: ${score}. Descuento del 10%: BROTHER10`);
+            let discount = 0;
+            let code = "";
+            if (score >= 251) { discount = 20; code = "BOOGIE20"; }
+            else if (score >= 101) { discount = 16; code = "BOOGIE16"; }
+            else if (score >= 50) { discount = 8; code = "BOOGIE8"; }
+
+            if (discount > 0) {
+                alert(`¡Increíble Brother! Puntos: ${score}. Has conseguido un ${discount}% de descuento. Código: ${code}`);
+            } else {
+                alert(`¡Brother! Puntos: ${score}. Necesitas al menos 50 puntos para un descuento.`);
+            }
             stopGame();
         }
     }, 1000);
@@ -547,7 +567,8 @@ function guessLetter(l, btn) {
             if (palabraOculta[i] === l) palabraAdivinada[i] = l;
         }
         if (!palabraAdivinada.includes("_")) {
-            alert(`¡Infinito! Ganaste. Descuento del 15%: VACIOINFINITO15`);
+            let discount = 30 - ((6 - intentos) * 5);
+            alert(`¡Infinito! Ganaste. Vidas restantes: ${intentos}. Descuento del ${discount}%: GOJO${discount}`);
             stopGame();
         }
     } else {
@@ -622,7 +643,17 @@ function startSukuna() {
         }
 
         if (timer <= 0) {
-            alert(`Santuario de Malévolo cerrado. Puntos: ${score}. Descuento del 20%: SANTUARIO20`);
+            let discount = 0;
+            let code = "";
+            if (score >= 141) { discount = 40; code = "CORTES40"; }
+            else if (score >= 61) { discount = 25; code = "CORTES25"; }
+            else if (score >= 20) { discount = 10; code = "CORTES10"; }
+
+            if (discount > 0) {
+                alert(`Santuario de Malévolo cerrado. Puntos: ${score}. Has conseguido un ${discount}% de descuento. Código: ${code}`);
+            } else {
+                alert(`Santuario cerrado. Puntos: ${score}. No has cortado lo suficiente.`);
+            }
             stopGame();
         }
     }, 20);
@@ -740,10 +771,10 @@ function spinJackpot() {
             sprite.classList.add('hakari-float');
 
             if (r1.textContent === r2.textContent && r2.textContent === r3.textContent) {
-                alert("¡JACKPOT! Descuento del 50%: JACKPOT50");
+                alert("¡JACKPOT! Has ganado un 50% de descuento. Código: JACKPOT50");
                 score = 1000;
             } else {
-                console.log("Aw dangit!");
+                alert("Aw dangit! No has ganado nada esta vez. ¡Sigue intentándolo!");
             }
             updateDisplays();
         }
