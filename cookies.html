@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Ajustes de Cookies - Sukuna's Malevolent Kitchen. Gestiona tus preferencias de privacidad.">
+  <title>Ajustes de Cookies - Sukuna's Malevolent Kitchen</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/icono.png">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .cookies-section {
+      padding: 120px 20px 80px;
+      min-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .cookies-container {
+      max-width: 800px;
+      width: 100%;
+    }
+    
+    .cookies-title {
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      margin-bottom: 3rem;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      background: linear-gradient(135deg, var(--sukuna-crimson), var(--oro-kamutoke));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 15px rgba(220, 20, 60, 0.3));
+      text-align: center;
+    }
+    
+    .cookie-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+    
+    .cookie-card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--sukuna-crimson);
+    }
+    
+    .cookie-info {
+      flex: 1;
+      padding-right: 2rem;
+    }
+    
+    .cookie-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--blanco);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    
+    .cookie-desc {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.5;
+    }
+    
+    /* Toggle Switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+    
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255,255,255,0.1);
+      transition: .4s;
+      border-radius: 34px;
+      border: 1px solid var(--border);
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .slider {
+      background-color: var(--sukuna-crimson);
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+    
+    input:disabled + .slider {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .btn-save-cookies {
+      width: 100%;
+      padding: 1rem;
+      background: var(--sukuna-crimson);
+      color: var(--blanco);
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      margin-top: 2rem;
+    }
+    
+    .btn-save-cookies:hover {
+      background: var(--sukuna-blood);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .success-msg {
+      color: #10b981;
+      text-align: center;
+      margin-top: 1rem;
+      display: none;
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body class="home">
+
+  <div class="circle-overlay"></div>
+  <div class="blood-particles" id="bloodParticles"></div>
+
+  <header class="header" id="header">
+    <a href="home.html" class="logo" aria-label="Volver al inicio">
+      <img src="img/logo.png" alt="Logo Sukuna's Malevolent Kitchen" />
+    </a>
+    <div class="header-content">
+      <nav class="menu">
+        <a href="carta.html" class="nav-link">Nuestra carta</a>
+        <a href="descuentos.html" class="nav-link">Descuentos</a>
+        <a href="cv.html" class="nav-link">¿Quieres trabajar para nosotros?</a>
+        <a href="reserva.html" class="nav-link">Reserva</a>
+        <a href="login.html" class="nav-link" id="nav-login">Iniciar sesión</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="cookies-section fade-in">
+    <div class="container cookies-container">
+      <h1 class="cookies-title">Ajustes de Cookies</h1>
+      
+      <p class="text-center text-muted mb-5" style="max-width: 600px; margin: 0 auto;">
+        Utilizamos cookies para mejorar tu experiencia en nuestro templo culinario. Gestiona tus preferencias de privacidad a continuación.
+      </p>
+
+      <div class="cookie-card">
+        <div class="cookie-info">
+          <span class="cookie-name">Cookies Necesarias</span>
+          <p class="cookie-desc">Estas cookies son esenciales para el funcionamiento de la web, como la gestión de sesiones y seguridad. No pueden desactivarse.</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" checked disabled>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="cookie-card">
+        <div class="cookie-info">
+          <span class="cookie-name">Cookies Funcionales</span>
+          <p class="cookie-desc">Permiten recordar tus preferencias, como el idioma o la configuración de visualización de la carta.</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="cookie-functional">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="cookie-card">
+        <div class="cookie-info">
+          <span class="cookie-name">Cookies Analíticas</span>
+          <p class="cookie-desc">Nos ayudan a entender cómo interactúan los usuarios con la web para mejorar nuestros servicios y la calidad de los platos.</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="cookie-analytical">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="cookie-card">
+        <div class="cookie-info">
+          <span class="cookie-name">Cookies de Marketing</span>
+          <p class="cookie-desc">Se utilizan para mostrarte promociones y ofertas especiales de grado especial que puedan interesarte.</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="cookie-marketing">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <button class="btn-save-cookies" id="save-cookies">Guardar Preferencias</button>
+      <p class="success-msg" id="success-msg">¡Preferencias guardadas con éxito!</p>
+    </div>
+  </main>
+
+  <footer class="footer py-5 mt-5 border-top border-dark">
+    <div class="container text-center">
+      <div class="d-flex justify-content-center flex-wrap gap-4 mb-4">
+        <a href="faq.html" class="footer-link">Preguntas Frecuentes</a>
+        <a href="contacto.html" class="footer-link">Contáctanos</a>
+        <a href="cookies.html" class="footer-link">Ajustes de Cookies</a>
+        <a href="#legal" class="footer-link">Aviso Legal</a>
+        <a href="#privacidad" class="footer-link">Privacidad</a>
+      </div>
+      <p style="color: var(--blanco); font-size: 0.9em; opacity: 0.8;">
+        &copy; 2026 Sukuna's Malevolent Kitchen. Todos los derechos reservados.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Cargar preferencias guardadas
+      const prefs = JSON.parse(localStorage.getItem('cookie_prefs') || '{"functional":false,"analytical":false,"marketing":false}');
+      
+      document.getElementById('cookie-functional').checked = prefs.functional;
+      document.getElementById('cookie-analytical').checked = prefs.analytical;
+      document.getElementById('cookie-marketing').checked = prefs.marketing;
+
+      document.getElementById('save-cookies').addEventListener('click', () => {
+        const newPrefs = {
+          functional: document.getElementById('cookie-functional').checked,
+          analytical: document.getElementById('cookie-analytical').checked,
+          marketing: document.getElementById('cookie-marketing').checked,
+          accepted: true
+        };
+        
+        localStorage.setItem('cookie_prefs', JSON.stringify(newPrefs));
+        
+        const msg = document.getElementById('success-msg');
+        msg.style.display = 'block';
+        setTimeout(() => {
+          msg.style.display = 'none';
+        }, 3000);
+      });
+    });
+  </script>
+  <script src="js/main.js"></script>
+</body>
+
+</html>

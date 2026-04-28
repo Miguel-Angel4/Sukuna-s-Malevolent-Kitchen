@@ -459,4 +459,48 @@ document.addEventListener('DOMContentLoaded', async () => {
         const close = document.querySelector('.close-modal');
         if (close && modal) close.onclick = () => modal.style.display = 'none';
     }
+    // --- 10. GESTIÓN DE COOKIES ---
+    const initCookies = () => {
+        const cookiePrefs = localStorage.getItem('cookie_prefs');
+        if (!cookiePrefs) {
+            const banner = document.createElement('div');
+            banner.className = 'cookie-banner';
+            banner.innerHTML = `
+                <div class="cookie-banner-title">Juramento de Privacidad</div>
+                <div class="cookie-banner-text">
+                    En Sukuna's Malevolent Kitchen utilizamos cookies para asegurar que tu experiencia sea de grado especial. ¿Aceptas nuestro contrato?
+                </div>
+                <div class="cookie-banner-buttons">
+                    <button class="btn-cookie btn-cookie-accept" id="accept-all-cookies">Aceptar todo</button>
+                    <button class="btn-cookie btn-cookie-reject" id="reject-optional-cookies">Solo necesarias</button>
+                    <a href="cookies.html" class="btn-cookie btn-cookie-settings">Ajustes</a>
+                </div>
+            `;
+            document.body.appendChild(banner);
+            setTimeout(() => banner.classList.add('active'), 1000);
+
+            document.getElementById('accept-all-cookies').onclick = () => {
+                localStorage.setItem('cookie_prefs', JSON.stringify({
+                    functional: true,
+                    analytical: true,
+                    marketing: true,
+                    accepted: true
+                }));
+                banner.classList.remove('active');
+                setTimeout(() => banner.remove(), 500);
+            };
+
+            document.getElementById('reject-optional-cookies').onclick = () => {
+                localStorage.setItem('cookie_prefs', JSON.stringify({
+                    functional: false,
+                    analytical: false,
+                    marketing: false,
+                    accepted: true
+                }));
+                banner.classList.remove('active');
+                setTimeout(() => banner.remove(), 500);
+            };
+        }
+    };
+    initCookies();
 });
