@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Política de Privacidad - Sukuna's Malevolent Kitchen. Cómo tratamos tus datos personales.">
+  <title>Política de Privacidad - Sukuna's Malevolent Kitchen</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/icono.png">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .privacy-section {
+      padding: 120px 20px 80px;
+      min-height: 85vh;
+    }
+    
+    .privacy-container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: rgba(20, 20, 25, 0.7);
+      backdrop-filter: blur(15px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 3rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+    
+    .privacy-title {
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      margin-bottom: 3rem;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      background: linear-gradient(135deg, var(--sukuna-crimson), var(--oro-kamutoke));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 15px rgba(220, 20, 60, 0.3));
+      text-align: center;
+    }
+    
+    .privacy-content h2 {
+      color: var(--sukuna-crimson);
+      font-size: 1.5rem;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border-bottom: 1px solid rgba(139, 0, 0, 0.3);
+      padding-bottom: 0.5rem;
+    }
+    
+    .privacy-content p, .privacy-content li {
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+    
+    .privacy-content ul {
+      padding-left: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .privacy-content li {
+      margin-bottom: 0.5rem;
+      list-style-type: none;
+      position: relative;
+    }
+    
+    .privacy-content li::before {
+      content: "👁️‍🗨️";
+      position: absolute;
+      left: -1.5rem;
+      font-size: 0.8rem;
+    }
+
+    .info-card {
+      background: rgba(139, 0, 0, 0.1);
+      border-left: 4px solid var(--sukuna-crimson);
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .info-item {
+      display: flex;
+      margin-bottom: 0.5rem;
+    }
+
+    .info-label {
+      font-weight: bold;
+      color: var(--oro-kamutoke);
+      width: 140px;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+
+<body class="home">
+
+  <div class="circle-overlay"></div>
+  <div class="blood-particles" id="bloodParticles"></div>
+
+  <header class="header" id="header">
+    <a href="home.html" class="logo" aria-label="Volver al inicio">
+      <img src="img/logo.png" alt="Logo Sukuna's Malevolent Kitchen" />
+    </a>
+    <div class="header-content">
+      <nav class="menu">
+        <a href="carta.html" class="nav-link">Nuestra carta</a>
+        <a href="descuentos.html" class="nav-link">Descuentos</a>
+        <a href="cv.html" class="nav-link">¿Quieres trabajar para nosotros?</a>
+        <a href="reserva.html" class="nav-link">Reserva</a>
+        <a href="login.html" class="nav-link" id="nav-login">Iniciar sesión</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="privacy-section fade-in">
+    <div class="container privacy-container">
+      <h1 class="privacy-title">Política de Privacidad</h1>
+      
+      <div class="privacy-content">
+        <h2>1. Responsable del tratamiento</h2>
+        <p>En cumplimiento del Reglamento (UE) 2016/679 (RGPD) y demás normativa aplicable, se informa que los datos personales recogidos a través de la presente plataforma (en adelante, “la Plataforma”) serán tratados por:</p>
+        
+        <div class="info-card">
+          <div class="info-item">
+            <span class="info-label">Responsable:</span>
+            <span>Sukuna's Malevolent Kitchen</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Domicilio:</span>
+            <span>Calle del Dominio, 4, 08840 Viladecans, Barcelona</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Email:</span>
+            <span>sukunaamalevolentkitchen@gmail.com</span>
+          </div>
+        </div>
+
+        <h2>2. Finalidad del tratamiento</h2>
+        <p>Los datos personales del usuario serán tratados con las siguientes finalidades:</p>
+        <ul>
+          <li>Gestionar el registro y acceso a cuentas de usuario</li>
+          <li>Tramitar y gestionar reservas realizadas a través de la Plataforma</li>
+          <li>Permitir la participación en minijuegos y la asignación de descuentos o promociones</li>
+          <li>Gestionar el envío y evaluación de candidaturas (CV)</li>
+          <li>Atender consultas o solicitudes de información</li>
+          <li>Enviar comunicaciones comerciales, en caso de consentimiento expreso</li>
+        </ul>
+
+        <h2>3. Legitimación</h2>
+        <p>La base legal para el tratamiento de los datos es:</p>
+        <ul>
+          <li>La ejecución de un contrato o precontrato (reservas, registro, participación en servicios)</li>
+          <li>El consentimiento del usuario (envío de CV, comunicaciones comerciales)</li>
+          <li>El cumplimiento de obligaciones legales</li>
+          <li>El interés legítimo del responsable para mejorar los servicios y garantizar la seguridad</li>
+        </ul>
+
+        <h2>4. Categorías de datos</h2>
+        <p>Se podrán tratar las siguientes categorías de datos:</p>
+        <ul>
+          <li>Datos identificativos (nombre, apellidos)</li>
+          <li>Datos de contacto (correo electrónico, teléfono)</li>
+          <li>Datos de acceso (usuario, contraseña)</li>
+          <li>Información profesional (CV, experiencia, formación)</li>
+          <li>Datos derivados del uso de la Plataforma (participación en minijuegos, historial de reservas)</li>
+        </ul>
+
+        <h2>5. Conservación de los datos</h2>
+        <p>Los datos se conservarán:</p>
+        <ul>
+          <li>Mientras se mantenga la relación con el usuario</li>
+          <li>Mientras sean necesarios para cumplir con las finalidades descritas</li>
+          <li>Hasta que el usuario solicite su supresión</li>
+          <li>Durante los plazos exigidos por obligaciones legales</li>
+        </ul>
+
+        <h2>6. Destinatarios</h2>
+        <p>Los datos no serán cedidos a terceros, salvo:</p>
+        <ul>
+          <li>Obligación legal</li>
+          <li>Proveedores de servicios necesarios para el funcionamiento de la Plataforma (encargados del tratamiento), con las debidas garantías</li>
+        </ul>
+        <p>No se prevén transferencias internacionales de datos, salvo que se indique expresamente.</p>
+
+        <h2>7. Derechos del usuario</h2>
+        <p>El usuario puede ejercer los siguientes derechos:</p>
+        <ul>
+          <li>Acceso a sus datos personales</li>
+          <li>Rectificación de datos inexactos</li>
+          <li>Supresión (“derecho al olvido”)</li>
+          <li>Limitación del tratamiento</li>
+          <li>Oposición al tratamiento</li>
+          <li>Portabilidad de los datos</li>
+        </ul>
+        <p>Para ejercer estos derechos, puede contactar a través del correo electrónico indicado, adjuntando copia de un documento identificativo.</p>
+        <p>Asimismo, tiene derecho a presentar una reclamación ante la autoridad de control competente, como la Agencia Española de Protección de Datos.</p>
+
+        <h2>8. Seguridad de los datos</h2>
+        <p>El responsable adopta las medidas técnicas y organizativas necesarias para garantizar la seguridad, integridad y confidencialidad de los datos personales, evitando su pérdida, alteración o acceso no autorizado.</p>
+
+        <h2>9. Datos de menores</h2>
+        <p>La Plataforma no está dirigida a menores de 14 años. En caso de que un menor facilite datos personales, será necesaria la autorización de sus padres o tutores legales.</p>
+
+        <h2>10. Modificaciones</h2>
+        <p>El responsable se reserva el derecho de modificar la presente Política de Privacidad para adaptarla a novedades legislativas o cambios en la Plataforma. En dichos casos, se informará debidamente a los usuarios.</p>
+
+        <h2>11. Consideraciones adicionales</h2>
+        <p>La ambientación temática de la Plataforma, inspirada en universos de ficción como Jujutsu Kaisen, tiene carácter exclusivamente estético y narrativo. En ningún caso afecta al tratamiento real y lícito de los datos personales, que se rige estrictamente por la normativa vigente.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer py-5 mt-5 border-top border-dark">
+    <div class="container text-center">
+      <div class="d-flex justify-content-center flex-wrap gap-4 mb-4">
+        <a href="faq.html" class="footer-link">Preguntas Frecuentes</a>
+        <a href="contacto.html" class="footer-link">Contáctanos</a>
+        <a href="cookies.html" class="footer-link">Ajustes de Cookies</a>
+        <a href="legal.html" class="footer-link">Aviso Legal</a>
+        <a href="privacidad.html" class="footer-link">Privacidad</a>
+      </div>
+      <p style="color: var(--blanco); font-size: 0.9em; opacity: 0.8;">
+        &copy; 2026 Sukuna's Malevolent Kitchen. Todos los derechos reservados.
+      </p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+
+</html>
