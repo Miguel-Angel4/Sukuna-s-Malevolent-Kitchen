@@ -389,37 +389,42 @@
             const confirmDel = confirm("¿Estás seguro de que quieres eliminar esta reserva? Este acto es irreversible.");
             if (!confirmDel) return;
 
-            // 1. Intentamos borrar por ID
-            let { data, error } = await sb
+            // 1. Intentamos borrar por ID y email (cumple políticas RLS)
+            let { data: delData, error: delError } = await sb
                 .from('reservations')
                 .delete()
                 .eq('id', currentResId)
+                .eq('email', currentResEmail) // asegura que el usuario sea propietario
                 .select();
-            
-            // 2. Si falla o no borra nada, probamos fallback por campos
-            if (!error && (!data || data.length === 0)) {
-                console.log("Fallo borrado por ID, probando fallback...");
-                const res = await sb
+
+            // 2. Si no se borró nada, intentar fallback por email+fecha+mesa
+            if (!delError && (!delData || delData.length === 0)) {
+                console.log('Fallback delete: ninguna fila borrada por ID+email, intentando match completo');
+                const fallback = await sb
                     .from('reservations')
                     .delete()
-                    .match({ 
-                        email: currentResEmail, 
-                        fecha_hora: currentResFecha, 
-                        mesa: currentResMesa 
+                    .match({
+                        email: currentResEmail,
+                        fecha_hora: currentResFecha,
+                        mesa: currentResMesa
                     })
                     .select();
-                data = res.data;
-                error = res.error;
+                delData = fallback.data;
+                delError = fallback.error;
             }
 
-            if (error) {
-                alert("Error al eliminar: " + error.message);
-            } else if (!data || data.length === 0) {
-                alert("No se pudo eliminar la reserva. Comprueba tus permisos de usuario.");
+            if (delError) {
+                alert('Error al eliminar: ' + delError.message);
+                console.error('Supabase Delete Error:', delError);
+            } else if (!delData || delData.length === 0) {
+                alert('No se pudo eliminar la reserva. Verifica que tengas permiso o que la reserva exista.');
             } else {
-                alert("🔥 Reserva eliminada del dominio con éxito.");
+                alert('🔥 Reserva eliminada del dominio con éxito.');
                 document.getElementById('reservationDetails').classList.remove('active');
-                loadUserReservations(); 
+                currentResId = null;
+                // 3. Actualizar UI inmediatamente después del borrado exitoso
+                userReservations = userReservations.filter(r => r.id !== currentResId);
+                renderCalendar();
             }
         };
     }
