@@ -189,10 +189,15 @@
         </div>
 
         <div class="contact-form-card">
-          <form action="mailto:sukunaamalevolentkitchen@gmail.com" method="post" enctype="text/plain">
+          <form action="/api/form-submit" method="POST" class="form-sukuna">
+            <!-- Configuración para FormSubmit -->
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_subject" value="Nuevo Mensaje de Contacto - Sukuna's Malevolent Kitchen">
+            <input type="hidden" name="_next" value="https://sukuna-s-malevolent-kitchen.vercel.app/contacto.html">
+            
             <div class="form-group">
               <label class="form-label">Mensaje</label>
-              <textarea name="message" class="form-control" rows="8" placeholder="Escribe tu mensaje aquí..." required></textarea>
+              <textarea name="mensaje" class="form-control" rows="8" placeholder="Escribe tu mensaje aquí..." required></textarea>
             </div>
             <button type="submit" class="btn-send">Enviar Mensaje</button>
           </form>
