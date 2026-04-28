@@ -2656,3 +2656,8 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 0 15px rgba(220, 20, 60, 0.3));
 }
+
+/* GLOBAL FORM FIX - WHITE TEXT */
+input, textarea, select, .form-control {
+    color: #ffffff !important;
+}
