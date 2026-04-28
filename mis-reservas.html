@@ -302,38 +302,54 @@
 
         const today = new Date();
 
+        const todayMidnight = new Date();
+        todayMidnight.setHours(0, 0, 0, 0);
+
         for (let day = 1; day <= daysInMonth; day++) {
             const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const currentIterDate = new Date(year, month, day);
+            
+            // Solo resaltamos si es una reserva para HOY o FUTURO
+            const isPast = currentIterDate < todayMidnight;
             const resOnDay = userReservations.filter(r => r.fecha_hora.startsWith(dateStr));
 
             const div = document.createElement('div');
             div.className = 'calendar-day-box';
-            if (resOnDay.length > 0) div.classList.add('has-reservation');
+            
+            if (resOnDay.length > 0 && !isPast) {
+                div.classList.add('has-reservation');
+            }
+
             if (today.getDate() === day && today.getMonth() === month && today.getFullYear() === year) {
                 div.classList.add('today');
             }
 
             div.innerHTML = `<span class="calendar-day-num">${day}</span>`;
             
-            if (resOnDay.length > 0) {
+            if (resOnDay.length > 0 && !isPast) {
                 const dot = document.createElement('div');
                 dot.className = 'reservation-dot';
                 div.appendChild(dot);
 
+                div.onclick = () => showDetails(resOnDay[0], day, month, year);
+            } else if (resOnDay.length > 0 && isPast) {
+                // Si es pasada, permitimos ver detalles pero no la resaltamos como activa
+                div.style.opacity = "0.5";
+                div.style.cursor = "pointer";
                 div.onclick = () => showDetails(resOnDay[0], day, month, year);
             }
 
             grid.appendChild(div);
         }
 
-        // Mostrar mensaje si no hay reservas en este mes
-        const hasResThisMonth = userReservations.some(r => {
+        // Mostrar mensaje si no hay reservas FUTURAS en este mes
+        const hasFutureRes = userReservations.some(r => {
             const d = new Date(r.fecha_hora);
-            return d.getMonth() === month && d.getFullYear() === year;
+            return d >= todayMidnight && d.getMonth() === month && d.getFullYear() === year;
         });
 
-        document.getElementById('noReservations').classList.toggle('d-none', hasResThisMonth);
-        if (!hasResThisMonth) document.getElementById('reservationDetails').classList.remove('active');
+        document.getElementById('noReservations').classList.toggle('d-none', hasFutureRes);
+        if (!hasFutureRes) document.getElementById('reservationDetails').classList.remove('active');
     }
 
     function showDetails(res, day, month, year) {
