@@ -2581,3 +2581,78 @@ input[type="file"].input-sukuna::file-selector-button:hover {
 .nav-account-link i {
     font-size: 1.2rem;
 }
+
+/* SECCIÓN FAQ - SUKUNA STYLE */
+.faq-section {
+    padding: 120px 20px 80px;
+    min-height: 80vh;
+}
+
+.faq-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all var(--transition-normal);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.faq-item:hover {
+    border-color: var(--sukuna-crimson);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.faq-question {
+    padding: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--blanco);
+    user-select: none;
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, padding 0.3s ease;
+    background: rgba(0, 0, 0, 0.2);
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 500px;
+    padding: 0 1.5rem 1.5rem;
+}
+
+.faq-item.active .faq-question {
+    color: var(--sukuna-crimson);
+}
+
+.faq-icon {
+    transition: transform 0.3s ease;
+    font-size: 0.8rem;
+}
+
+.faq-item.active .faq-icon {
+    transform: rotate(180deg);
+}
+
+.faq-title {
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    margin-bottom: 3rem;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    background: linear-gradient(135deg, var(--sukuna-crimson), var(--oro-kamutoke));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 15px rgba(220, 20, 60, 0.3));
+}
