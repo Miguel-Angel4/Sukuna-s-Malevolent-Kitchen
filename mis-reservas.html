@@ -260,6 +260,9 @@
     let currentViewDate = new Date();
     let userReservations = [];
     let currentResId = null;
+    let currentResEmail = null;
+    let currentResFecha = null;
+    let currentResMesa = null;
 
     const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
@@ -360,6 +363,10 @@
 
     function showDetails(res, day, month, year) {
         currentResId = res.id;
+        currentResEmail = res.email;
+        currentResFecha = res.fecha_hora;
+        currentResMesa = res.mesa;
+
         const details = document.getElementById('reservationDetails');
         document.getElementById('res-date').textContent = `${day} de ${monthNames[month]}, ${year}`;
         document.getElementById('res-table').textContent = res.mesa;
@@ -374,22 +381,45 @@
     const deleteBtn = document.getElementById('deleteReservationBtn');
     if (deleteBtn) {
         deleteBtn.onclick = async () => {
-            if (!currentResId || !sb) return;
+            if (!currentResId || !sb) {
+                alert("Error: No se ha seleccionado una reserva o no hay conexión con la base de datos.");
+                return;
+            }
             
             const confirmDel = confirm("¿Estás seguro de que quieres eliminar esta reserva? Este acto es irreversible.");
             if (!confirmDel) return;
 
-            const { error } = await sb
+            // 1. Intentamos borrar por ID
+            let { data, error } = await sb
                 .from('reservations')
                 .delete()
-                .eq('id', currentResId);
+                .eq('id', currentResId)
+                .select();
             
+            // 2. Si falla o no borra nada, probamos fallback por campos
+            if (!error && (!data || data.length === 0)) {
+                console.log("Fallo borrado por ID, probando fallback...");
+                const res = await sb
+                    .from('reservations')
+                    .delete()
+                    .match({ 
+                        email: currentResEmail, 
+                        fecha_hora: currentResFecha, 
+                        mesa: currentResMesa 
+                    })
+                    .select();
+                data = res.data;
+                error = res.error;
+            }
+
             if (error) {
                 alert("Error al eliminar: " + error.message);
+            } else if (!data || data.length === 0) {
+                alert("No se pudo eliminar la reserva. Comprueba tus permisos de usuario.");
             } else {
-                alert("Reserva eliminada del dominio.");
+                alert("🔥 Reserva eliminada del dominio con éxito.");
                 document.getElementById('reservationDetails').classList.remove('active');
-                loadUserReservations(); // Recargar todo
+                loadUserReservations(); 
             }
         };
     }
