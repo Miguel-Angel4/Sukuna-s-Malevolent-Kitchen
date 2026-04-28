@@ -373,6 +373,26 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (img    && m?.avatar_url) img.src      = m.avatar_url;
             }
 
+            // --- ACTUALIZAR ESTADÍSTICAS EN TIEMPO REAL ---
+            // 1. Reservas Pendientes
+            const now = new Date().toISOString();
+            const { data: resData } = await sb
+                .from('reservations')
+                .select('id')
+                .eq('email', user.email)
+                .gte('fecha_hora', now);
+            
+            const pendingCountEl = document.getElementById('pending-reservations-count');
+            if (pendingCountEl && resData) {
+                pendingCountEl.textContent = resData.length;
+            }
+
+            // 2. Descuentos Actuales (Placeholder por ahora, ya que no hay tabla de cupones)
+            const discountsCountEl = document.getElementById('current-discounts-count');
+            if (discountsCountEl) {
+                discountsCountEl.textContent = "0";
+            }
+
             const up = document.getElementById('profile-upload');
             if (up && img) {
                 up.onchange = (e) => {
