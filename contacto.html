@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -149,34 +149,36 @@
   <div class="circle-overlay"></div>
   <div class="blood-particles" id="bloodParticles"></div>
 
-  <header class="header" id="header">
-    <a href="home.html" class="logo" aria-label="Volver al inicio">
-      <img src="img/logo.png" alt="Logo Sukuna's Malevolent Kitchen" />
-    </a>
-    <div class="header-content">
-      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-      <nav class="menu">
-        <a href="carta.html" class="nav-link">Nuestra carta</a>
-        <a href="descuentos.html" class="nav-link">Descuentos</a>
-        <a href="cv.html" class="nav-link">¿Quieres trabajar para nosotros?</a>
-        <a href="reserva.html" class="nav-link">Reserva</a>
-        <a href="login.html" class="nav-link" id="nav-login">Iniciar sesión</a>
-      </nav>
+    <header class="header" id="header">
+    <div class="container d-flex justify-content-between align-items-center">
+      <a href="home.html" class="logo" aria-label="Volver al inicio">
+        <img src="img/logo.png" alt="Logo Sukuna's Malevolent Kitchen" />
+      </a>
+      <div class="header-content">
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav class="menu">
+          <a href="carta.html" class="nav-link">Nuestra carta</a>
+          <a href="descuentos.html" class="nav-link">Descuentos</a>
+          <a href="cv.html" class="nav-link">¿Quieres trabajar para nosotros?</a>
+          <a href="reserva.html" class="nav-link">Reserva</a>
+          <a href="login.html" class="nav-link" id="nav-login">Iniciar sesión</a>
+        </nav>
+      </div>
     </div>
   </header>
 
   <main class="contact-section fade-in">
     <div class="container contact-container">
-      <h1 class="contact-title">Contáctanos</h1>
+      <h1 class="contact-title">ContÃ¡ctanos</h1>
       
       <div class="contact-grid">
         <div class="contact-info-card">
           <div class="info-item">
-            <span class="info-label">Teléfono</span>
+            <span class="info-label">TelÃ©fono</span>
             <a href="tel:+34690064039" class="info-value">+34 690 06 40 39</a>
           </div>
           <div class="info-item">
@@ -184,7 +186,7 @@
             <a href="mailto:sukunaamalevolentkitchen@gmail.com" class="info-value">sukunaamalevolentkitchen@gmail.com</a>
           </div>
           <div class="info-item">
-            <span class="info-label">Ubicación</span>
+            <span class="info-label">UbicaciÃ³n</span>
             <span class="info-value">Avenida Siglo XXI, 6, Viladecans, Barcelona</span>
           </div>
           <div class="info-item">
@@ -195,14 +197,14 @@
 
         <div class="contact-form-card">
           <form action="/api/form-submit" method="POST" class="form-sukuna">
-            <!-- Configuración para FormSubmit -->
+            <!-- ConfiguraciÃ³n para FormSubmit -->
             <input type="hidden" name="_captcha" value="false">
             <input type="hidden" name="_subject" value="Nuevo Mensaje de Contacto - Sukuna's Malevolent Kitchen">
             <input type="hidden" name="_next" value="https://sukuna-s-malevolent-kitchen.vercel.app/contacto.html">
             
             <div class="form-group">
               <label class="form-label">Mensaje</label>
-              <textarea name="mensaje" class="form-control" rows="8" placeholder="Escribe tu mensaje aquí..." required></textarea>
+              <textarea name="mensaje" class="form-control" rows="8" placeholder="Escribe tu mensaje aquÃ­..." required></textarea>
             </div>
             <button type="submit" class="btn-send">Enviar Mensaje</button>
           </form>
@@ -215,7 +217,7 @@
     <div class="container text-center">
       <div class="d-flex justify-content-center flex-wrap gap-4 mb-4">
         <a href="faq.html" class="footer-link">Preguntas Frecuentes</a>
-        <a href="contacto.html" class="footer-link">Contáctanos</a>
+        <a href="contacto.html" class="footer-link">ContÃ¡ctanos</a>
         <a href="cookies.html" class="footer-link">Ajustes de Cookies</a>
         <a href="legal.html" class="footer-link">Aviso Legal</a>
         <a href="privacidad.html" class="footer-link">Privacidad</a>
@@ -230,3 +232,4 @@
 </body>
 
 </html>
+
