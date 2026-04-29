@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
 
 :root {
-    /* Shadcn UI x Temática Premium Oscura */
+    /* Shadcn UI x TemÃ¡tica Premium Oscura */
     --sukuna-red: #be0404;
     --sukuna-crimson: #dc2626;
     --sukuna-black: #09090b;
@@ -13,7 +13,7 @@
     /* Letras totalmente blancas por solicitud del cliente */
     --sukuna-shadow: rgba(0, 0, 0, 0.8);
     --oro-kamutoke: #ef4444;
-    /* Reemplazado oro por rojo más vivo en acentos */
+    /* Reemplazado oro por rojo mÃ¡s vivo en acentos */
     --sukuna-blood: #991b1b;
     --border: rgba(255, 255, 255, 0.1);
 
@@ -58,7 +58,7 @@ strong {
     font-family: 'Inter', sans-serif;
     font-weight: 600;
     letter-spacing: -0.025em;
-    /* Tracking característico de Shadcn */
+    /* Tracking caracterÃ­stico de Shadcn */
 }
 
 /* Utility Classes */
@@ -272,7 +272,7 @@ body.home {
     background: rgba(9, 9, 11, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    padding: 1.5rem 0; /* Más aire arriba y abajo */
+    padding: 1.5rem 0; /* MÃ¡s aire arriba y abajo */
     color: var(--blanco);
     display: flex;
     justify-content: center;
@@ -388,8 +388,8 @@ body.carta {
     color: var(--blanco);
 }
 
-/* BARRA DE CATEGORÍAS */
-/* BARRA DE CATEGORÍAS (CARTA) */
+/* BARRA DE CATEGORÃAS */
+/* BARRA DE CATEGORÃAS (CARTA) */
 .comidas {
     position: fixed;
     top: 100px;
@@ -457,7 +457,7 @@ body.carta {
     margin: 0;
 }
 
-/* CARDS DE COMIDA — ESTILO SUKUNA */
+/* CARDS DE COMIDA â€” ESTILO SUKUNA */
 /* CARDS DE CARTA (ESTILO PREMIUM V2) */
 .bebidas, .entrantes, .carnes, .vegetales, .pescados, .pastas, .postres, .menus, .retos {
     background-size: cover;
@@ -503,7 +503,7 @@ body.carta {
 
 
 
-/* Imágenes individuales */
+/* ImÃ¡genes individuales */
 .bebidas {
     background-image: url(../img/bebida_temporal.jpg);
 }
@@ -2582,7 +2582,7 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     font-size: 1.2rem;
 }
 
-/* SECCI�N FAQ - SUKUNA STYLE */
+/* SECCIÓN FAQ - SUKUNA STYLE */
 .faq-section {
     padding: 120px 20px 80px;
     min-height: 80vh;
@@ -2940,7 +2940,7 @@ body.menu-open {
    ======================================== */
 
 .header {
-    height: 80px !important;
+    height: 100px !important;
     padding: 0 !important;
     display: flex !important;
     justify-content: center !important;

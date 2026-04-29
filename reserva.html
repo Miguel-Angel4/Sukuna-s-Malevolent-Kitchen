@@ -31,7 +31,7 @@
         <nav class="menu">
           <a href="carta.html" class="nav-link">Nuestra carta</a>
           <a href="descuentos.html" class="nav-link">Descuentos</a>
-          <a href="cv.html" class="nav-link">¿Quieres trabajar para nosotros?</a>
+          <a href="cv.html" class="nav-link">¿¿Quieres trabajar para nosotros?</a>
           <a href="reserva.html" class="nav-link">Reserva</a>
           <a href="login.html" class="nav-link" id="nav-login">Iniciar sesión</a>
         </nav>
@@ -52,16 +52,16 @@
             <h1 class="hero-title text-uppercase" style="letter-spacing: 4px;">Reserva tu Banquete</h1>
             <div class="sukuna-divider my-4"></div>
             <p class="hero-subtitle text-muted mt-2" style="font-size: 1.1rem; font-weight: 300;">
-              Asegura tu lugar en el dominio de Sukuna. Elige cuÃ¡ndo y dÃ³nde quieres servir tu paladar en una experiencia de grado especial.
+              Asegura tu lugar en el dominio de Sukuna. Elige cuándo y dónde quieres servir tu paladar en una experiencia de grado especial.
             </p>
           </div>
         </div>
         <div class="row justify-content-center">
           <div class="col-lg-7">
             <form id="form-reserva" action="/api/form-submit" method="POST" enctype="multipart/form-data" class="form-sukuna glass-effect">
-              <!-- ParÃ¡metros tÃ©cnicos de compatibilidad de Formsubmit -->
+              <!-- Parámetros técnicos de compatibilidad de Formsubmit -->
               <input type="hidden" name="_captcha" value="false">
-              <input type="hidden" name="_subject" value="Â¡Nueva Reserva en Sukuna's Malevolent Kitchen!">
+              <input type="hidden" name="_subject" value="¡Nueva Reserva en Sukuna's Malevolent Kitchen!">
               <input type="hidden" name="_next" value="https://sukuna-s-malevolent-kitchen.vercel.app/reserva.html">
 
               <div class="mb-4">
@@ -73,17 +73,17 @@
                 <input type="email" name="email" class="form-control input-sukuna" id="email" required placeholder="tu@email.com">
               </div>
               <div class="mb-4">
-                <label for="telefono" class="form-label">TelÃ©fono de contacto</label>
+                <label for="telefono" class="form-label">Teléfono de contacto</label>
                 <input type="tel" name="telefono" class="form-control input-sukuna" id="telefono" required placeholder="+34 600000000">
               </div>
               
               <div class="row">
                 <div class="col-md-4 mb-4">
-                  <label for="fecha_hora" class="form-label">DÃ­a y hora del banquete</label>
+                  <label for="fecha_hora" class="form-label">Día y hora del banquete</label>
                   <input type="datetime-local" name="fecha_hora" class="form-control input-sukuna" id="fecha_hora" required>
                 </div>
                 <div class="col-md-4 mb-4">
-                  <label for="personas" class="form-label">NÃºmero de comensales</label>
+                  <label for="personas" class="form-label">Número de comensales</label>
                   <input type="number" name="personas" class="form-control input-sukuna" id="personas" min="1" max="20" required placeholder="Ej: 2">
                 </div>
                 <div class="col-md-4 mb-4">
@@ -104,7 +104,7 @@
                     <option value="Mesa 12">Mesa 12</option>
                     <option value="Mesa 13">Mesa 13</option>
                     <option value="Mesa 14">Mesa 14</option>
-                    <option value="Mesa 15 (Especial para CumpleaÃ±os)">Mesa 15 (Especial para CumpleaÃ±os)</option>
+                    <option value="Mesa 15 (Especial para Cumpleaños)">Mesa 15 (Especial para Cumpleaños)</option>
                   </select>
                 </div>
               </div>
@@ -127,7 +127,7 @@
       <div class="container text-center">
         <div class="d-flex justify-content-center flex-wrap gap-4 mb-4">
           <a href="faq.html" class="footer-link">Preguntas Frecuentes</a>
-          <a href="contacto.html" class="footer-link">ContÃ¡ctanos</a>
+          <a href="contacto.html" class="footer-link">Contáctanos</a>
           <a href="cookies.html" class="footer-link">Ajustes de Cookies</a>
           <a href="legal.html" class="footer-link">Aviso Legal</a>
           <a href="privacidad.html" class="footer-link">Privacidad</a>
@@ -150,7 +150,7 @@
       </div>
       
       <div class="calendar-month-grid">
-        <!-- Mock de dÃ­as del mes -->
+        <!-- Mock de días del mes -->
         <span class="calendar-day other-month">30</span>
         <span class="calendar-day other-month">31</span>
         <span class="calendar-day">1</span><span class="calendar-day">2</span><span class="calendar-day">3</span><span class="calendar-day">4</span><span class="calendar-day">5</span>
@@ -165,9 +165,9 @@
         <input type="time" id="widget-hour" class="form-control input-sukuna py-1" value="14:00" style="font-size: 0.8rem;">
       </div>
 
-      <div class="widget-title" id="status-title">Estado para el dÃ­a 14</div>
+      <div class="widget-title" id="status-title">Estado para el día 14</div>
       <div class="tables-status" id="tablesContainer">
-        <!-- Las mesas se generarÃ¡n dinÃ¡micamente o se actualizarÃ¡n via JS -->
+        <!-- Las mesas se generarán dinámicamente o se actualizarán via JS -->
       </div>
       <div class="calendar-legend">
         <div class="legend-item"><div class="legend-color" style="background:#10b981;"></div> Libre</div>

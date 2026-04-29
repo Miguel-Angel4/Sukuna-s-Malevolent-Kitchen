@@ -162,7 +162,7 @@
         <nav class="menu">
           <a href="carta.html" class="nav-link">Nuestra carta</a>
           <a href="descuentos.html" class="nav-link">Descuentos</a>
-          <a href="cv.html" class="nav-link">¿Quieres trabajar para nosotros?</a>
+          <a href="cv.html" class="nav-link">¿¿Quieres trabajar para nosotros?</a>
           <a href="reserva.html" class="nav-link">Reserva</a>
           <a href="login.html" class="nav-link" id="nav-login">Iniciar sesión</a>
         </nav>
@@ -180,7 +180,7 @@
               <a href="cuenta.html" class="nav-account-link">Mi Perfil</a>
               <a href="mis-reservas.html" class="nav-account-link active">Mis Reservas</a>
               <a href="descuentos.html" class="nav-account-link">Recompensas</a>
-              <a href="#" id="logout-link-side" class="nav-account-link" style="color: var(--sukuna-red);">Cerrar SesiÃ³n</a>
+              <a href="#" id="logout-link-side" class="nav-account-link" style="color: var(--sukuna-red);">Cerrar Sesión</a>
             </nav>
           </div>
         </aside>
@@ -197,12 +197,12 @@
             <div class="calendar-grid" id="calendarGrid">
               <div class="calendar-weekday">Lun</div>
               <div class="calendar-weekday">Mar</div>
-              <div class="calendar-weekday">MiÃ©</div>
+              <div class="calendar-weekday">Mié</div>
               <div class="calendar-weekday">Jue</div>
               <div class="calendar-weekday">Vie</div>
-              <div class="calendar-weekday">SÃ¡b</div>
+              <div class="calendar-weekday">Sáb</div>
               <div class="calendar-weekday">Dom</div>
-              <!-- DÃ­as inyectados por JS -->
+              <!-- Días inyectados por JS -->
             </div>
 
             <div id="reservationDetails" class="reservation-details mt-4">
@@ -250,7 +250,7 @@
     <div class="container text-center">
       <div class="d-flex justify-content-center flex-wrap gap-4 mb-4">
         <a href="faq.html" class="footer-link">Preguntas Frecuentes</a>
-        <a href="contacto.html" class="footer-link">ContÃ¡ctanos</a>
+        <a href="contacto.html" class="footer-link">Contáctanos</a>
         <a href="cookies.html" class="footer-link">Ajustes de Cookies</a>
         <a href="legal.html" class="footer-link">Aviso Legal</a>
         <a href="privacidad.html" class="footer-link">Privacidad</a>
@@ -263,7 +263,7 @@
 
   <script src="js/main.js"></script>
   <script>
-    // --- LÃ“GICA ESPECÃFICA DEL CALENDARIO ---
+    // --- Lí“GICA ESPECíFICA DEL CALENDARIO ---
     let currentViewDate = new Date();
     let userReservations = [];
     let currentResId = null;
@@ -271,7 +271,7 @@
     let currentResFecha = null;
     let currentResMesa = null;
 
-    const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+    const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Añosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
     async function loadUserReservations() {
         if (!sb) return;
@@ -298,7 +298,7 @@
 
         monthTitle.textContent = `${monthNames[month]} ${year}`;
 
-        // Limpiar dÃ­as anteriores (mantener cabeceras)
+        // Limpiar días anteriores (mantener cabeceras)
         const headers = Array.from(grid.querySelectorAll('.calendar-weekday'));
         grid.innerHTML = '';
         headers.forEach(h => grid.appendChild(h));
@@ -306,10 +306,10 @@
         const firstDay = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-        // Ajustar primer dÃ­a (JS: 0=Dom, queremos Lun=0)
+        // Ajustar primer día (JS: 0=Dom, queremos Lun=0)
         let startingDay = firstDay === 0 ? 6 : firstDay - 1;
 
-        // DÃ­as vacÃ­os al inicio
+        // Días vacíos al inicio
         for (let i = 0; i < startingDay; i++) {
             const div = document.createElement('div');
             div.className = 'calendar-day-box empty-day';
@@ -389,14 +389,14 @@
     if (deleteBtn) {
         deleteBtn.onclick = async () => {
             if (!currentResId || !sb) {
-                alert("Error: No se ha seleccionado una reserva o no hay conexiÃ³n con la base de datos.");
+                alert("Error: No se ha seleccionado una reserva o no hay conexión con la base de datos.");
                 return;
             }
             
-            const confirmDel = confirm("Â¿EstÃ¡s seguro de que quieres eliminar esta reserva? Este acto es irreversible.");
+            const confirmDel = confirm("¿Estás seguro de que quieres eliminar esta reserva? Este acto es irreversible.");
             if (!confirmDel) return;
 
-            // 1. Intentamos borrar por ID y email (cumple polÃ­ticas RLS)
+            // 1. Intentamos borrar por ID y email (cumple políticas RLS)
             let { data: delData, error: delError } = await sb
                 .from('reservations')
                 .delete()
@@ -404,7 +404,7 @@
                 .eq('email', currentResEmail) // asegura que el usuario sea propietario
                 .select();
 
-            // 2. Si no se borrÃ³ nada, intentar fallback por email+fecha+mesa
+            // 2. Si no se borró nada, intentar fallback por email+fecha+mesa
             if (!delError && (!delData || delData.length === 0)) {
                 console.log('Fallback delete: ninguna fila borrada por ID+email, intentando match completo');
                 const fallback = await sb
@@ -426,10 +426,10 @@
             } else if (!delData || delData.length === 0) {
                 alert('No se pudo eliminar la reserva. Verifica que tengas permiso o que la reserva exista.');
             } else {
-                alert('ðŸ”¥ Reserva eliminada del dominio con Ã©xito.');
+                alert('ðŸ”¥ Reserva eliminada del dominio con éxito.');
                 document.getElementById('reservationDetails').classList.remove('active');
                 currentResId = null;
-                // 3. Actualizar UI inmediatamente despuÃ©s del borrado exitoso
+                // 3. Actualizar UI inmediatamente después del borrado exitoso
                 userReservations = userReservations.filter(r => r.id !== currentResId);
                 renderCalendar();
             }
