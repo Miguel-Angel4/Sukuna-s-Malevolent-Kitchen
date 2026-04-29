@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -16,12 +16,17 @@
 
 <body class="home">
 
-  <!-- ZONA DEL HEADER -->
+    <!-- ZONA DEL HEADER -->
   <header class="header" id="header">
     <a href="home.html" class="logo" aria-label="Volver al inicio">
       <img src="img/logo.png" alt="Logo Sukuna's Malevolent Kitchen" />
     </a>
     <div class="header-content">
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
       <nav class="menu">
         <a href="carta.html" class="nav-link">Nuestra carta</a>
         <a href="descuentos.html" class="nav-link">Descuentos</a>
@@ -44,7 +49,7 @@
             <h1 class="hero-title text-uppercase" style="letter-spacing: 4px;">El Juego de las Maldiciones</h1>
             <div class="sukuna-divider my-4"></div>
             <p class="hero-subtitle text-muted mt-2" style="font-size: 1.1rem; font-weight: 300;">
-              Gana minijuegos para obtener cupones de descuento exclusivos. Cada técnica es única, cada victoria es un grado especial.
+              Gana minijuegos para obtener cupones de descuento exclusivos. Cada tÃ©cnica es Ãºnica, cada victoria es un grado especial.
             </p>
           </div>
         </div>
@@ -55,7 +60,7 @@
             <div class="game-card glass-effect" onclick="startKokusen()">
               <img src="img/game_yuji.png" alt="Yuji" class="game-sprite">
               <div class="game-title">KOKUSEN (Yuji)</div>
-              <p class="game-desc">Haz click en los círculos en el momento preciso. (40s)</p>
+              <p class="game-desc">Haz click en los cÃ­rculos en el momento preciso. (40s)</p>
             </div>
           </div>
 
@@ -64,7 +69,7 @@
             <div class="game-card glass-effect" onclick="startTodo()">
               <img src="img/game_todo.png" alt="Todo" class="game-sprite">
               <div class="game-title">BOOGIE WOOGIE (Todo)</div>
-              <p class="game-desc">Teletranspórtate sin parar. (60s Clicker)</p>
+              <p class="game-desc">TeletranspÃ³rtate sin parar. (60s Clicker)</p>
             </div>
           </div>
 
@@ -91,7 +96,7 @@
             <div class="game-card glass-effect" onclick="startHakari()">
               <img src="img/game_hakari.png" alt="Hakari" class="game-sprite">
               <div class="game-title">JACKPOT (Hakari)</div>
-              <p class="game-desc">Tira de la palanca y ten fe. ¡Let's go gambling!</p>
+              <p class="game-desc">Tira de la palanca y ten fe. Â¡Let's go gambling!</p>
             </div>
           </div>
         </div>
@@ -102,13 +107,13 @@
 
     <!-- Modal de Juego -->
     <div id="game-modal">
-      <span class="close-game" onclick="stopGame()">×</span>
+      <span class="close-game" onclick="stopGame()">Ã—</span>
       <div class="game-header">
         <div id="game-timer">Tiempo: 0s</div>
         <div id="game-score">Puntos: 0</div>
       </div>
       <div id="game-container">
-        <!-- El contenido del juego se inyectará aquí via JS -->
+        <!-- El contenido del juego se inyectarÃ¡ aquÃ­ via JS -->
       </div>
     </div>
 
@@ -117,7 +122,7 @@
       <div class="container text-center">
         <div class="d-flex justify-content-center flex-wrap gap-4 mb-4">
           <a href="faq.html" class="footer-link">Preguntas Frecuentes</a>
-          <a href="contacto.html" class="footer-link">Contáctanos</a>
+          <a href="contacto.html" class="footer-link">ContÃ¡ctanos</a>
           <a href="#cookies" class="footer-link">Ajustes de Cookies</a>
           <a href="#legal" class="footer-link">Aviso Legal</a>
           <a href="#privacidad" class="footer-link">Privacidad</a>
@@ -136,3 +141,4 @@
 </body>
 
 </html>
+

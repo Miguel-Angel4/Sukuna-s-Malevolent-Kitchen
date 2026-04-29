@@ -24,6 +24,26 @@ let updateTables = async (day) => {};
 document.addEventListener('DOMContentLoaded', async () => {
     console.log("🚀 DOM Cargado");
 
+    // --- 0. MENU MÓVIL ---
+    const menuToggle = document.getElementById('menuToggle');
+    const menu = document.querySelector('.menu');
+    if (menuToggle && menu) {
+        menuToggle.onclick = () => {
+            menuToggle.classList.toggle('active');
+            menu.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
+        };
+
+        // Cerrar menú al hacer clic en un enlace
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.onclick = () => {
+                menuToggle.classList.remove('active');
+                menu.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            };
+        });
+    }
+
     // --- 1. NAVEGACIÓN ---
     const navLoginBtn = document.getElementById('nav-login');
     if (navLoginBtn && sb) {

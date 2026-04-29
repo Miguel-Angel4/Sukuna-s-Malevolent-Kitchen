@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -15,12 +15,17 @@
 
 <body class="home">
 
-  <!-- ZONA DEL HEADER -->
+    <!-- ZONA DEL HEADER -->
   <header class="header" id="header">
     <a href="home.html" class="logo" aria-label="Volver al inicio">
       <img src="img/logo.png" alt="Logo Sukuna's Malevolent Kitchen" />
     </a>
     <div class="header-content">
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
       <nav class="menu">
         <a href="carta.html" class="nav-link">Nuestra carta</a>
         <a href="descuentos.html" class="nav-link">Descuentos</a>
@@ -43,7 +48,7 @@
             <h1 class="hero-title text-uppercase" id="form-title" style="letter-spacing: 4px;">Nueva Cuenta</h1>
             <div class="sukuna-divider my-4"></div>
             <p class="hero-subtitle text-muted mt-2" id="form-subtitle" style="font-size: 1.1rem; font-weight: 300;">
-              Sella tu juramento para entrar en el Dominio. Recibirás un correo de confirmación.
+              Sella tu juramento para entrar en el Dominio. RecibirÃ¡s un correo de confirmaciÃ³n.
             </p>
           </div>
         </div>
@@ -53,14 +58,14 @@
             <form id="register-form" class="form-sukuna glass-effect">
 
               <div class="mb-4">
-                <label for="reg-email" class="form-label">Correo Electrónico</label>
+                <label for="reg-email" class="form-label">Correo ElectrÃ³nico</label>
                 <input type="email" class="form-control input-sukuna" id="reg-email" required
                   placeholder="tu@email.com">
               </div>
               <div class="mb-4">
-                <label for="reg-password" class="form-label">Contraseña (mínimo 6 caracteres)</label>
+                <label for="reg-password" class="form-label">ContraseÃ±a (mÃ­nimo 6 caracteres)</label>
                 <input type="password" class="form-control input-sukuna" id="reg-password" required
-                  placeholder="••••••••" minlength="6">
+                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" minlength="6">
               </div>
 
               <div class="text-center mt-4">
@@ -68,7 +73,7 @@
               </div>
 
               <div class="text-center mt-3">
-                <span style="color:#e0e0e0; font-size:14px;">¿O prefieres una vía rápida?</span>
+                <span style="color:#e0e0e0; font-size:14px;">Â¿O prefieres una vÃ­a rÃ¡pida?</span>
               </div>
 
               <!-- Google Register Button -->
@@ -82,8 +87,8 @@
               </div>
 
               <div class="text-center mt-4 pt-3 border-top border-secondary">
-                <p style="color:#bbb;">¿Ya tienes cuenta? <a href="login.html"
-                    style="color:#B31B1B; font-weight:bold;">Inicia sesión aquí</a></p>
+                <p style="color:#bbb;">Â¿Ya tienes cuenta? <a href="login.html"
+                    style="color:#B31B1B; font-weight:bold;">Inicia sesiÃ³n aquÃ­</a></p>
               </div>
             </form>
 
@@ -99,7 +104,7 @@
       <div class="container text-center">
         <div class="d-flex justify-content-center flex-wrap gap-4 mb-4">
           <a href="faq.html" class="footer-link">Preguntas Frecuentes</a>
-          <a href="contacto.html" class="footer-link">Contáctanos</a>
+          <a href="contacto.html" class="footer-link">ContÃ¡ctanos</a>
           <a href="#cookies" class="footer-link">Ajustes de Cookies</a>
           <a href="#legal" class="footer-link">Aviso Legal</a>
           <a href="privacidad.html" class="footer-link">Privacidad</a>
