@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 const note = document.createElement('p');
                 note.className = 'cv-preview-note';
-                note.textContent = 'Si tu navegador no muestra el PDF aqui, puedes abrirlo en otra pestana.';
+                note.textContent = 'Si tu navegador no muestra el PDF aqui, puedes abrirlo en otra pestaña.';
 
                 const link = document.createElement('a');
                 link.href = cvPreviewUrl;

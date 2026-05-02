@@ -263,7 +263,7 @@
 
   <script src="js/main.js"></script>
   <script>
-    // --- Lí“GICA ESPECíFICA DEL CALENDARIO ---
+    // --- LÓGICA ESPECÍFICA DEL CALENDARIO ---
     let currentViewDate = new Date();
     let userReservations = [];
     let currentResId = null;
@@ -271,7 +271,7 @@
     let currentResFecha = null;
     let currentResMesa = null;
 
-    const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Añosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+    const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
     async function loadUserReservations() {
         if (!sb) return;
@@ -426,7 +426,7 @@
             } else if (!delData || delData.length === 0) {
                 alert('No se pudo eliminar la reserva. Verifica que tengas permiso o que la reserva exista.');
             } else {
-                alert('ðŸ”¥ Reserva eliminada del dominio con éxito.');
+                alert('🔥 Reserva eliminada del dominio con éxito.');
                 document.getElementById('reservationDetails').classList.remove('active');
                 currentResId = null;
                 // 3. Actualizar UI inmediatamente después del borrado exitoso
