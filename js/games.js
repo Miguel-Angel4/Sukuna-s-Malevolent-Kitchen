@@ -548,6 +548,18 @@ function startGojo() {
     intentos = 6;
     palabraOculta = PALABRAS[Math.floor(Math.random() * PALABRAS.length)];
     palabraAdivinada = Array(palabraOculta.length).fill("_");
+    timer = 120;
+    score = 0;
+    updateDisplays();
+
+    gameInterval = setInterval(() => {
+        timer -= 0.1;
+        updateDisplays();
+        if (timer <= 0) {
+            alert(`¡Se acabó el tiempo! Has caído. La palabra era: ${palabraOculta}`);
+            stopGame();
+        }
+    }, 100);
 
     renderHangman();
 }
@@ -578,6 +590,7 @@ function guessLetter(l, btn) {
         for (let i = 0; i < palabraOculta.length; i++) {
             if (palabraOculta[i] === l) palabraAdivinada[i] = l;
         }
+        timer += 5; // Acierto: +5 segundos
         if (!palabraAdivinada.includes("_")) {
             let discount = 30 - ((6 - intentos) * 5);
             alert(`¡Infinito! Ganaste. Vidas restantes: ${intentos}. Descuento del ${discount}%: GOJO${discount}`);
@@ -585,11 +598,13 @@ function guessLetter(l, btn) {
         }
     } else {
         intentos--;
+        timer -= 10; // Fallo: -10 segundos
         if (intentos <= 0) {
             alert(`Has caído. La palabra era: ${palabraOculta}`);
             stopGame();
         }
     }
+    updateDisplays();
     renderHangman();
 }
 

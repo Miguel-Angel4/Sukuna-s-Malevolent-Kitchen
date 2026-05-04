@@ -118,7 +118,7 @@ class MusicController {
             this.currentAudio.play()
                 .then(() => {
                     console.log(`✅ Music resumed at ${this.currentAudio.currentTime}s`);
-                    this.fadeIn(this.currentAudio, this.currentAudio === this.mainAudio ? 0.7 : 0.8);
+                    this.fadeIn(this.currentAudio, this.currentAudio === this.mainAudio ? 0.4 : 0.8);
                 })
                 .catch(e => {
                     console.warn("🔇 Autoplay blocked. Waiting for interaction.");
@@ -168,7 +168,7 @@ class MusicController {
         this.fadeOut(this.gameAudio, () => {
             this.currentAudio = this.mainAudio;
             this.mainAudio.play().catch(() => {});
-            this.fadeIn(this.mainAudio, 0.7);
+            this.fadeIn(this.mainAudio, 0.4);
         });
     }
 
