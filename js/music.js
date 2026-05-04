@@ -1,6 +1,6 @@
 /**
  * Music Controller for Sukuna's Malevolent Kitchen
- * Version 6: Aggressive Autoplay attempt.
+ * Version 7: Persistent playback + Aggressive Autoplay triggers.
  */
 
 const musicConfig = {
@@ -13,40 +13,41 @@ const musicConfig = {
 
 class MusicController {
     constructor() {
-        console.log("🎵 MusicController: Autoplay mode attempt.");
+        console.log("🎵 MusicController: Persistent & Autoplay mode.");
         this.currentAudio = null;
         this.mainAudio = null;
         this.gameAudio = null;
         this.initialized = false;
+        this.pendingGameTrack = null;
         
-        // No persistence if user wants to start from 0
-        this.state = {
+        // Load saved state
+        const savedState = localStorage.getItem('sukuna_music_state');
+        this.state = savedState ? JSON.parse(savedState) : {
             trackKey: 'main',
             currentTime: 0,
             isMuted: false,
             isPlaying: true
         };
 
-        this.isMuted = false;
+        this.isMuted = this.state.isMuted;
 
-        // Multiple triggers for fallback
+        // Multiple triggers for initialization
         const initTriggers = ['click', 'keydown', 'touchstart', 'mousedown', 'mousemove', 'scroll'];
         initTriggers.forEach(trigger => {
             document.addEventListener(trigger, () => this.init(), { once: true });
         });
 
+        // Inject control button
         this.injectButton();
-        
-        // Try to play immediately on load
+
+        // Save state periodically and on unload
+        setInterval(() => this.saveState(), 1000);
+        window.addEventListener('beforeunload', () => this.saveState());
+
+        // Attempt early play
         window.addEventListener('load', () => {
-            this.init();
-            // Attempt immediate play (most browsers will block this, but we try)
             setTimeout(() => {
-                if (this.currentAudio) {
-                    this.currentAudio.play().catch(() => {
-                        console.log("🔇 Autoplay blocked by browser. Waiting for interaction...");
-                    });
-                }
+                if (!this.initialized) this.init();
             }, 500);
         });
     }
@@ -56,7 +57,7 @@ class MusicController {
         const btn = document.createElement('div');
         btn.id = 'music-toggle';
         btn.className = 'music-control';
-        btn.innerHTML = '🔊';
+        btn.innerHTML = this.isMuted ? '🔇' : '🔊';
         btn.title = 'Activar/Desactivar música';
         document.body.appendChild(btn);
 
@@ -66,29 +67,67 @@ class MusicController {
         };
     }
 
+    saveState() {
+        if (!this.initialized || !this.currentAudio) return;
+        
+        this.state = {
+            trackKey: this.currentAudio === this.mainAudio ? 'main' : this.getGameKeyBySrc(this.currentAudio.src),
+            currentTime: this.currentAudio.currentTime,
+            isMuted: this.isMuted,
+            isPlaying: !this.currentAudio.paused
+        };
+        localStorage.setItem('sukuna_music_state', JSON.stringify(this.state));
+    }
+
+    getGameKeyBySrc(src) {
+        for (let key in musicConfig) {
+            if (src.includes(musicConfig[key])) return key;
+        }
+        return 'main';
+    }
+
     init() {
         if (this.initialized) return;
         
-        console.log("🎵 MusicController: Initializing...");
+        console.log("🎵 MusicController: Initializing audio context...");
         
         try {
             this.mainAudio = new Audio(musicConfig.main);
             this.mainAudio.loop = true;
-            this.mainAudio.volume = 0.7;
             
             this.gameAudio = new Audio();
             this.gameAudio.loop = true;
-            this.gameAudio.volume = 0.8;
 
-            this.currentAudio = this.mainAudio;
             this.initialized = true;
 
+            // Restore track and time
+            if (this.state.trackKey === 'main') {
+                this.currentAudio = this.mainAudio;
+            } else {
+                this.gameAudio.src = musicConfig[this.state.trackKey] || musicConfig.main;
+                this.currentAudio = this.gameAudio;
+            }
+
+            this.currentAudio.currentTime = this.state.currentTime || 0;
+            this.currentAudio.muted = this.isMuted;
+
+            // Update button
+            const btn = document.getElementById('music-toggle');
+            if (btn) btn.innerHTML = this.isMuted ? '🔇' : '🔊';
+
             this.currentAudio.play()
-                .then(() => console.log("✅ Music started!"))
+                .then(() => {
+                    console.log(`✅ Music resumed at ${this.currentAudio.currentTime}s`);
+                    this.fadeIn(this.currentAudio, this.currentAudio === this.mainAudio ? 0.7 : 0.8);
+                })
                 .catch(e => {
-                    // If blocked, we stay silent until next trigger
+                    console.warn("🔇 Autoplay blocked. Waiting for interaction.");
                 });
 
+            if (this.pendingGameTrack) {
+                this.playGame(this.pendingGameTrack);
+                this.pendingGameTrack = null;
+            }
         } catch (error) {
             console.error("❌ Error during music init:", error);
         }
@@ -115,10 +154,15 @@ class MusicController {
             btn.innerHTML = '🔊';
             btn.classList.remove('muted');
         }
+        this.saveState();
     }
 
     playMain() {
-        if (!this.initialized) return;
+        if (!this.initialized) {
+            this.state.trackKey = 'main';
+            return;
+        }
+
         if (this.currentAudio === this.mainAudio && !this.mainAudio.paused) return;
         
         this.fadeOut(this.gameAudio, () => {
@@ -130,9 +174,7 @@ class MusicController {
 
     playGame(gameKey) {
         if (!this.initialized) {
-            this.init();
-            // We might need a small delay for the src to load
-            setTimeout(() => this.playGame(gameKey), 100);
+            this.pendingGameTrack = gameKey;
             return;
         }
 
