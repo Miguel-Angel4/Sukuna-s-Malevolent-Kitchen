@@ -19,12 +19,53 @@ class MusicController {
         this.gameAudio = null;
         this.initialized = false;
         this.pendingGameTrack = null;
+        this.isMuted = false;
 
         // Multiple triggers for initialization
         const initTriggers = ['click', 'keydown', 'touchstart', 'mousedown'];
         initTriggers.forEach(trigger => {
             document.addEventListener(trigger, () => this.init(), { once: true });
         });
+
+        // Inject control button
+        this.injectButton();
+    }
+
+    injectButton() {
+        const btn = document.createElement('div');
+        btn.id = 'music-toggle';
+        btn.className = 'music-control';
+        btn.innerHTML = '🔊';
+        btn.title = 'Activar/Desactivar música';
+        document.body.appendChild(btn);
+
+        btn.onclick = (e) => {
+            e.stopPropagation();
+            this.toggleMusic();
+        };
+    }
+
+    toggleMusic() {
+        if (!this.initialized) {
+            this.init();
+            return;
+        }
+
+        this.isMuted = !this.isMuted;
+        const btn = document.getElementById('music-toggle');
+
+        if (this.isMuted) {
+            if (this.currentAudio) this.currentAudio.muted = true;
+            btn.innerHTML = '🔇';
+            btn.classList.add('muted');
+        } else {
+            if (this.currentAudio) {
+                this.currentAudio.muted = false;
+                if (this.currentAudio.paused) this.currentAudio.play();
+            }
+            btn.innerHTML = '🔊';
+            btn.classList.remove('muted');
+        }
     }
 
     init() {
@@ -46,6 +87,10 @@ class MusicController {
 
             this.initialized = true;
             
+            // Update button if needed
+            const btn = document.getElementById('music-toggle');
+            if (btn) btn.innerHTML = this.isMuted ? '🔇' : '🔊';
+
             // Start main music
             this.playMain();
 
