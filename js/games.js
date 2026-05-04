@@ -54,8 +54,8 @@ const KOKUSEN_COMBOS = {
         attackFrame: 'img/Itadori sprite golpeando.png',
         flashFrame: 'img/Itadori sprite black flash pu\u00f1etazo.png',
         frameDuration: 310, // <--- CAMBIA ESTE VALOR PARA AJUSTAR LA VELOCIDAD (Menor = Más rápido)
-        circleOffset: { x: 154, y: 70 },
-        effectOffset: { x: 184, y: 100 }
+        circleOffset: { x: 135, y: 60 },
+        effectOffset: { x: 165, y: 90 }
     },
     even: {
         prepFrames: [
@@ -65,8 +65,8 @@ const KOKUSEN_COMBOS = {
         attackFrame: 'img/Itadori sprite pateando.png',
         flashFrame: 'img/Itadori sprite black flash patada.png',
         frameDuration: 310, // <--- CAMBIA ESTE VALOR PARA AJUSTAR LA VELOCIDAD
-        circleOffset: { x: 154, y: 70 },
-        effectOffset: { x: 184, y: 100 }
+        circleOffset: { x: 135, y: 60 },
+        effectOffset: { x: 165, y: 90 }
     }
 };
 
@@ -238,6 +238,8 @@ function oldSpawnKokusenCircle() {
         }, 10);
 
         circle.onclick = () => {
+        if (activeGame !== 'kokusen' || circle.dataset.clicked) return;
+        circle.dataset.clicked = "true";
             const currentSize = parseInt(ring.style.width);
             if (currentSize < 75 && currentSize > 45) {
                 score += 10;
@@ -253,7 +255,7 @@ function oldSpawnKokusenCircle() {
 
         // Si no se pulsa a tiempo
         setTimeout(() => {
-            if (circle.parentNode) {
+            if (circle.parentNode && !circle.dataset.clicked) {
                 circle.remove();
                 yuji.remove();
                 spawnKokusenCircle();
@@ -355,6 +357,8 @@ function createKokusenTarget(arena, yuji, combo) {
     }, 20);
 
     circle.onclick = () => {
+        if (activeGame !== 'kokusen' || circle.dataset.clicked) return;
+        circle.dataset.clicked = "true";
         if (activeGame !== 'kokusen') return;
         const currentWidth = window.getComputedStyle(ring).width;
         const currentSize = parseInt(currentWidth, 10);
@@ -375,7 +379,7 @@ function createKokusenTarget(arena, yuji, combo) {
     };
 
     registerGameTimeout(() => {
-        if (circle.parentNode) {
+        if (circle.parentNode && !circle.dataset.clicked) {
             score -= 5;
             kokusenStreak = 0;
             updateDisplays();
