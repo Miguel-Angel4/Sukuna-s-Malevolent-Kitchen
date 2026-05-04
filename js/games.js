@@ -81,6 +81,9 @@ function stopGame() {
     kokusenStreak = 0;
     todoClickCount = 0;
     todoCurrentSpeed = 300;
+
+    // Regresar a música principal
+    if (window.musicController) window.musicController.playMain();
 }
 
 function updateDisplays() {
@@ -92,6 +95,9 @@ function updateDisplays() {
 // 1. YUJI KOKUSEN (Timing Game)
 // ------------------------------------------
 function startKokusen() {
+    // Música de Itadori
+    if (window.musicController) window.musicController.playGame('kokusen');
+
     modal.style.display = 'flex';
     container.innerHTML = '<div style="color:#fff; padding:20px;">Pulsa los círculos cuando el aro rojo coincida con el negro.</div>';
     timer = 40;
@@ -415,6 +421,9 @@ function showBlackFlashEffect(x, y) {
 // 2. TODO BOOGIE WOOGIE (Clicker)
 // ------------------------------------------
 function startTodo() {
+    // Música de Todo
+    if (window.musicController) window.musicController.playGame('todo');
+
     modal.style.display = 'flex';
     container.innerHTML = `
         <div id="todo-container" style="position:relative; width:100%; height:100%;">
@@ -531,6 +540,9 @@ let palabraAdivinada = [];
 let intentos = 6;
 
 function startGojo() {
+    // Música de Gojo
+    if (window.musicController) window.musicController.playGame('gojo');
+
     modal.style.display = 'flex';
     activeGame = 'gojo';
     intentos = 6;
@@ -721,6 +733,9 @@ function startSukuna() {
 // 5. HAKARI JACKPOT (Gambling)
 // ------------------------------------------
 function startHakari() {
+    // Música de Hakari
+    if (window.musicController) window.musicController.playGame('hakari');
+
     modal.style.display = 'flex';
     container.innerHTML = `
         <div style="text-align:center; color:#fff; padding:20px;">
