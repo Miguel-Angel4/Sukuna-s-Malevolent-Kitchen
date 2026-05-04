@@ -1,6 +1,6 @@
 /**
  * Music Controller for Sukuna's Malevolent Kitchen
- * Version 5: Persistent playback across pages using localStorage.
+ * Version 6: Aggressive Autoplay attempt.
  */
 
 const musicConfig = {
@@ -13,43 +13,50 @@ const musicConfig = {
 
 class MusicController {
     constructor() {
-        console.log("🎵 MusicController: Persistent mode active.");
+        console.log("🎵 MusicController: Autoplay mode attempt.");
         this.currentAudio = null;
         this.mainAudio = null;
         this.gameAudio = null;
         this.initialized = false;
-        this.pendingGameTrack = null;
         
-        // Load saved state
-        const savedState = localStorage.getItem('sukuna_music_state');
-        this.state = savedState ? JSON.parse(savedState) : {
+        // No persistence if user wants to start from 0
+        this.state = {
             trackKey: 'main',
             currentTime: 0,
             isMuted: false,
-            isPlaying: false
+            isPlaying: true
         };
 
-        this.isMuted = this.state.isMuted;
+        this.isMuted = false;
 
-        // Multiple triggers for initialization
-        const initTriggers = ['click', 'keydown', 'touchstart', 'mousedown'];
+        // Multiple triggers for fallback
+        const initTriggers = ['click', 'keydown', 'touchstart', 'mousedown', 'mousemove', 'scroll'];
         initTriggers.forEach(trigger => {
             document.addEventListener(trigger, () => this.init(), { once: true });
         });
 
-        // Inject control button
         this.injectButton();
-
-        // Save state periodically and on unload
-        setInterval(() => this.saveState(), 1000);
-        window.addEventListener('beforeunload', () => this.saveState());
+        
+        // Try to play immediately on load
+        window.addEventListener('load', () => {
+            this.init();
+            // Attempt immediate play (most browsers will block this, but we try)
+            setTimeout(() => {
+                if (this.currentAudio) {
+                    this.currentAudio.play().catch(() => {
+                        console.log("🔇 Autoplay blocked by browser. Waiting for interaction...");
+                    });
+                }
+            }, 500);
+        });
     }
 
     injectButton() {
+        if (document.getElementById('music-toggle')) return;
         const btn = document.createElement('div');
         btn.id = 'music-toggle';
         btn.className = 'music-control';
-        btn.innerHTML = this.isMuted ? '🔇' : '🔊';
+        btn.innerHTML = '🔊';
         btn.title = 'Activar/Desactivar música';
         document.body.appendChild(btn);
 
@@ -59,72 +66,31 @@ class MusicController {
         };
     }
 
-    saveState() {
-        if (!this.initialized || !this.currentAudio) return;
-        
-        this.state = {
-            trackKey: this.currentAudio === this.mainAudio ? 'main' : this.getGameKeyBySrc(this.currentAudio.src),
-            currentTime: this.currentAudio.currentTime,
-            isMuted: this.isMuted,
-            isPlaying: !this.currentAudio.paused
-        };
-        localStorage.setItem('sukuna_music_state', JSON.stringify(this.state));
-    }
-
-    getGameKeyBySrc(src) {
-        for (let key in musicConfig) {
-            if (src.includes(musicConfig[key])) return key;
-        }
-        return 'main';
-    }
-
     init() {
         if (this.initialized) return;
         
-        console.log("🎵 MusicController: Resuming music state...");
+        console.log("🎵 MusicController: Initializing...");
         
         try {
             this.mainAudio = new Audio(musicConfig.main);
             this.mainAudio.loop = true;
+            this.mainAudio.volume = 0.7;
             
             this.gameAudio = new Audio();
             this.gameAudio.loop = true;
+            this.gameAudio.volume = 0.8;
 
+            this.currentAudio = this.mainAudio;
             this.initialized = true;
 
-            // Restore track and time
-            if (this.state.trackKey === 'main') {
-                this.currentAudio = this.mainAudio;
-            } else {
-                this.gameAudio.src = musicConfig[this.state.trackKey] || musicConfig.main;
-                this.currentAudio = this.gameAudio;
-            }
-
-            this.currentAudio.currentTime = this.state.currentTime || 0;
-            this.currentAudio.muted = this.isMuted;
-
-            // Update button
-            const btn = document.getElementById('music-toggle');
-            if (btn) btn.innerHTML = this.isMuted ? '🔇' : '🔊';
-
-            // Auto-resume if it was playing or if main theme
             this.currentAudio.play()
-                .then(() => {
-                    console.log(`✅ Music resumed at ${this.currentAudio.currentTime}s`);
-                    this.fadeIn(this.currentAudio, this.currentAudio === this.mainAudio ? 0.7 : 0.8);
-                })
+                .then(() => console.log("✅ Music started!"))
                 .catch(e => {
-                    console.warn("⚠️ Resume blocked, user must interact again:", e);
-                    // Force play on button click if blocked
+                    // If blocked, we stay silent until next trigger
                 });
 
-            // If a new game was requested before init
-            if (this.pendingGameTrack) {
-                this.playGame(this.pendingGameTrack);
-                this.pendingGameTrack = null;
-            }
         } catch (error) {
-            console.error("❌ Error during music persistence init:", error);
+            console.error("❌ Error during music init:", error);
         }
     }
 
@@ -144,33 +110,29 @@ class MusicController {
         } else {
             if (this.currentAudio) {
                 this.currentAudio.muted = false;
-                if (this.currentAudio.paused) this.currentAudio.play();
+                this.currentAudio.play().catch(() => {});
             }
             btn.innerHTML = '🔊';
             btn.classList.remove('muted');
         }
-        this.saveState();
     }
 
     playMain() {
-        if (!this.initialized) {
-            this.state.trackKey = 'main';
-            return;
-        }
-
+        if (!this.initialized) return;
         if (this.currentAudio === this.mainAudio && !this.mainAudio.paused) return;
         
         this.fadeOut(this.gameAudio, () => {
             this.currentAudio = this.mainAudio;
-            this.mainAudio.play()
-                .then(() => this.fadeIn(this.mainAudio, 0.7))
-                .catch(e => console.warn("⚠️ Main play blocked:", e));
+            this.mainAudio.play().catch(() => {});
+            this.fadeIn(this.mainAudio, 0.7);
         });
     }
 
     playGame(gameKey) {
         if (!this.initialized) {
-            this.pendingGameTrack = gameKey;
+            this.init();
+            // We might need a small delay for the src to load
+            setTimeout(() => this.playGame(gameKey), 100);
             return;
         }
 
@@ -181,9 +143,8 @@ class MusicController {
             this.gameAudio.src = track;
             this.gameAudio.currentTime = 0;
             this.currentAudio = this.gameAudio;
-            this.gameAudio.play()
-                .then(() => this.fadeIn(this.gameAudio, 0.8))
-                .catch(e => console.warn(`⚠️ Game play blocked (${gameKey}):`, e));
+            this.gameAudio.play().catch(() => {});
+            this.fadeIn(this.gameAudio, 0.8);
         });
     }
 
