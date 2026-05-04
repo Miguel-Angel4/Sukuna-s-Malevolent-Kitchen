@@ -832,6 +832,7 @@ function spinJackpot() {
     const sprite = document.getElementById('hakari-sprite');
     const symbols = ["💀", "🔥", "💎", "🎰", "❤️", "🤞"];
 
+    if (btn.disabled) return;
     btn.disabled = true;
 
     // Animación de baile
@@ -843,29 +844,36 @@ function spinJackpot() {
     }, 150);
 
     let cycles = 0;
-    let result = ["", "", ""];
+    let resultIndices = [0, 0, 0];
     
     const interval = setInterval(() => {
-        result = [
-            symbols[Math.floor(Math.random() * symbols.length)],
-            symbols[Math.floor(Math.random() * symbols.length)],
-            symbols[Math.floor(Math.random() * symbols.length)]
+        resultIndices = [
+            Math.floor(Math.random() * symbols.length),
+            Math.floor(Math.random() * symbols.length),
+            Math.floor(Math.random() * symbols.length)
         ];
         
-        r1.textContent = result[0];
-        r2.textContent = result[1];
-        r3.textContent = result[2];
+        r1.textContent = symbols[resultIndices[0]];
+        r2.textContent = symbols[resultIndices[1]];
+        r3.textContent = symbols[resultIndices[2]];
         cycles++;
 
         if (cycles > 20) {
             clearInterval(interval);
             clearInterval(danceInterval);
+            
+            // Forzar los valores finales en el DOM para que coincidan con los índices
+            r1.textContent = symbols[resultIndices[0]];
+            r2.textContent = symbols[resultIndices[1]];
+            r3.textContent = symbols[resultIndices[2]];
+
             btn.disabled = false;
             sprite.src = 'img/Hakari sprites feliz.png';
             sprite.classList.add('hakari-float');
 
-            if (result[0] === result[1] && result[1] === result[2]) {
-                if (result[0] === '🎰') {
+            if (resultIndices[0] === resultIndices[1] && resultIndices[1] === resultIndices[2]) {
+                const winnerSymbol = symbols[resultIndices[0]];
+                if (winnerSymbol === '🎰') {
                     saveReward("JACKPOT50", 50, "JACKPOT (Hakari)");
                     alert("¡JACKPOT SUPREMO! Has ganado un 50% de descuento. Código: JACKPOT50. QR disponible en tu cuenta.");
                 } else {
