@@ -1,6 +1,6 @@
 /**
  * Music Controller for Sukuna's Malevolent Kitchen
- * Improved version with better initialization and logging
+ * Version 3: Initializing Audio objects inside user interaction for maximum compatibility.
  */
 
 const musicConfig = {
@@ -13,51 +13,61 @@ const musicConfig = {
 
 class MusicController {
     constructor() {
-        console.log("🎵 MusicController: Initializing...");
+        console.log("🎵 MusicController: Ready to initialize on interaction.");
         this.currentAudio = null;
-        this.mainAudio = new Audio(musicConfig.main);
-        this.mainAudio.loop = true;
-        this.mainAudio.volume = 0; // Start at 0 for fade in
-        
-        this.gameAudio = new Audio();
-        this.gameAudio.loop = true;
-        this.gameAudio.volume = 0;
-
+        this.mainAudio = null;
+        this.gameAudio = null;
         this.initialized = false;
         this.pendingGameTrack = null;
 
-        // Try multiple triggers for initialization
+        // Multiple triggers for initialization
         const initTriggers = ['click', 'keydown', 'touchstart', 'mousedown'];
         initTriggers.forEach(trigger => {
             document.addEventListener(trigger, () => this.init(), { once: true });
         });
-
-        // Debug: log audio errors
-        this.mainAudio.onerror = (e) => console.error("❌ Error loading main music:", musicConfig.main, e);
-        this.gameAudio.onerror = (e) => console.error("❌ Error loading game music:", this.gameAudio.src, e);
     }
 
     init() {
         if (this.initialized) return;
-        this.initialized = true;
-        console.log("🎵 MusicController: User interaction detected, starting music.");
         
-        // Start main music
-        this.playMain();
+        console.log("🎵 MusicController: Initializing Audio objects after user interaction...");
+        
+        try {
+            this.mainAudio = new Audio(musicConfig.main);
+            this.mainAudio.loop = true;
+            this.mainAudio.volume = 0;
+            
+            this.gameAudio = new Audio();
+            this.gameAudio.loop = true;
+            this.gameAudio.volume = 0;
 
-        // If there was a pending game track, play it
-        if (this.pendingGameTrack) {
-            this.playGame(this.pendingGameTrack);
-            this.pendingGameTrack = null;
+            this.mainAudio.onerror = (e) => console.error("❌ Error loading main music:", musicConfig.main, e);
+            this.gameAudio.onerror = (e) => console.error("❌ Error loading game music:", this.gameAudio.src, e);
+
+            this.initialized = true;
+            
+            // Start main music
+            this.playMain();
+
+            // If there was a pending game track, play it
+            if (this.pendingGameTrack) {
+                this.playGame(this.pendingGameTrack);
+                this.pendingGameTrack = null;
+            }
+        } catch (error) {
+            console.error("❌ Error during music initialization:", error);
         }
     }
 
     playMain() {
-        console.log("🎵 MusicController: Playing main theme...");
-        if (!this.initialized) return;
+        if (!this.initialized) {
+            console.log("⏳ Waiting for interaction to play main theme.");
+            return;
+        }
 
         if (this.currentAudio === this.mainAudio && !this.mainAudio.paused) return;
         
+        console.log("🎵 MusicController: Fading into main theme...");
         this.fadeOut(this.gameAudio, () => {
             this.currentAudio = this.mainAudio;
             this.mainAudio.play()
@@ -70,19 +80,16 @@ class MusicController {
     }
 
     playGame(gameKey) {
-        console.log(`🎵 MusicController: Switching to game music: ${gameKey}`);
         if (!this.initialized) {
-            console.log("⏳ Interaction pending, saving game track for later.");
+            console.log(`⏳ Interaction pending, saving game track: ${gameKey}`);
             this.pendingGameTrack = gameKey;
             return;
         }
 
         const track = musicConfig[gameKey];
-        if (!track) {
-            console.error(`❌ Track not found for game: ${gameKey}`);
-            return;
-        }
+        if (!track) return;
 
+        console.log(`🎵 MusicController: Switching to ${gameKey}...`);
         this.fadeOut(this.mainAudio, () => {
             this.gameAudio.src = track;
             this.currentAudio = this.gameAudio;
@@ -116,6 +123,7 @@ class MusicController {
     }
 
     fadeIn(audio, targetVol) {
+        if (!audio) return;
         audio.volume = 0;
         let vol = 0;
         const interval = setInterval(() => {
