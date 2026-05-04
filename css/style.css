@@ -3368,7 +3368,6 @@ html, body {
     }
     
     .kokusen-target {
-        transform: scale(0.4) !important;
-        transform-origin: center !important;
+        /* Tamaño ahora controlado por el escalado de la arena */
     }
 }

@@ -311,12 +311,12 @@ function playKokusenSequence(sprite, combo, onComplete) {
     registerGameTimeout(showNextFrame, combo.frameDuration);
 }
 
-function createKokusenTarget(yuji, combo, targetX, targetY) {
+
+function createKokusenTarget(arena, yuji, combo) {
     if (activeGame !== 'kokusen' || !yuji.isConnected) return;
 
-    // Calcular velocidad basada en la racha (streak)
     const baseDuration = 1000;
-    const speedMultiplier = Math.pow(0.85, kokusenStreak); // 15% más rápido por cada Black Flash
+    const speedMultiplier = Math.pow(0.85, kokusenStreak);
     const currentDuration = Math.max(300, baseDuration * speedMultiplier);
 
     const circle = document.createElement('div');
@@ -327,13 +327,12 @@ function createKokusenTarget(yuji, combo, targetX, targetY) {
     circle.style.borderRadius = '50%';
     circle.style.border = '3px solid #87CEEB';
     circle.style.background = 'rgba(0,0,100,0.3)';
-    const scale = getGameScale();
-    const visualX = targetX + combo.circleOffset.x * scale;
-    const visualY = targetY + combo.circleOffset.y * scale;
-    circle.style.left = `${visualX}px`;
-    circle.style.top = `${visualY}px`;
+    circle.style.left = `${combo.circleOffset.x}px`;
+    circle.style.top = `${combo.circleOffset.y}px`;
     circle.style.cursor = 'pointer';
     circle.style.zIndex = '10';
+    circle.style.pointerEvents = 'auto'; // Permitir clics en el círculo
+    arena.appendChild(circle);
 
     const ring = document.createElement('div');
     ring.style.position = 'absolute';
@@ -344,11 +343,8 @@ function createKokusenTarget(yuji, combo, targetX, targetY) {
     ring.style.top = '-30px';
     ring.style.left = '-30px';
     ring.style.transition = `all ${currentDuration}ms linear`;
-
     circle.appendChild(ring);
-    container.appendChild(circle);
 
-    // Forzar un reflujo (reflow) para asegurar que el navegador registre el tamaño inicial antes de la transición
     void ring.offsetHeight;
 
     registerGameTimeout(() => {
@@ -360,93 +356,90 @@ function createKokusenTarget(yuji, combo, targetX, targetY) {
 
     circle.onclick = () => {
         if (activeGame !== 'kokusen') return;
-
         const currentWidth = window.getComputedStyle(ring).width;
         const currentSize = parseInt(currentWidth, 10);
 
         if (currentSize <= 66 && currentSize >= 54) {
-            // PERFECTO: El aro coincide con el círculo
             score += 10;
-            kokusenStreak++; // Aumentar racha
+            kokusenStreak++;
             yuji.src = combo.flashFrame;
-            const scale = getGameScale();
-            const flashX = targetX + combo.effectOffset.x * scale;
-            const flashY = targetY + combo.effectOffset.y * scale;
-            showBlackFlashEffect(flashX, flashY);
-
-            registerGameTimeout(() => {
-                if (yuji.isConnected) yuji.remove();
-            }, 500);
-        } else if (currentSize > 66 && currentSize <= 115) {
-            // BIEN: Le diste antes de que se cerrara
-            score += 2;
-            kokusenStreak = 0; // Reiniciar racha
-            yuji.remove();
+            showBlackFlashEffect(arena, combo.effectOffset.x, combo.effectOffset.y);
+            registerGameTimeout(() => { if (arena.isConnected) arena.remove(); }, 500);
         } else {
-            // MAL: Demasiado tarde
-            score -= 5;
-            kokusenStreak = 0; // Reiniciar racha
-            yuji.remove();
+            score = (currentSize > 66) ? score + 2 : score - 5;
+            kokusenStreak = 0;
+            arena.remove();
         }
-
         updateDisplays();
-        circle.remove();
         spawnKokusenCircle();
     };
 
     registerGameTimeout(() => {
         if (circle.parentNode) {
             score -= 5;
-            kokusenStreak = 0; // Reiniciar racha por omisión
+            kokusenStreak = 0;
             updateDisplays();
-            circle.remove();
-            yuji.remove();
+            arena.remove();
             spawnKokusenCircle();
         }
     }, currentDuration + 200);
 }
+
+
 
 function spawnKokusenCircle() {
     if (activeGame !== 'kokusen') return;
 
     kokusenAttackCount += 1;
     const combo = kokusenAttackCount % 2 === 1 ? KOKUSEN_COMBOS.odd : KOKUSEN_COMBOS.even;
+    
     const scale = getGameScale();
-    const spriteWidth = 200 * scale;
-    const spriteHeight = 200 * scale;
     const containerWidth = container.clientWidth || 800;
     const containerHeight = container.clientHeight || 600;
+
+    // Crear arena para agrupar sprite y círculo
+    const arena = document.createElement('div');
+    arena.className = 'kokusen-arena';
+    arena.style.position = 'absolute';
+    arena.style.width = '200px';
+    arena.style.height = '200px';
+    arena.style.transform = `scale(${scale})`;
+    arena.style.transformOrigin = '0 0';
+    arena.style.pointerEvents = 'none'; // No bloquea clics fuera de sus hijos
+    container.appendChild(arena);
 
     const yuji = document.createElement('img');
     yuji.id = 'yuji-sprite';
     yuji.style.position = 'absolute';
-    yuji.style.width = `${spriteWidth}px`;
-    yuji.style.height = `${spriteHeight}px`;
+    yuji.style.width = '200px';
+    yuji.style.height = '200px';
     yuji.style.objectFit = 'contain';
     yuji.style.imageRendering = 'pixelated';
     yuji.style.pointerEvents = 'none';
     yuji.style.zIndex = '5';
+    arena.appendChild(yuji);
 
-    const startX = Math.random() > 0.5 ? -spriteWidth : containerWidth + 20;
-    const startY = Math.random() * Math.max(1, containerHeight - spriteHeight - 40);
-    const targetX = 20 + Math.random() * Math.max(1, containerWidth - spriteWidth - 100);
-    const targetY = 20 + Math.random() * Math.max(1, containerHeight - spriteHeight - 100);
+    const startX = Math.random() > 0.5 ? -200 : containerWidth + 20;
+    const startY = Math.random() * Math.max(1, containerHeight - 100);
+    const targetX = 20 + Math.random() * Math.max(1, (containerWidth - 200 * scale) - 50);
+    const targetY = 20 + Math.random() * Math.max(1, (containerHeight - 200 * scale) - 50);
     const travelDuration = (combo.prepFrames.length + 1) * combo.frameDuration + 220;
 
-    yuji.style.left = `${startX}px`;
-    yuji.style.top = `${startY}px`;
-    yuji.style.transition = `left ${travelDuration}ms cubic-bezier(0.2, 0.8, 0.2, 1), top ${travelDuration}ms cubic-bezier(0.2, 0.8, 0.2, 1)`;
-    container.appendChild(yuji);
+    arena.style.left = `${startX}px`;
+    arena.style.top = `${startY}px`;
+    arena.style.transition = `left ${travelDuration}ms cubic-bezier(0.2, 0.8, 0.2, 1), top ${travelDuration}ms cubic-bezier(0.2, 0.8, 0.2, 1)`;
 
     registerGameTimeout(() => {
-        yuji.style.left = `${targetX}px`;
-        yuji.style.top = `${targetY}px`;
+        arena.style.left = `${targetX}px`;
+        arena.style.top = `${targetY}px`;
     }, 30);
 
-    playKokusenSequence(yuji, combo, () => createKokusenTarget(yuji, combo, targetX, targetY));
+    playKokusenSequence(yuji, combo, () => createKokusenTarget(arena, yuji, combo));
 }
 
-function showBlackFlashEffect(x, y) {
+
+
+function showBlackFlashEffect(arena, x, y) {
     const flash = document.createElement('div');
     flash.id = 'yuji-effect';
     flash.style.position = 'absolute';
@@ -459,20 +452,15 @@ function showBlackFlashEffect(x, y) {
     flash.style.borderRadius = '50%';
     flash.style.zIndex = '100';
     flash.style.pointerEvents = 'none';
-
     flash.style.boxShadow += ', 20px -20px 0 #B31B1B, -20px 20px 0 #B31B1B';
+    arena.appendChild(flash);
 
-    container.appendChild(flash);
     container.style.transform = 'translate(5px, 5px)';
-
-    registerGameTimeout(() => {
-        if (activeGame) container.style.transform = 'translate(-5px, -5px)';
-    }, 50);
-    registerGameTimeout(() => {
-        if (activeGame) container.style.transform = 'translate(0, 0)';
-    }, 100);
+    registerGameTimeout(() => { if (activeGame) container.style.transform = 'translate(-5px, -5px)'; }, 50);
+    registerGameTimeout(() => { if (activeGame) container.style.transform = 'translate(0, 0)'; }, 100);
     registerGameTimeout(() => flash.remove(), 400);
 }
+
 
 // ------------------------------------------
 // 2. TODO BOOGIE WOOGIE (Clicker)
