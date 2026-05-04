@@ -3351,3 +3351,25 @@ html, body {
         font-size: 1.1rem !important;
     }
 }
+
+/* ================================================
+   AJUSTES EXTRA DE DIFICULTAD MÓVIL (MIGUEL ANGEL)
+   ================================================ */
+
+@media (max-width: 768px) {
+    /* Sukuna (Corte) - Línea más pequeña (difícil) */
+    #hit-zone {
+        width: 15px !important;
+    }
+
+    /* Yuji (Kokusen) - Sprite y objetivo más pequeños (difícil) */
+    #yuji-sprite, #yuji-effect {
+        transform: scale(0.4) !important;
+        transform-origin: center top !important;
+    }
+    
+    .kokusen-target {
+        transform: scale(0.4) !important;
+        transform-origin: center !important;
+    }
+}
