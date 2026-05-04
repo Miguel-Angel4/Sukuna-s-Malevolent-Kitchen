@@ -856,9 +856,14 @@ function spinJackpot() {
             sprite.src = 'img/Hakari sprites feliz.png';
             sprite.classList.add('hakari-float');
 
-            if (r1.textContent === r2.textContent && r2.textContent === r3.textContent) {
-                saveReward("JACKPOT50", 50, "JACKPOT (Hakari)");
-                alert("¡JACKPOT! Has ganado un 50% de descuento. Código: JACKPOT50. QR disponible en tu cuenta.");
+                        if (r1.textContent === r2.textContent && r2.textContent === r3.textContent) {
+                if (r1.textContent === '🎰') {
+                    saveReward("JACKPOT50", 50, "JACKPOT (Hakari)");
+                    alert("¡JACKPOT SUPREMO! Has ganado un 50% de descuento. Código: JACKPOT50. QR disponible en tu cuenta.");
+                } else {
+                    saveReward("JACKPOT30", 30, "JACKPOT (Hakari)");
+                    alert("¡JACKPOT! Has ganado un 30% de descuento. Código: JACKPOT30. QR disponible en tu cuenta.");
+                }
                 score = 1000;
             } else {
                 alert("Aw dangit! No has ganado nada esta vez. ¡Sigue intentándolo!");
