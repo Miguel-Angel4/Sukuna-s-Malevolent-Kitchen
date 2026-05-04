@@ -169,16 +169,19 @@
   <script src="js/main.js"></script>
   <script>
     async function loadRewards() {
-        if (!window.sb) return;
+        if (!window.sb) {
+            console.log("Esperando a Supabase...");
+            setTimeout(loadRewards, 100);
+            return;
+        }
 
-        const { data: { user } } = await sb.auth.getUser();
+        const { data: { user } } = await window.sb.auth.getUser();
         if (!user) {
             window.location.href = "login.html";
             return;
         }
 
-        // Obtener recompensas no expiradas
-        const { data, error } = await sb
+        const { data, error } = await window.sb
             .from('rewards')
             .select('*')
             .eq('user_id', user.id)
@@ -189,9 +192,10 @@
         const loading = document.getElementById('loading-rewards');
         const noRewards = document.getElementById('no-rewards');
 
-        loading.classList.add('d-none');
+        if (loading) loading.classList.add('d-none');
 
         if (error) {
+            console.error("Error Supabase:", error);
             container.innerHTML = `<p class="text-danger">Error al cargar: ${error.message}</p>`;
             return;
         }
@@ -222,7 +226,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(loadRewards, 500);
+        loadRewards();
     });
   </script>
 </body>

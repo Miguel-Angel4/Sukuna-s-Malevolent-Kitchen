@@ -13,7 +13,8 @@ const EMAILJS_PUBLIC_KEY  = "TU_PUBLIC_KEY";      // <-- cambia esto
 let sb = null;
 try {
     if (typeof supabase !== 'undefined') {
-        sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        window.sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        sb = window.sb;
         console.log("✅ Supabase conectado");
     }
 } catch (e) { console.error("❌ Error Supabase:", e); }
