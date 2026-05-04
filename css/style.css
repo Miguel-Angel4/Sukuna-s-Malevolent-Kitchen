@@ -3206,11 +3206,6 @@ body.menu-open {
         justify-content: center !important;
     }
     
-    body.carta .comidas {
-        position: fixed !important;
-        top: 70px !important; /* Below header */
-    }
-
     .frase-carta {
         padding-top: 40px !important;
         padding-left: 0 !important;
