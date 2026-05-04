@@ -2666,7 +2666,7 @@ input, textarea, select, .form-control {
 .music-control {
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    left: 20px;
     z-index: 9999;
     background: rgba(179, 27, 27, 0.8);
     color: white;
@@ -3253,9 +3253,9 @@ html, body {
     overflow: hidden;
 }
 
-/* Modificaciones adicionales solo para móviles */
+/* Modificaciones adicionales solo para mï¿½viles */
 @media (max-width: 768px) {
-    /* Menú: Asegurar que ocupe todo el ancho sin salirse */
+    /* Menï¿½: Asegurar que ocupe todo el ancho sin salirse */
     .menu {
         width: 100vw !important;
         left: 0 !important;
@@ -3266,7 +3266,7 @@ html, body {
     
     .nav-link {
         font-size: 1rem !important;
-        white-space: normal !important; /* Permitir salto de línea si es muy largo */
+        white-space: normal !important; /* Permitir salto de lï¿½nea si es muy largo */
         text-align: center;
         width: 100%;
     }
@@ -3331,7 +3331,7 @@ html, body {
     }
     
     #hit-zone {
-        width: 40px !important; /* Más pequeño para móvil */
+        width: 40px !important; /* Mï¿½s pequeï¿½o para mï¿½vil */
     }
 
     /* Yuji (Kokusen) */
@@ -3353,16 +3353,16 @@ html, body {
 }
 
 /* ================================================
-   AJUSTES EXTRA DE DIFICULTAD MÓVIL (MIGUEL ANGEL)
+   AJUSTES EXTRA DE DIFICULTAD Mï¿½VIL (MIGUEL ANGEL)
    ================================================ */
 
 @media (max-width: 768px) {
-    /* Sukuna (Corte) - Línea más pequeña (difícil) */
+    /* Sukuna (Corte) - Lï¿½nea mï¿½s pequeï¿½a (difï¿½cil) */
     #hit-zone {
         width: 15px !important;
     }
 
-    /* Yuji (Kokusen) - Sprite y objetivo más pequeños (difícil) */
+    /* Yuji (Kokusen) - Sprite y objetivo mï¿½s pequeï¿½os (difï¿½cil) */
     #yuji-sprite, #yuji-effect {
         transform: scale(0.4) !important;
         transform-origin: center top !important;
