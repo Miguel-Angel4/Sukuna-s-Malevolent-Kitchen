@@ -18,6 +18,19 @@ let kokusenStreak = 0;
 let todoClickCount = 0;
 let todoCurrentSpeed = 300;
 
+// Función para verificar si el usuario está logueado antes de jugar
+async function checkGameAccess() {
+    if (!window.sb) return true;
+    const { data: { session } } = await window.sb.auth.getSession();
+    if (!session) {
+        alert("¡Alto ahí, hechicero! Debes iniciar sesión para acceder a los juegos y obtener descuentos.");
+        window.location.href = "login.html";
+        return false;
+    }
+    return true;
+}
+
+
 const TODO_SEQUENCE = [
     'img/Todo sprite base.png',
     'img/Todo sprite preparandose.png',
@@ -119,7 +132,8 @@ function updateDisplays() {
 // ------------------------------------------
 // 1. YUJI KOKUSEN (Timing Game)
 // ------------------------------------------
-function startKokusen() {
+async function startKokusen() {
+    if (!await checkGameAccess()) return;
     // Música de Itadori
     if (window.musicController) window.musicController.playGame('kokusen');
 
@@ -446,7 +460,8 @@ function showBlackFlashEffect(x, y) {
 // ------------------------------------------
 // 2. TODO BOOGIE WOOGIE (Clicker)
 // ------------------------------------------
-function startTodo() {
+async function startTodo() {
+    if (!await checkGameAccess()) return;
     // Música de Todo
     if (window.musicController) window.musicController.playGame('todo');
 
@@ -566,7 +581,8 @@ let palabraOculta = "";
 let palabraAdivinada = [];
 let intentos = 6;
 
-function startGojo() {
+async function startGojo() {
+    if (!await checkGameAccess()) return;
     // Música de Gojo
     if (window.musicController) window.musicController.playGame('gojo');
 
@@ -639,7 +655,8 @@ function guessLetter(l, btn) {
 // ------------------------------------------
 // 4. SUKUNA CORTES (Slider Game)
 // ------------------------------------------
-function startSukuna() {
+async function startSukuna() {
+    if (!await checkGameAccess()) return;
     modal.style.display = 'flex';
     container.innerHTML = `
         <div style="text-align:center; color:#fff; padding:20px;">
@@ -776,7 +793,8 @@ function startSukuna() {
 // ------------------------------------------
 // 5. HAKARI JACKPOT (Gambling)
 // ------------------------------------------
-function startHakari() {
+async function startHakari() {
+    if (!await checkGameAccess()) return;
     // Música de Hakari
     if (window.musicController) window.musicController.playGame('hakari');
 
