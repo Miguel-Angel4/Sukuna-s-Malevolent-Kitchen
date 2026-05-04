@@ -18,6 +18,12 @@ let kokusenStreak = 0;
 let todoClickCount = 0;
 let todoCurrentSpeed = 300;
 
+// Detección de escala para móviles (coincidir con CSS)
+function getGameScale() {
+    return window.innerWidth <= 768 ? 0.3 : 1.0;
+}
+
+
 // Función para verificar si el usuario está logueado antes de jugar
 async function checkGameAccess() {
     if (!window.sb) return true;
@@ -321,8 +327,11 @@ function createKokusenTarget(yuji, combo, targetX, targetY) {
     circle.style.borderRadius = '50%';
     circle.style.border = '3px solid #87CEEB';
     circle.style.background = 'rgba(0,0,100,0.3)';
-    circle.style.left = `${targetX + combo.circleOffset.x}px`;
-    circle.style.top = `${targetY + combo.circleOffset.y}px`;
+    const scale = getGameScale();
+    const visualX = targetX + 100 + (combo.circleOffset.x - 100) * scale;
+    const visualY = targetY + combo.circleOffset.y * scale;
+    circle.style.left = `${visualX}px`;
+    circle.style.top = `${visualY}px`;
     circle.style.cursor = 'pointer';
     circle.style.zIndex = '10';
 
@@ -360,7 +369,10 @@ function createKokusenTarget(yuji, combo, targetX, targetY) {
             score += 10;
             kokusenStreak++; // Aumentar racha
             yuji.src = combo.flashFrame;
-            showBlackFlashEffect(targetX + combo.effectOffset.x, targetY + combo.effectOffset.y);
+            const scale = getGameScale();
+            const flashX = targetX + 100 + (combo.effectOffset.x - 100) * scale;
+            const flashY = targetY + combo.effectOffset.y * scale;
+            showBlackFlashEffect(flashX, flashY);
 
             registerGameTimeout(() => {
                 if (yuji.isConnected) yuji.remove();
