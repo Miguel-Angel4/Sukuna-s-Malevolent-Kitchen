@@ -843,10 +843,18 @@ function spinJackpot() {
     }, 150);
 
     let cycles = 0;
+    let result = ["", "", ""];
+    
     const interval = setInterval(() => {
-        r1.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-        r2.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-        r3.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        result = [
+            symbols[Math.floor(Math.random() * symbols.length)],
+            symbols[Math.floor(Math.random() * symbols.length)],
+            symbols[Math.floor(Math.random() * symbols.length)]
+        ];
+        
+        r1.textContent = result[0];
+        r2.textContent = result[1];
+        r3.textContent = result[2];
         cycles++;
 
         if (cycles > 20) {
@@ -856,8 +864,8 @@ function spinJackpot() {
             sprite.src = 'img/Hakari sprites feliz.png';
             sprite.classList.add('hakari-float');
 
-                        if (r1.textContent === r2.textContent && r2.textContent === r3.textContent) {
-                if (r1.textContent === '🎰') {
+            if (result[0] === result[1] && result[1] === result[2]) {
+                if (result[0] === '🎰') {
                     saveReward("JACKPOT50", 50, "JACKPOT (Hakari)");
                     alert("¡JACKPOT SUPREMO! Has ganado un 50% de descuento. Código: JACKPOT50. QR disponible en tu cuenta.");
                 } else {
