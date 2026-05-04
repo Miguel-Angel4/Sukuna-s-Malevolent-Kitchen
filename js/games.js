@@ -66,6 +66,31 @@ function clearPendingGameTimeouts() {
     pendingGameTimeouts = [];
 }
 
+async function saveReward(code, percentage, gameName) {
+    if (!window.sb) return;
+    
+    const { data: { session } } = await window.sb.auth.getSession();
+    if (!session) {
+        console.warn("⚠️ No hay sesión activa. El cupón no se guardará en la cuenta.");
+        return;
+    }
+
+    const { error } = await window.sb.from('rewards').insert([
+        { 
+            user_id: session.user.id,
+            code: code,
+            discount_percentage: percentage,
+            game_name: gameName
+        }
+    ]);
+
+    if (error) {
+        console.error("❌ Error al guardar recompensa:", error.message);
+    } else {
+        console.log("✅ Recompensa guardada en la base de datos.");
+    }
+}
+
 function stopGame() {
     modal.style.display = 'none';
     container.innerHTML = '';
@@ -117,7 +142,8 @@ function startKokusen() {
             else if (score >= 50) { discount = 5; code = "KOKUSEN5"; }
 
             if (discount > 0) {
-                alert(`¡Juego terminado! Puntos: ${score}. Has conseguido un ${discount}% de descuento. Código: ${code}`);
+                saveReward(code, discount, "KOKUSEN (Yuji)");
+                alert(`¡Juego terminado! Puntos: ${score}. Has conseguido un ${discount}% de descuento. Tu código QR: ${code} estará disponible en tu cuenta durante 30 días.`);
             } else {
                 alert(`Juego terminado. Puntos: ${score}. No has alcanzado el mínimo para un descuento. ¡Sigue entrenando!`);
             }
@@ -504,7 +530,8 @@ function startTodo() {
             else if (score >= 50) { discount = 8; code = "BOOGIE8"; }
 
             if (discount > 0) {
-                alert(`¡Increíble Brother! Puntos: ${score}. Has conseguido un ${discount}% de descuento. Código: ${code}`);
+                saveReward(code, discount, "BOOGIE WOOGIE (Todo)");
+                alert(`¡Increíble Brother! Puntos: ${score}. Has conseguido un ${discount}% de descuento. Tu código QR: ${code} estará disponible en tu cuenta durante 30 días.`);
             } else {
                 alert(`¡Brother! Puntos: ${score}. Necesitas al menos 50 puntos para un descuento.`);
             }
@@ -593,7 +620,8 @@ function guessLetter(l, btn) {
         timer += 5; // Acierto: +5 segundos
         if (!palabraAdivinada.includes("_")) {
             let discount = 30 - ((6 - intentos) * 5);
-            alert(`¡Infinito! Ganaste. Vidas restantes: ${intentos}. Descuento del ${discount}%: GOJO${discount}`);
+            saveReward(`GOJO${discount}`, discount, "AHORCADO (Gojo)");
+            alert(`¡Infinito! Ganaste. Vidas restantes: ${intentos}. Descuento del ${discount}%: GOJO${discount}. Estará guardado en tu cuenta.`);
             stopGame();
         }
     } else {
@@ -677,7 +705,8 @@ function startSukuna() {
             else if (score >= 20) { discount = 10; code = "CORTES10"; }
 
             if (discount > 0) {
-                alert(`Santuario de Malévolo cerrado. Puntos: ${score}. Has conseguido un ${discount}% de descuento. Código: ${code}`);
+                saveReward(code, discount, "CORTES (Sukuna)");
+                alert(`Santuario de Malévolo cerrado. Puntos: ${score}. Has conseguido un ${discount}% de descuento. Código QR: ${code} guardado en tu cuenta.`);
             } else {
                 alert(`Santuario cerrado. Puntos: ${score}. No has cortado lo suficiente.`);
             }
@@ -801,7 +830,8 @@ function spinJackpot() {
             sprite.classList.add('hakari-float');
 
             if (r1.textContent === r2.textContent && r2.textContent === r3.textContent) {
-                alert("¡JACKPOT! Has ganado un 50% de descuento. Código: JACKPOT50");
+                saveReward("JACKPOT50", 50, "JACKPOT (Hakari)");
+                alert("¡JACKPOT! Has ganado un 50% de descuento. Código: JACKPOT50. QR disponible en tu cuenta.");
                 score = 1000;
             } else {
                 alert("Aw dangit! No has ganado nada esta vez. ¡Sigue intentándolo!");

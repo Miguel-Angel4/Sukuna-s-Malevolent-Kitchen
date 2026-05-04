@@ -407,10 +407,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 pendingCountEl.textContent = resData.length;
             }
 
-            // 2. Descuentos Actuales (Placeholder por ahora, ya que no hay tabla de cupones)
+            // 2. Descuentos Actuales
+            const { data: rewardData } = await sb
+                .from('rewards')
+                .select('id')
+                .eq('user_id', user.id)
+                .gt('expires_at', now);
+            
             const discountsCountEl = document.getElementById('current-discounts-count');
-            if (discountsCountEl) {
-                discountsCountEl.textContent = "0";
+            if (discountsCountEl && rewardData) {
+                discountsCountEl.textContent = rewardData.length;
             }
 
             const up = document.getElementById('profile-upload');
