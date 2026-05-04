@@ -5,7 +5,8 @@
     { "src": "*.html", "use": "@vercel/static" },
     { "src": "css/**", "use": "@vercel/static" },
     { "src": "js/**", "use": "@vercel/static" },
-    { "src": "img/**", "use": "@vercel/static" }
+    { "src": "img/**", "use": "@vercel/static" },
+    { "src": "musica/**", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/api/form-submit", "dest": "https://formsubmit.co/sukunaamalevolentkitchen@gmail.com" },
