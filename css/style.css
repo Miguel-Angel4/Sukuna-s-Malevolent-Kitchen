@@ -3364,8 +3364,7 @@ html, body {
 
     /* Yuji (Kokusen) - Sprite y objetivo m�s peque�os (dif�cil) */
     #yuji-sprite, #yuji-effect {
-        transform: scale(0.3) !important;
-        transform-origin: center top !important;
+        /* Tamaño ahora controlado por JS para mejor alineación */
     }
     
     .kokusen-target {

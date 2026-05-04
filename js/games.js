@@ -328,7 +328,7 @@ function createKokusenTarget(yuji, combo, targetX, targetY) {
     circle.style.border = '3px solid #87CEEB';
     circle.style.background = 'rgba(0,0,100,0.3)';
     const scale = getGameScale();
-    const visualX = targetX + 100 + (combo.circleOffset.x - 100) * scale;
+    const visualX = targetX + combo.circleOffset.x * scale;
     const visualY = targetY + combo.circleOffset.y * scale;
     circle.style.left = `${visualX}px`;
     circle.style.top = `${visualY}px`;
@@ -370,7 +370,7 @@ function createKokusenTarget(yuji, combo, targetX, targetY) {
             kokusenStreak++; // Aumentar racha
             yuji.src = combo.flashFrame;
             const scale = getGameScale();
-            const flashX = targetX + 100 + (combo.effectOffset.x - 100) * scale;
+            const flashX = targetX + combo.effectOffset.x * scale;
             const flashY = targetY + combo.effectOffset.y * scale;
             showBlackFlashEffect(flashX, flashY);
 
@@ -411,8 +411,9 @@ function spawnKokusenCircle() {
 
     kokusenAttackCount += 1;
     const combo = kokusenAttackCount % 2 === 1 ? KOKUSEN_COMBOS.odd : KOKUSEN_COMBOS.even;
-    const spriteWidth = 200;
-    const spriteHeight = 200;
+    const scale = getGameScale();
+    const spriteWidth = 200 * scale;
+    const spriteHeight = 200 * scale;
     const containerWidth = container.clientWidth || 800;
     const containerHeight = container.clientHeight || 600;
 
