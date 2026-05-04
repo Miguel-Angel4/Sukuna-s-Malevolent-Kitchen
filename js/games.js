@@ -173,6 +173,7 @@ function oldSpawnKokusenCircle() {
 
     // Crear sprite de Yuji atacando
     const yuji = document.createElement('img');
+    yuji.id = 'yuji-sprite';
     yuji.src = 'img/game_yuji.png';
     yuji.style.position = 'absolute';
     yuji.style.width = '100px';
@@ -258,6 +259,7 @@ function oldSpawnKokusenCircle() {
 
 function oldShowBlackFlashEffect(x, y) {
     const flash = document.createElement('div');
+    flash.id = 'yuji-effect';
     flash.style.position = 'absolute';
     flash.style.left = x + 'px';
     flash.style.top = y + 'px';
@@ -403,6 +405,7 @@ function spawnKokusenCircle() {
     const containerHeight = container.clientHeight || 600;
 
     const yuji = document.createElement('img');
+    yuji.id = 'yuji-sprite';
     yuji.style.position = 'absolute';
     yuji.style.width = `${spriteWidth}px`;
     yuji.style.height = `${spriteHeight}px`;
@@ -432,6 +435,7 @@ function spawnKokusenCircle() {
 
 function showBlackFlashEffect(x, y) {
     const flash = document.createElement('div');
+    flash.id = 'yuji-effect';
     flash.style.position = 'absolute';
     flash.style.left = x + 'px';
     flash.style.top = y + 'px';
