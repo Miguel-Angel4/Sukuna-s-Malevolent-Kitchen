@@ -3,11 +3,6 @@
   "version": "0.0.1",
   "type": "module",
   "private": true,
-  "scripts": {
-    "dev": "echo 'No dev script'",
-    "build": "echo 'Static deploy'",
-    "start": "echo 'No start script'"
-  },
   "dependencies": {
     "@capacitor/android": "^8.3.1",
     "@capacitor/core": "^8.3.1",
