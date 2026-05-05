@@ -110,6 +110,86 @@ async function saveReward(code, percentage, gameName) {
     }
 }
 
+async function saveGameScore(gameName, scoreValue) {
+    if (!window.sb) return;
+    const { data: { session } } = await window.sb.auth.getSession();
+    if (!session) return;
+
+    let userName = "Usuario";
+    try {
+        const { data: prof } = await window.sb.from('profiles').select('name').eq('id', session.user.id).single();
+        if (prof && prof.name) {
+            userName = prof.name;
+        } else {
+            userName = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
+        }
+    } catch(e) {}
+
+    const { error } = await window.sb.from('game_scores').insert([
+        { 
+            user_id: session.user.id,
+            user_name: userName,
+            game_name: gameName,
+            score: scoreValue
+        }
+    ]);
+    if (error) {
+        console.error("❌ Error al guardar puntuación:", error.message);
+    } else {
+        if (typeof loadLeaderboards === 'function') {
+            loadLeaderboards();
+        }
+    }
+}
+
+async function loadLeaderboards() {
+    if (!window.sb) return;
+    
+    const games = [
+        { name: 'KOKUSEN (Yuji)', id: 'tabla-kokusen', order: false },
+        { name: 'BOOGIE WOOGIE (Todo)', id: 'tabla-boogie', order: false },
+        { name: 'CORTES (Sukuna)', id: 'tabla-cortes', order: false },
+        { name: 'AHORCADO (Gojo)', id: 'tabla-ahorcado', order: true }
+    ];
+
+    for (const game of games) {
+        const tbody = document.querySelector(`#${game.id} tbody`);
+        if (!tbody) continue;
+
+        const { data, error } = await window.sb
+            .from('game_scores')
+            .select('*')
+            .eq('game_name', game.name)
+            .order('score', { ascending: game.order })
+            .limit(5);
+
+        if (error) {
+            tbody.innerHTML = `<tr><td colspan="3" class="text-center">Error al cargar datos</td></tr>`;
+            continue;
+        }
+
+        if (!data || data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" class="text-center">Sin puntuaciones aún</td></tr>`;
+            continue;
+        }
+
+        tbody.innerHTML = data.map((row, index) => {
+            const displayScore = game.name === 'AHORCADO (Gojo)' ? `${row.score}s` : row.score;
+            return `<tr>
+                <td>${index + 1}</td>
+                <td>${row.user_name || 'Desconocido'}</td>
+                <td>${displayScore}</td>
+            </tr>`;
+        }).join('');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('tabla-kokusen')) {
+        setTimeout(loadLeaderboards, 1000);
+    }
+});
+
 function stopGame() {
     modal.style.display = 'none';
     container.innerHTML = '';
@@ -167,6 +247,7 @@ async function startKokusen() {
             } else {
                 alert(`Juego terminado. Puntos: ${score}. No has alcanzado el mínimo para un descuento. ¡Sigue entrenando!`);
             }
+            saveGameScore('KOKUSEN (Yuji)', score);
             stopGame();
         }
     }, 100);
@@ -559,6 +640,7 @@ async function startTodo() {
             } else {
                 alert(`¡Brother! Puntos: ${score}. Necesitas al menos 50 puntos para un descuento.`);
             }
+            saveGameScore('BOOGIE WOOGIE (Todo)', score);
             stopGame();
         }
     }, 1000);
@@ -589,6 +671,7 @@ const PALABRAS = ["SUKUNA", "GOJO", "ITARODI", "MEGUMI", "NOBARA", "EXPANSION", 
 let palabraOculta = "";
 let palabraAdivinada = [];
 let intentos = 6;
+let gojoStartTime = 0;
 
 async function startGojo() {
     if (!await checkGameAccess()) return;
@@ -602,6 +685,7 @@ async function startGojo() {
     palabraAdivinada = Array(palabraOculta.length).fill("_");
     timer = 120;
     score = 0;
+    gojoStartTime = Date.now();
     updateDisplays();
 
     gameInterval = setInterval(() => {
@@ -646,7 +730,9 @@ function guessLetter(l, btn) {
         if (!palabraAdivinada.includes("_")) {
             let discount = 30 - ((6 - intentos) * 5);
             saveReward(`GOJO${discount}`, discount, "AHORCADO (Gojo)");
+            let timeTaken = parseFloat(((Date.now() - gojoStartTime) / 1000).toFixed(1));
             alert(`¡Infinito! Ganaste. Vidas restantes: ${intentos}. Descuento del ${discount}%: GOJO${discount}. Estará guardado en tu cuenta.`);
+            saveGameScore('AHORCADO (Gojo)', timeTaken);
             stopGame();
         }
     } else {
@@ -736,6 +822,7 @@ async function startSukuna() {
             } else {
                 alert(`Santuario cerrado. Puntos: ${score}. No has cortado lo suficiente.`);
             }
+            saveGameScore('CORTES (Sukuna)', score);
             stopGame();
         }
     }, 20);
