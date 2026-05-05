@@ -1,7 +1,6 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/api/form-submit", "destination": "https://formsubmit.co/sukunaamalevolentkitchen@gmail.com" },
     { "source": "/", "destination": "/home.html" }
   ]
 }
