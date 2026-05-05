@@ -205,11 +205,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const baseMesa = `mesa ${i}`;
                 const fullMesa = mesaNombre.trim().toLowerCase();
 
-                const d = new Date(r.fecha_hora);
+                const d = new Date(r.fecha_hora.replace(' ', 'T'));
                 
-                // Comparamos el día
-                const resDateStr = new Date(d.getFullYear(), d.getMonth(), d.getDate()).toDateString();
-                const dateMatch = resDateStr === selectedDateStr;
+                // Comparamos el día de forma explícita para evitar errores de locale o formato
+                const dateMatch = d.getFullYear() === dateObj.getFullYear() && 
+                                d.getMonth() === dateObj.getMonth() && 
+                                d.getDate() === dateObj.getDate();
 
                 // Comparamos la hora localmente para evitar desfases de zona horaria (UTC vs Local)
                 const resMin    = d.getHours() * 60 + d.getMinutes();
