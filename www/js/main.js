@@ -214,18 +214,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const baseMesa = `mesa ${i}`;
                 const fullMesa = mesaNombre.trim().toLowerCase();
 
-                // Normalización de fecha para evitar errores de parseo
-                const d = new Date(r.fecha_hora.replace(' ', 'T'));
+                // Forzamos el parseo como tiempo local ignorando el offset de Supabase (+00)
+                // Si r.fecha_hora es "2026-05-31 15:00:00+00", tomamos solo los primeros 19 caracteres
+                const localDateStr = r.fecha_hora.substring(0, 19).replace(' ', 'T');
+                const d = new Date(localDateStr);
                 
                 // Comparación de día exacta
                 const dateMatch = d.getFullYear() === dateObj.getFullYear() && 
                                 d.getMonth() === dateObj.getMonth() && 
                                 d.getDate() === dateObj.getDate();
 
-                // Comparación de hora: 1 hora de margen (60 min)
+                // Comparación de hora: Exactamente 1 hora desde el inicio
                 const resMin    = d.getHours() * 60 + d.getMinutes();
                 const targetMin = h * 60 + m;
-                const timeMatch = Math.abs(resMin - targetMin) <= 60;
+                
+                // La mesa está ocupada si la hora consultada está entre la hora de reserva y 60 min después
+                const timeMatch = targetMin >= resMin && targetMin < (resMin + 60);
 
                 return dateMatch && timeMatch && (resMesa === baseMesa || resMesa === fullMesa);
             });
