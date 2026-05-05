@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Sukuna\'s Kitchen</string>
+    <string name="title_activity_main">Sukuna\'s Kitchen</string>
+    <string name="package_name">com.sukuna.kitchen</string>
+    <string name="custom_url_scheme">com.sukuna.kitchen</string>
+</resources>
