@@ -185,30 +185,47 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     updateTables = async (dateObj) => {
         if (!tablesContainer || !sb || !dateObj) return;
-        tablesContainer.innerHTML = '<span style="color:#aaa;font-size:0.8rem">Cargando...</span>';
+        tablesContainer.innerHTML = '<span style="color:#aaa;font-size:0.8rem">Consultando dominio...</span>';
 
+        // Intentamos obtener todas las reservas. 
+        // Si hay RLS activo, esto devolverá solo las permitidas por la política.
         const { data: reservations, error } = await sb.from('reservations').select('*');
-        if (error) { console.error("Error mesas:", error); return; }
+        
+        if (error) { 
+            console.error("Error Supabase:", error);
+            tablesContainer.innerHTML = `<span style="color:red;font-size:0.7rem">Error: ${error.message}</span>`;
+            return; 
+        }
 
         let h = 14, m = 0;
         if (widgetHour?.value) [h, m] = widgetHour.value.split(':').map(Number);
 
         tablesContainer.innerHTML = '';
+        
+        const count = (reservations || []).length;
+        console.log(`Buscando en ${count} reservas para el día ${dateObj.toDateString()}`);
+
         for (let i = 1; i <= 15; i++) {
             const mesaNombre = i === 15 ? "Mesa 15 (Especial para Cumpleaños)" : `Mesa ${i}`;
             const isBusy = (reservations || []).some(r => {
+                if (!r.mesa || !r.fecha_hora) return false;
+
                 const resMesa  = String(r.mesa).trim().toLowerCase();
                 const baseMesa = `mesa ${i}`;
                 const fullMesa = mesaNombre.trim().toLowerCase();
 
-                const d = new Date(r.fecha_hora);
-                const dateMatch = d.getDate() === dateObj.getDate() && 
+                // Normalización de fecha para evitar errores de parseo
+                const d = new Date(r.fecha_hora.replace(' ', 'T'));
+                
+                // Comparación de día exacta
+                const dateMatch = d.getFullYear() === dateObj.getFullYear() && 
                                 d.getMonth() === dateObj.getMonth() && 
-                                d.getFullYear() === dateObj.getFullYear();
+                                d.getDate() === dateObj.getDate();
 
+                // Comparación de hora: 1 hora de margen (60 min)
                 const resMin    = d.getHours() * 60 + d.getMinutes();
                 const targetMin = h * 60 + m;
-                const timeMatch = Math.abs(resMin - targetMin) < 60;
+                const timeMatch = Math.abs(resMin - targetMin) <= 60;
 
                 return dateMatch && timeMatch && (resMesa === baseMesa || resMesa === fullMesa);
             });
@@ -406,7 +423,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 alert(`🩸 RESERVA CONFIRMADA 🩸\n\nNombre: ${data.nombre}\nMesa: ${data.mesa}\nFecha: ${data.fecha_hora.replace('T', ' ')}\nPersonas: ${data.personas}`);
                 resForm.reset();
 
-                // 4. REFRESCAR CALENDARIO
+                // 4. REFRESCAR CALENDARIO Y MOSTRAR FECHA ELEGIDA
+                const resDate = new Date(data.fecha_hora);
+                selectedDate = resDate; // Actualizamos la fecha seleccionada global
+                if (widgetHour && data.fecha_hora.includes('T')) {
+                    widgetHour.value = data.fecha_hora.split('T')[1]; // Actualizamos la hora del widget
+                }
+                
+                if (typeof renderCalendar === 'function') renderCalendar();
                 if (typeof updateTables === 'function') setTimeout(() => updateTables(selectedDate), 600);
 
             } catch (err) {

@@ -185,38 +185,46 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     updateTables = async (dateObj) => {
         if (!tablesContainer || !sb || !dateObj) return;
-        tablesContainer.innerHTML = '<span style="color:#aaa;font-size:0.8rem">Cargando...</span>';
+        tablesContainer.innerHTML = '<span style="color:#aaa;font-size:0.8rem">Consultando dominio...</span>';
 
+        // Intentamos obtener todas las reservas. 
+        // Si hay RLS activo, esto devolverá solo las permitidas por la política.
         const { data: reservations, error } = await sb.from('reservations').select('*');
-        if (error) { console.error("Error mesas:", error); return; }
+        
+        if (error) { 
+            console.error("Error Supabase:", error);
+            tablesContainer.innerHTML = `<span style="color:red;font-size:0.7rem">Error: ${error.message}</span>`;
+            return; 
+        }
 
         let h = 14, m = 0;
         if (widgetHour?.value) [h, m] = widgetHour.value.split(':').map(Number);
 
         tablesContainer.innerHTML = '';
         
-        // Normalizamos la fecha seleccionada a medianoche para comparar solo el día
-        const selectedDateStr = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()).toDateString();
+        const count = (reservations || []).length;
+        console.log(`Buscando en ${count} reservas para el día ${dateObj.toDateString()}`);
 
         for (let i = 1; i <= 15; i++) {
             const mesaNombre = i === 15 ? "Mesa 15 (Especial para Cumpleaños)" : `Mesa ${i}`;
             const isBusy = (reservations || []).some(r => {
+                if (!r.mesa || !r.fecha_hora) return false;
+
                 const resMesa  = String(r.mesa).trim().toLowerCase();
                 const baseMesa = `mesa ${i}`;
                 const fullMesa = mesaNombre.trim().toLowerCase();
 
+                // Normalización de fecha para evitar errores de parseo
                 const d = new Date(r.fecha_hora.replace(' ', 'T'));
                 
-                // Comparamos el día de forma explícita para evitar errores de locale o formato
+                // Comparación de día exacta
                 const dateMatch = d.getFullYear() === dateObj.getFullYear() && 
                                 d.getMonth() === dateObj.getMonth() && 
                                 d.getDate() === dateObj.getDate();
 
-                // Comparamos la hora localmente para evitar desfases de zona horaria (UTC vs Local)
+                // Comparación de hora: 1 hora de margen (60 min)
                 const resMin    = d.getHours() * 60 + d.getMinutes();
                 const targetMin = h * 60 + m;
-                
-                // Si la reserva está dentro de un rango de 1 hora (60 min) exacta
                 const timeMatch = Math.abs(resMin - targetMin) <= 60;
 
                 return dateMatch && timeMatch && (resMesa === baseMesa || resMesa === fullMesa);
