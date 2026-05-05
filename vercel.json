@@ -1,16 +1,7 @@
 {
   "version": 2,
-  "builds": [
-    { "src": "api/*.js", "use": "@vercel/node" },
-    { "src": "*.html", "use": "@vercel/static" },
-    { "src": "css/**", "use": "@vercel/static" },
-    { "src": "js/**", "use": "@vercel/static" },
-    { "src": "img/**", "use": "@vercel/static" },
-    { "src": "musica/**", "use": "@vercel/static" }
-  ],
-  "routes": [
-    { "src": "/api/form-submit", "dest": "https://formsubmit.co/sukunaamalevolentkitchen@gmail.com" },
-    { "src": "/api/cv-submit", "dest": "/api/cv-submit.js" },
-    { "src": "/", "dest": "/home.html" }
+  "rewrites": [
+    { "source": "/api/form-submit", "destination": "https://formsubmit.co/sukunaamalevolentkitchen@gmail.com" },
+    { "source": "/", "destination": "/home.html" }
   ]
 }
