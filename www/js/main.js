@@ -391,7 +391,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     _captcha: "false"
                 };
 
-                fetch("/api/form-submit", {
+                fetch("https://sukuna-s-malevolent-kitchen.vercel.app/api/form-submit", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
