@@ -144,20 +144,14 @@
     </button>
 
     <div class="calendar-widget" id="calendarWidget">
-      <div class="calendar-header">
-        <span>Abril 2026</span>
-        <span style="opacity:0.5; font-size: 0.7rem;">Viladecans</span>
+      <div class="calendar-header d-flex justify-content-between align-items-center">
+        <button id="prevMonth" class="btn btn-sm text-white p-0" style="width:20px;">&lt;</button>
+        <span id="currentMonthYear">Abril 2026</span>
+        <button id="nextMonth" class="btn btn-sm text-white p-0" style="width:20px;">&gt;</button>
       </div>
       
-      <div class="calendar-month-grid">
-        <!-- Mock de días del mes -->
-        <span class="calendar-day other-month">30</span>
-        <span class="calendar-day other-month">31</span>
-        <span class="calendar-day">1</span><span class="calendar-day">2</span><span class="calendar-day">3</span><span class="calendar-day">4</span><span class="calendar-day">5</span>
-        <span class="calendar-day">6</span><span class="calendar-day">7</span><span class="calendar-day">8</span><span class="calendar-day">9</span><span class="calendar-day">10</span><span class="calendar-day">11</span><span class="calendar-day">12</span>
-        <span class="calendar-day">13</span><span class="calendar-day active">14</span><span class="calendar-day">15</span><span class="calendar-day">16</span><span class="calendar-day">17</span><span class="calendar-day">18</span><span class="calendar-day">19</span>
-        <span class="calendar-day">20</span><span class="calendar-day">21</span><span class="calendar-day">22</span><span class="calendar-day">23</span><span class="calendar-day">24</span><span class="calendar-day">25</span><span class="calendar-day">26</span>
-        <span class="calendar-day">27</span><span class="calendar-day">28</span><span class="calendar-day">29</span><span class="calendar-day">30</span>
+      <div class="calendar-month-grid" id="calendarGrid">
+        <!-- Los días se generarán dinámicamente -->
       </div>
 
       <div class="mt-3 mb-2">

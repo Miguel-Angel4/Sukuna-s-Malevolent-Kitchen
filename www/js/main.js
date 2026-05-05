@@ -126,16 +126,65 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- 5. CALENDARIO Y RESERVAS ---
     const calendarToggle  = document.getElementById('calendarToggle');
     const calendarWidget  = document.getElementById('calendarWidget');
-    if (calendarToggle && calendarWidget) {
-        calendarToggle.onclick = () => calendarWidget.classList.toggle('active');
-    }
-
-    const tablesContainer = document.getElementById('tablesContainer');
+    const calendarGrid    = document.getElementById('calendarGrid');
+    const monthYearText   = document.getElementById('currentMonthYear');
+    const prevMonthBtn    = document.getElementById('prevMonth');
+    const nextMonthBtn    = document.getElementById('nextMonth');
+    const statusTitle     = document.getElementById('status-title');
     const widgetHour      = document.getElementById('widget-hour');
+    const tablesContainer = document.getElementById('tablesContainer');
 
-    // Definir updateTables globalmente
-    updateTables = async (day) => {
-        if (!tablesContainer || !sb) return;
+    let currentViewDate = new Date(); // Fecha que se está viendo en el calendario
+    let selectedDate    = new Date(); // Fecha seleccionada para ver mesas
+
+    const renderCalendar = () => {
+        if (!calendarGrid || !monthYearText) return;
+        calendarGrid.innerHTML = '';
+        
+        const year = currentViewDate.getFullYear();
+        const month = currentViewDate.getMonth();
+        
+        const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        monthYearText.textContent = `${monthNames[month]} ${year}`;
+
+        const firstDay = new Date(year, month, 1).getDay(); 
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        
+        // Ajuste para que la semana empiece en Lunes (0:Lun, 6:Dom)
+        const startOffset = firstDay === 0 ? 6 : firstDay - 1;
+
+        // Días del mes anterior (vacíos)
+        const prevMonthLastDay = new Date(year, month, 0).getDate();
+        for (let i = startOffset; i > 0; i--) {
+            const span = document.createElement('span');
+            span.className = 'calendar-day other-month';
+            span.textContent = prevMonthLastDay - i + 1;
+            calendarGrid.appendChild(span);
+        }
+
+        // Días del mes actual
+        for (let i = 1; i <= daysInMonth; i++) {
+            const span = document.createElement('span');
+            span.className = 'calendar-day';
+            span.textContent = i;
+            
+            if (i === selectedDate.getDate() && month === selectedDate.getMonth() && year === selectedDate.getFullYear()) {
+                span.classList.add('active');
+            }
+
+            span.onclick = () => {
+                document.querySelectorAll('.calendar-day').forEach(x => x.classList.remove('active'));
+                span.classList.add('active');
+                selectedDate = new Date(year, month, i);
+                if (statusTitle) statusTitle.textContent = `Estado para el día ${i}`;
+                updateTables(selectedDate);
+            };
+            calendarGrid.appendChild(span);
+        }
+    };
+
+    updateTables = async (dateObj) => {
+        if (!tablesContainer || !sb || !dateObj) return;
         tablesContainer.innerHTML = '<span style="color:#aaa;font-size:0.8rem">Cargando...</span>';
 
         const { data: reservations, error } = await sb.from('reservations').select('*');
@@ -153,16 +202,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const fullMesa = mesaNombre.trim().toLowerCase();
 
                 const d = new Date(r.fecha_hora);
-                // Comprobar día (UTC y local para robustez)
-                const dayMatch   = d.getUTCDate() == day || d.getDate() == day;
-                const monthMatch = d.getUTCMonth() === 3 || d.getMonth() === 3; // Abril
+                const dateMatch = d.getDate() === dateObj.getDate() && 
+                                d.getMonth() === dateObj.getMonth() && 
+                                d.getFullYear() === dateObj.getFullYear();
 
-                // Bloqueo de exactamente 1 hora (60 min)
-                const resMin    = d.getUTCHours() * 60 + d.getUTCMinutes();
+                const resMin    = d.getHours() * 60 + d.getMinutes();
                 const targetMin = h * 60 + m;
                 const timeMatch = Math.abs(resMin - targetMin) < 60;
 
-                return dayMatch && monthMatch && timeMatch && (resMesa === baseMesa || resMesa === fullMesa);
+                return dateMatch && timeMatch && (resMesa === baseMesa || resMesa === fullMesa);
             });
 
             const dot = document.createElement('div');
@@ -173,26 +221,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    // Asignar eventos a los días del calendario
-    document.querySelectorAll('.calendar-day:not(.other-month)').forEach(d => {
-        d.onclick = () => {
-            document.querySelectorAll('.calendar-day').forEach(x => x.classList.remove('active'));
-            d.classList.add('active');
-            const title = document.getElementById('status-title');
-            if (title) title.textContent = `Estado para el día ${d.textContent}`;
-            updateTables(d.textContent);
-        };
-    });
-
-    if (widgetHour) {
-        widgetHour.onchange = () => {
-            const active = document.querySelector('.calendar-day.active');
-            if (active) updateTables(active.textContent);
+    if (calendarToggle && calendarWidget) {
+        calendarToggle.onclick = () => {
+            calendarWidget.classList.toggle('active');
+            if (calendarWidget.classList.contains('active')) {
+                renderCalendar();
+                updateTables(selectedDate);
+            }
         };
     }
 
-    // Carga inicial del calendario
-    if (tablesContainer) updateTables(14);
+    if (prevMonthBtn) prevMonthBtn.onclick = () => { currentViewDate.setMonth(currentViewDate.getMonth() - 1); renderCalendar(); };
+    if (nextMonthBtn) nextMonthBtn.onclick = () => { currentViewDate.setMonth(currentViewDate.getMonth() + 1); renderCalendar(); };
+    if (widgetHour)   widgetHour.onchange  = () => updateTables(selectedDate);
+
+    if (tablesContainer) {
+        renderCalendar();
+        updateTables(selectedDate);
+    }
 
     // --- 6. FORMULARIO DE EMPLEO ---
     const cvForm = document.getElementById('form-empleo');
@@ -361,8 +407,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 resForm.reset();
 
                 // 4. REFRESCAR CALENDARIO
-                const activeDay = document.querySelector('.calendar-day.active');
-                if (activeDay) setTimeout(() => updateTables(activeDay.textContent), 600);
+                if (typeof updateTables === 'function') setTimeout(() => updateTables(selectedDate), 600);
 
             } catch (err) {
                 console.error("Error reserva:", err);
