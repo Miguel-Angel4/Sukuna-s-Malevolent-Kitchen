@@ -194,6 +194,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (widgetHour?.value) [h, m] = widgetHour.value.split(':').map(Number);
 
         tablesContainer.innerHTML = '';
+        
+        // Normalizamos la fecha seleccionada a medianoche para comparar solo el día
+        const selectedDateStr = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()).toDateString();
+
         for (let i = 1; i <= 15; i++) {
             const mesaNombre = i === 15 ? "Mesa 15 (Especial para Cumpleaños)" : `Mesa ${i}`;
             const isBusy = (reservations || []).some(r => {
@@ -202,13 +206,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const fullMesa = mesaNombre.trim().toLowerCase();
 
                 const d = new Date(r.fecha_hora);
-                const dateMatch = d.getDate() === dateObj.getDate() && 
-                                d.getMonth() === dateObj.getMonth() && 
-                                d.getFullYear() === dateObj.getFullYear();
+                const resDateStr = new Date(d.getFullYear(), d.getMonth(), d.getDate()).toDateString();
+                
+                const dateMatch = resDateStr === selectedDateStr;
 
                 const resMin    = d.getHours() * 60 + d.getMinutes();
                 const targetMin = h * 60 + m;
-                const timeMatch = Math.abs(resMin - targetMin) < 60;
+                // Aumentamos el margen a 90 minutos para cubrir posibles desfases o duraciones de comida
+                const timeMatch = Math.abs(resMin - targetMin) < 90;
 
                 return dateMatch && timeMatch && (resMesa === baseMesa || resMesa === fullMesa);
             });
@@ -406,7 +411,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 alert(`🩸 RESERVA CONFIRMADA 🩸\n\nNombre: ${data.nombre}\nMesa: ${data.mesa}\nFecha: ${data.fecha_hora.replace('T', ' ')}\nPersonas: ${data.personas}`);
                 resForm.reset();
 
-                // 4. REFRESCAR CALENDARIO
+                // 4. REFRESCAR CALENDARIO Y MOSTRAR FECHA ELEGIDA
+                const resDate = new Date(data.fecha_hora);
+                selectedDate = resDate; // Actualizamos la fecha seleccionada global
+                if (widgetHour && data.fecha_hora.includes('T')) {
+                    widgetHour.value = data.fecha_hora.split('T')[1]; // Actualizamos la hora del widget
+                }
+                
+                if (typeof renderCalendar === 'function') renderCalendar();
                 if (typeof updateTables === 'function') setTimeout(() => updateTables(selectedDate), 600);
 
             } catch (err) {
