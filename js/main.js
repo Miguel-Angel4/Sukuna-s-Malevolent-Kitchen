@@ -211,12 +211,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const resDateStr = new Date(d.getFullYear(), d.getMonth(), d.getDate()).toDateString();
                 const dateMatch = resDateStr === selectedDateStr;
 
-                // Comparamos la hora de forma precisa usando timestamps
-                const targetDate = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), h, m);
-                const diffMinutes = Math.abs(d.getTime() - targetDate.getTime()) / (1000 * 60);
+                // Comparamos la hora localmente para evitar desfases de zona horaria (UTC vs Local)
+                const resMin    = d.getHours() * 60 + d.getMinutes();
+                const targetMin = h * 60 + m;
                 
-                // Si la reserva está dentro de un rango de 2 horas (120 min) de la hora consultada
-                const timeMatch = diffMinutes < 120;
+                // Si la reserva está dentro de un rango de 1 hora (60 min) exacta
+                const timeMatch = Math.abs(resMin - targetMin) <= 60;
 
                 return dateMatch && timeMatch && (resMesa === baseMesa || resMesa === fullMesa);
             });
