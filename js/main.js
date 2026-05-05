@@ -206,14 +206,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const fullMesa = mesaNombre.trim().toLowerCase();
 
                 const d = new Date(r.fecha_hora);
-                const resDateStr = new Date(d.getFullYear(), d.getMonth(), d.getDate()).toDateString();
                 
+                // Comparamos el día
+                const resDateStr = new Date(d.getFullYear(), d.getMonth(), d.getDate()).toDateString();
                 const dateMatch = resDateStr === selectedDateStr;
 
-                const resMin    = d.getHours() * 60 + d.getMinutes();
-                const targetMin = h * 60 + m;
-                // Aumentamos el margen a 90 minutos para cubrir posibles desfases o duraciones de comida
-                const timeMatch = Math.abs(resMin - targetMin) < 90;
+                // Comparamos la hora de forma precisa usando timestamps
+                const targetDate = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), h, m);
+                const diffMinutes = Math.abs(d.getTime() - targetDate.getTime()) / (1000 * 60);
+                
+                // Si la reserva está dentro de un rango de 2 horas (120 min) de la hora consultada
+                const timeMatch = diffMinutes < 120;
 
                 return dateMatch && timeMatch && (resMesa === baseMesa || resMesa === fullMesa);
             });
