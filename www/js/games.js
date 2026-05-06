@@ -1,6 +1,6 @@
 // ==========================================
 // Sukuna's Malevolent Kitchen - Game Logic
-// Triggering rebuild
+// Rebuild Trigger: v1.0.1 - Fixed Hakari Win Condition
 // ==========================================
 
 const modal = document.getElementById('game-modal');
@@ -933,7 +933,7 @@ function spinJackpot() {
     let cycles = 0;
     const maxCycles = 20;
     
-    // El resultado se decide al principio para evitar inconsistencias
+    // El resultado se decide al principio para evitar inconsistencias y trampas
     const finalResultIndices = [
         Math.floor(Math.random() * symbols.length),
         Math.floor(Math.random() * symbols.length),
@@ -949,40 +949,44 @@ function spinJackpot() {
             r2.textContent = symbols[Math.floor(Math.random() * symbols.length)];
             r3.textContent = symbols[Math.floor(Math.random() * symbols.length)];
         } else {
-            // Resultado final
+            // Resultado final bloqueado
             clearInterval(interval);
             clearInterval(danceInterval);
             
-            r1.textContent = symbols[finalResultIndices[0]];
-            r2.textContent = symbols[finalResultIndices[1]];
-            r3.textContent = symbols[finalResultIndices[2]];
+            const idx1 = finalResultIndices[0];
+            const idx2 = finalResultIndices[1];
+            const idx3 = finalResultIndices[2];
+
+            r1.textContent = symbols[idx1];
+            r2.textContent = symbols[idx2];
+            r3.textContent = symbols[idx3];
 
             btn.disabled = false;
             sprite.src = 'img/Hakari sprites feliz.png';
             sprite.classList.add('hakari-float');
 
-            // Comprobación de victoria
-            const idx1 = finalResultIndices[0];
-            const idx2 = finalResultIndices[1];
-            const idx3 = finalResultIndices[2];
-
-            if (idx1 === idx2 && idx2 === idx3) {
-                const winnerSymbol = symbols[idx1];
-                if (winnerSymbol === '🎰') {
-                    // 50% de descuento para la máquina tragaperras
-                    saveReward("JACKPOT50", 50, "JACKPOT (Hakari)");
-                    alert("¡JACKPOT SUPREMO! 🎰🎰🎰\nHas ganado un 50% de descuento.\nCódigo: JACKPOT50\nEl cupón se ha guardado en tu cuenta.");
+            // Pequeño retardo para que el usuario vea los símbolos antes de la alerta
+            setTimeout(() => {
+                // Comprobación ESTRICTA de victoria: los tres deben ser iguales
+                if (idx1 === idx2 && idx2 === idx3) {
+                    const winnerSymbol = symbols[idx1];
+                    if (winnerSymbol === '🎰') {
+                        // 50% de descuento para la máquina tragaperras
+                        saveReward("JACKPOT50", 50, "JACKPOT (Hakari)");
+                        alert("¡JACKPOT SUPREMO! 🎰🎰🎰\nHas ganado un 50% de descuento.\nCódigo: JACKPOT50\nEl cupón se ha guardado en tu cuenta.");
+                    } else {
+                        // 30% de descuento para otros símbolos iguales
+                        saveReward("JACKPOT30", 30, "JACKPOT (Hakari)");
+                        alert(`¡JACKPOT! ${winnerSymbol}${winnerSymbol}${winnerSymbol}\nHas ganado un 30% de descuento.\nCódigo: JACKPOT30\nEl cupón se ha guardado en tu cuenta.`);
+                    }
+                    score = 1000;
                 } else {
-                    // 30% de descuento para otros símbolos iguales
-                    saveReward("JACKPOT30", 30, "JACKPOT (Hakari)");
-                    alert(`¡JACKPOT! ${winnerSymbol}${winnerSymbol}${winnerSymbol}\nHas ganado un 30% de descuento.\nCódigo: JACKPOT30\nEl cupón se ha guardado en tu cuenta.`);
+                    // Mensaje de pérdida que incluye los símbolos para transparencia
+                    alert(`Aw dangit! (${symbols[idx1]} ${symbols[idx2]} ${symbols[idx3]}) No has ganado nada esta vez. ¡Sigue intentándolo!`);
+                    score = 0;
                 }
-                score = 1000;
-            } else {
-                alert("Aw dangit! No has ganado nada esta vez. ¡Sigue intentándolo!");
-                score = 0;
-            }
-            updateDisplays();
+                updateDisplays();
+            }, 500);
         }
     }, 100);
 }
