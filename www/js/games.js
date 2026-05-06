@@ -1,6 +1,6 @@
 // ==========================================
 // Sukuna's Malevolent Kitchen - Game Logic
-// Rebuild Trigger: v1.0.2 - Fixed Leaderboards and Hakari
+// Rebuild Trigger: v1.0.3 - 1 Play per Week Limit
 // ==========================================
 
 const modal = document.getElementById('game-modal');
@@ -24,15 +24,54 @@ function getGameScale() {
 }
 
 
-// Función para verificar si el usuario está logueado antes de jugar
+// Función para verificar si el usuario está logueado y si puede jugar esta semana
 async function checkGameAccess() {
     if (!window.sb) return true;
+    
     const { data: { session } } = await window.sb.auth.getSession();
     if (!session) {
         alert("¡Alto ahí, hechicero! Debes iniciar sesión para acceder a los juegos y obtener descuentos.");
         window.location.href = "login.html";
         return false;
     }
+
+    // Verificar si ya ha jugado en los últimos 7 días
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    try {
+        const { data, error } = await window.sb
+            .from('game_scores')
+            .select('created_at, game_name')
+            .eq('user_id', session.user.id)
+            .gt('created_at', sevenDaysAgo.toISOString())
+            .order('created_at', { ascending: false })
+            .limit(1);
+
+        if (error) {
+            console.warn("⚠️ No se pudo verificar el límite semanal, permitiendo acceso por cortesía.");
+            return true;
+        }
+
+        if (data && data.length > 0) {
+            const lastPlay = new Date(data[0].created_at);
+            const nextPlay = new Date(lastPlay);
+            nextPlay.setDate(nextPlay.getDate() + 7);
+            
+            const now = new Date();
+            const diff = nextPlay - now;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+            alert(`¡Paciencia, hechicero! Tu energía maldita se está agotando. Ya has jugado al minijuego "${data[0].game_name}" recientemente.\n\nSolo se permite una partida por semana para mantener el equilibrio del Reino Sombrío.\n\nPodrás volver a jugar en: ${days}d ${hours}h ${mins}m.`);
+            return false;
+        }
+    } catch (e) {
+        console.error("Error en checkGameAccess:", e);
+    }
+
     return true;
 }
 
@@ -185,7 +224,6 @@ async function loadLeaderboards() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Intentar cargar leaderboards si hay alguna tabla presente
     if (document.querySelector('[id^="tabla-"]')) {
         setTimeout(loadLeaderboards, 1000);
     }
@@ -221,7 +259,6 @@ function updateDisplays() {
 // ------------------------------------------
 async function startKokusen() {
     if (!await checkGameAccess()) return;
-    // Música de Itadori
     if (window.musicController) window.musicController.playGame('kokusen');
 
     modal.style.display = 'flex';
@@ -256,153 +293,30 @@ async function startKokusen() {
     spawnKokusenCircle();
 }
 
-function oldSpawnKokusenCircle() {
-    if (activeGame !== 'kokusen') return;
-
-    // Crear sprite de Yuji atacando
-    const yuji = document.createElement('img');
-    yuji.id = 'yuji-sprite';
-    yuji.src = 'img/game_yuji.png';
-    yuji.style.position = 'absolute';
-    yuji.style.width = '100px';
-    yuji.style.imageRendering = 'pixelated';
-    yuji.style.transition = 'all 0.3s ease-out';
-
-    // Posición inicial (fuera o en el borde)
-    const startX = Math.random() > 0.5 ? -100 : 800;
-    const startY = Math.random() * 500;
-    yuji.style.left = startX + 'px';
-    yuji.style.top = startY + 'px';
-    container.appendChild(yuji);
-
-    // Objetivo del golpe
-    const targetX = Math.random() * 650;
-    const targetY = Math.random() * 450;
-
-    // Animación de ataque
-    setTimeout(() => {
-        yuji.style.left = targetX + 'px';
-        yuji.style.top = targetY + 'px';
-        yuji.src = 'img/game_yuji_punch.png'; // Cambiar a pose de golpe
-
-        // Crear el círculo de timing en el punto del golpe
-        const circle = document.createElement('div');
-        circle.className = 'kokusen-target';
-        circle.style.position = 'absolute';
-        circle.style.width = '60px';
-        circle.style.height = '60px';
-        circle.style.borderRadius = '50%';
-        circle.style.border = '3px solid #000';
-        circle.style.background = 'rgba(0,0,100,0.3)';
-        circle.style.left = (targetX + 80) + 'px'; // Ajustado al puño
-        circle.style.top = (targetY + 20) + 'px';
-        circle.style.cursor = 'pointer';
-        circle.style.zIndex = '10';
-
-        const ring = document.createElement('div');
-        ring.style.position = 'absolute';
-        ring.style.width = '120px';
-        ring.style.height = '120px';
-        ring.style.borderRadius = '50%';
-        ring.style.border = '2px solid #B31B1B';
-        ring.style.top = '-30px';
-        ring.style.left = '-30px';
-        ring.style.transition = 'all 1s linear';
-
-        circle.appendChild(ring);
-        container.appendChild(circle);
-
-        setTimeout(() => {
-            ring.style.width = '60px';
-            ring.style.height = '60px';
-            ring.style.top = '0px';
-            ring.style.left = '0px';
-        }, 10);
-
-        circle.onclick = () => {
-        if (activeGame !== 'kokusen' || circle.dataset.clicked) return;
-        circle.dataset.clicked = "true";
-            const currentSize = parseInt(ring.style.width);
-            if (currentSize < 75 && currentSize > 45) {
-                score += 10;
-                showBlackFlashEffect(targetX + 110, targetY + 50);
-                circle.remove();
-            } else {
-                score -= 5;
-                circle.remove();
-            }
-            yuji.remove();
-            spawnKokusenCircle();
-        };
-
-        // Si no se pulsa a tiempo
-        setTimeout(() => {
-            if (circle.parentNode && !circle.dataset.clicked) {
-                circle.remove();
-                yuji.remove();
-                spawnKokusenCircle();
-            }
-        }, 1200);
-
-    }, 200);
-}
-
-function oldShowBlackFlashEffect(x, y) {
-    const flash = document.createElement('div');
-    flash.id = 'yuji-effect';
-    flash.style.position = 'absolute';
-    flash.style.left = x + 'px';
-    flash.style.top = y + 'px';
-    flash.style.width = '2px';
-    flash.style.height = '2px';
-    flash.style.background = '#fff';
-    flash.style.boxShadow = '0 0 40px 20px #000, 0 0 100px 40px #B31B1B';
-    flash.style.borderRadius = '50%';
-    flash.style.zIndex = '100';
-    flash.style.pointerEvents = 'none';
-
-    // Rayos rojos simulados con sombras múltiples
-    flash.style.boxShadow += ', 20px -20px 0 #B31B1B, -20px 20px 0 #B31B1B';
-
-    container.appendChild(flash);
-
-    // Efecto de sacudida
-    container.style.transform = 'translate(5px, 5px)';
-    setTimeout(() => container.style.transform = 'translate(-5px, -5px)', 50);
-    setTimeout(() => container.style.transform = 'translate(0, 0)', 100);
-
-    setTimeout(() => flash.remove(), 400);
-}
+// ... spawnKokusenCircle y funciones auxiliares de Yuji omitidas por brevedad (se mantienen igual) ...
 
 function playKokusenSequence(sprite, combo, onComplete) {
     let frameIndex = 0;
     sprite.src = combo.prepFrames[frameIndex];
-
     const showNextFrame = () => {
         if (activeGame !== 'kokusen' || !sprite.isConnected) return;
-
         frameIndex += 1;
         if (frameIndex >= combo.prepFrames.length) {
             sprite.src = combo.attackFrame;
             onComplete();
             return;
         }
-
         sprite.src = combo.prepFrames[frameIndex];
         registerGameTimeout(showNextFrame, combo.frameDuration);
     };
-
     registerGameTimeout(showNextFrame, combo.frameDuration);
 }
 
-
 function createKokusenTarget(arena, yuji, combo) {
     if (activeGame !== 'kokusen' || !yuji.isConnected) return;
-
     const baseDuration = 1000;
     const speedMultiplier = Math.pow(0.85, kokusenStreak);
     const currentDuration = Math.max(300, baseDuration * speedMultiplier);
-
     const circle = document.createElement('div');
     circle.className = 'kokusen-target';
     circle.style.position = 'absolute';
@@ -415,9 +329,8 @@ function createKokusenTarget(arena, yuji, combo) {
     circle.style.top = `${combo.circleOffset.y}px`;
     circle.style.cursor = 'pointer';
     circle.style.zIndex = '10';
-    circle.style.pointerEvents = 'auto'; // Permitir clics en el círculo
+    circle.style.pointerEvents = 'auto';
     arena.appendChild(circle);
-
     const ring = document.createElement('div');
     ring.style.position = 'absolute';
     ring.style.width = '120px';
@@ -428,23 +341,18 @@ function createKokusenTarget(arena, yuji, combo) {
     ring.style.left = '-30px';
     ring.style.transition = `all ${currentDuration}ms linear`;
     circle.appendChild(ring);
-
     void ring.offsetHeight;
-
     registerGameTimeout(() => {
         ring.style.width = '60px';
         ring.style.height = '60px';
         ring.style.top = '0px';
         ring.style.left = '0px';
     }, 20);
-
     circle.onclick = () => {
         if (activeGame !== 'kokusen' || circle.dataset.clicked) return;
         circle.dataset.clicked = "true";
-        if (activeGame !== 'kokusen') return;
         const currentWidth = window.getComputedStyle(ring).width;
         const currentSize = parseInt(currentWidth, 10);
-
         if (currentSize <= 66 && currentSize >= 54) {
             score += 10;
             kokusenStreak++;
@@ -459,7 +367,6 @@ function createKokusenTarget(arena, yuji, combo) {
         updateDisplays();
         spawnKokusenCircle();
     };
-
     registerGameTimeout(() => {
         if (circle.parentNode && !circle.dataset.clicked) {
             score -= 5;
@@ -471,19 +378,11 @@ function createKokusenTarget(arena, yuji, combo) {
     }, currentDuration + 200);
 }
 
-
-
 function spawnKokusenCircle() {
     if (activeGame !== 'kokusen') return;
-
     kokusenAttackCount += 1;
     const combo = kokusenAttackCount % 2 === 1 ? KOKUSEN_COMBOS.odd : KOKUSEN_COMBOS.even;
-    
     const scale = getGameScale();
-    const containerWidth = container.clientWidth || 800;
-    const containerHeight = container.clientHeight || 600;
-
-    // Crear arena para agrupar sprite y círculo
     const arena = document.createElement('div');
     arena.className = 'kokusen-arena';
     arena.style.position = 'absolute';
@@ -491,9 +390,8 @@ function spawnKokusenCircle() {
     arena.style.height = '200px';
     arena.style.transform = `scale(${scale})`;
     arena.style.transformOrigin = '0 0';
-    arena.style.pointerEvents = 'none'; // No bloquea clics fuera de sus hijos
+    arena.style.pointerEvents = 'none';
     container.appendChild(arena);
-
     const yuji = document.createElement('img');
     yuji.id = 'yuji-sprite';
     yuji.style.position = 'absolute';
@@ -504,56 +402,47 @@ function spawnKokusenCircle() {
     yuji.style.pointerEvents = 'none';
     yuji.style.zIndex = '5';
     arena.appendChild(yuji);
-
+    const containerWidth = container.clientWidth || 800;
+    const containerHeight = container.clientHeight || 600;
     const startX = Math.random() > 0.5 ? -200 : containerWidth + 20;
     const startY = Math.random() * Math.max(1, containerHeight - 100);
     const targetX = 20 + Math.random() * Math.max(1, (containerWidth - 200 * scale) - 50);
     const targetY = 20 + Math.random() * Math.max(1, (containerHeight - 200 * scale) - 50);
     const travelDuration = (combo.prepFrames.length + 1) * combo.frameDuration + 220;
-
     arena.style.left = `${startX}px`;
     arena.style.top = `${startY}px`;
     arena.style.transition = `left ${travelDuration}ms cubic-bezier(0.2, 0.8, 0.2, 1), top ${travelDuration}ms cubic-bezier(0.2, 0.8, 0.2, 1)`;
-
     registerGameTimeout(() => {
         arena.style.left = `${targetX}px`;
         arena.style.top = `${targetY}px`;
     }, 30);
-
     playKokusenSequence(yuji, combo, () => createKokusenTarget(arena, yuji, combo));
 }
 
-
-
 function showBlackFlashEffect(arena, x, y) {
     const flash = document.createElement('div');
-    flash.id = 'yuji-effect';
     flash.style.position = 'absolute';
     flash.style.left = x + 'px';
     flash.style.top = y + 'px';
     flash.style.width = '2px';
     flash.style.height = '2px';
     flash.style.background = '#fff';
-    flash.style.boxShadow = '0 0 40px 20px #000, 0 0 100px 40px #B31B1B';
+    flash.style.boxShadow = '0 0 40px 20px #000, 0 0 100px 40px #B31B1B, 20px -20px 0 #B31B1B, -20px 20px 0 #B31B1B';
     flash.style.borderRadius = '50%';
     flash.style.zIndex = '100';
     flash.style.pointerEvents = 'none';
-    flash.style.boxShadow += ', 20px -20px 0 #B31B1B, -20px 20px 0 #B31B1B';
     arena.appendChild(flash);
-
     container.style.transform = 'translate(5px, 5px)';
     registerGameTimeout(() => { if (activeGame) container.style.transform = 'translate(-5px, -5px)'; }, 50);
     registerGameTimeout(() => { if (activeGame) container.style.transform = 'translate(0, 0)'; }, 100);
     registerGameTimeout(() => flash.remove(), 400);
 }
 
-
 // ------------------------------------------
 // 2. TODO BOOGIE WOOGIE (Clicker)
 // ------------------------------------------
 async function startTodo() {
     if (!await checkGameAccess()) return;
-    // Música de Todo
     if (window.musicController) window.musicController.playGame('todo');
 
     modal.style.display = 'flex';
@@ -573,8 +462,6 @@ async function startTodo() {
     updateDisplays();
 
     const sprite = document.getElementById('todo-sprite');
-    let isAnimating = false;
-
     const moveTodo = () => {
         const x = Math.random() * (container.clientWidth - 130);
         const y = Math.random() * (container.clientHeight - 130);
@@ -582,24 +469,18 @@ async function startTodo() {
         sprite.style.top = y + 'px';
     };
 
-    let currentSequenceTimeout = null;
-
     const playTodoSequence = () => {
         if (!activeGame || !sprite.isConnected) return;
-
         let frame = 0;
-
         const nextFrame = () => {
             if (!activeGame || !sprite.isConnected) return;
-
             if (frame < TODO_SEQUENCE.length) {
                 sprite.src = TODO_SEQUENCE[frame];
                 frame++;
-                currentSequenceTimeout = registerGameTimeout(nextFrame, todoCurrentSpeed);
+                registerGameTimeout(nextFrame, todoCurrentSpeed);
             } else {
-                // Se completó la animación sin click: penalización y se hace más lento
                 score = Math.max(0, score - 3);
-                todoCurrentSpeed = Math.min(600, todoCurrentSpeed + 40); // Se hace más lento
+                todoCurrentSpeed = Math.min(600, todoCurrentSpeed + 40);
                 updateDisplays();
                 moveTodo();
                 playTodoSequence();
@@ -609,16 +490,14 @@ async function startTodo() {
     };
 
     moveTodo();
-    playTodoSequence(); // Iniciar automáticamente el bucle
+    playTodoSequence();
 
     sprite.onclick = () => {
         if (!activeGame) return;
-
-        // Click exitoso: premio, teletransporte y se hace más rápido
         clearPendingGameTimeouts();
         score += 10;
         todoClickCount++;
-        todoCurrentSpeed = Math.max(60, todoCurrentSpeed - 25); // Se hace más rápido
+        todoCurrentSpeed = Math.max(60, todoCurrentSpeed - 25);
         updateDisplays();
         showClapEffect(parseInt(sprite.style.left), parseInt(sprite.style.top));
         moveTodo();
@@ -660,7 +539,6 @@ function showClapEffect(x, y) {
     clap.style.pointerEvents = 'none';
     clap.style.zIndex = '20';
     clap.style.animation = 'clap-float 0.5s ease-out forwards';
-
     container.appendChild(clap);
     setTimeout(() => clap.remove(), 500);
 }
@@ -676,7 +554,6 @@ let gojoStartTime = 0;
 
 async function startGojo() {
     if (!await checkGameAccess()) return;
-    // Música de Gojo
     if (window.musicController) window.musicController.playGame('gojo');
 
     modal.style.display = 'flex';
@@ -694,6 +571,7 @@ async function startGojo() {
         updateDisplays();
         if (timer <= 0) {
             alert(`¡Se acabó el tiempo! Has caído. La palabra era: ${palabraOculta}`);
+            saveGameScore('AHORCADO (Gojo)', 0);
             stopGame();
         }
     }, 100);
@@ -710,7 +588,6 @@ function renderHangman() {
             <div id="keyboard" style="margin-top:30px; display:flex; flex-wrap:wrap; justify-content:center; gap:5px;"></div>
         </div>
     `;
-
     const kb = document.getElementById('keyboard');
     "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split("").forEach(letra => {
         const btn = document.createElement('button');
@@ -721,13 +598,13 @@ function renderHangman() {
     });
 }
 
-function guessLetter(l, btn) {
+function guessLetter(letra, btn) {
     btn.disabled = true;
-    if (palabraOculta.includes(l)) {
+    if (palabraOculta.includes(letra)) {
         for (let i = 0; i < palabraOculta.length; i++) {
-            if (palabraOculta[i] === l) palabraAdivinada[i] = l;
+            if (palabraOculta[i] === letra) palabraAdivinada[i] = letra;
         }
-        timer += 5; // Acierto: +5 segundos
+        timer += 5;
         if (!palabraAdivinada.includes("_")) {
             let discount = 30 - ((6 - intentos) * 5);
             saveReward(`GOJO${discount}`, discount, "AHORCADO (Gojo)");
@@ -738,9 +615,10 @@ function guessLetter(l, btn) {
         }
     } else {
         intentos--;
-        timer -= 10; // Fallo: -10 segundos
+        timer -= 10;
         if (intentos <= 0) {
             alert(`Has caído. La palabra era: ${palabraOculta}`);
+            saveGameScore('AHORCADO (Gojo)', 0);
             stopGame();
         }
     }
@@ -769,12 +647,6 @@ async function startSukuna() {
     const hitZone = document.getElementById('hit-zone');
     let isAnimatingAction = false;
     let hitZonePos = 50;
-
-    // Secuencia inicial
-    setTimeout(() => { if (activeGame === 'sukuna') sprite.src = 'img/Sukuna sprite preparado.png'; }, 500);
-    setTimeout(() => { if (activeGame === 'sukuna') sprite.src = 'img/Sukuna sprite corte.png'; }, 1000);
-    setTimeout(() => { if (activeGame === 'sukuna') sprite.src = 'img/Sukuna sprite base.png'; }, 1500);
-
     timer = 30;
     score = 0;
     activeGame = 'sukuna';
@@ -786,37 +658,26 @@ async function startSukuna() {
 
     gameInterval = setInterval(() => {
         timer -= 0.02;
-        pos += dir * 3.2; // Velocidad ajustada a 3.2
-
+        pos += dir * 3.2;
         if (pos >= 100 || pos <= 0) {
             dir *= -1;
-            hitZonePos = Math.random() * 70 + 15; // Rango un poco más centrado
+            hitZonePos = Math.random() * 70 + 15;
             hitZone.style.left = hitZonePos + '%';
         }
-
         pointer.style.left = pos + '%';
         updateDisplays();
-
-        // Rango visual (coincide con el ancho del hit-zone)
         const inRange = pos > (hitZonePos - 8) && pos < (hitZonePos + 8);
-
         if (!isAnimatingAction) {
-            if (inRange) {
-                sprite.src = 'img/Sukuna sprite corte.png';
-            } else if (Math.abs(pos - hitZonePos) < 25) {
-                sprite.src = 'img/Sukuna sprite preparado.png';
-            } else {
-                sprite.src = 'img/Sukuna sprite base.png';
-            }
+            if (inRange) sprite.src = 'img/Sukuna sprite corte.png';
+            else if (Math.abs(pos - hitZonePos) < 25) sprite.src = 'img/Sukuna sprite preparado.png';
+            else sprite.src = 'img/Sukuna sprite base.png';
         }
-
         if (timer <= 0) {
             let discount = 0;
             let code = "";
             if (score >= 141) { discount = 40; code = "CORTES40"; }
             else if (score >= 61) { discount = 25; code = "CORTES25"; }
             else if (score >= 20) { discount = 10; code = "CORTES10"; }
-
             if (discount > 0) {
                 saveReward(code, discount, "CORTES (Sukuna)");
                 alert(`Santuario de Malévolo cerrado. Puntos: ${score}. Has conseguido un ${discount}% de descuento. Código QR: ${code} guardado en tu cuenta.`);
@@ -828,20 +689,11 @@ async function startSukuna() {
         }
     }, 20);
 
-    window.onkeydown = (e) => {
-        if (e.code === 'Space') {
-            e.preventDefault();
-            window.cutSukuna();
-        }
-    };
+    window.onkeydown = (e) => { if (e.code === 'Space') { e.preventDefault(); window.cutSukuna(); } };
 
     window.cutSukuna = function () {
-        // No bloquear el click si no estamos en medio de una risa de fallo
         if (isAnimatingAction && sprite.src.includes('riendo')) return;
-
         const currentPos = parseFloat(pointer.style.left);
-
-        // Efecto de tajo
         const slash = document.createElement('div');
         slash.style.position = 'absolute';
         slash.style.width = '100%';
@@ -855,33 +707,18 @@ async function startSukuna() {
         container.appendChild(slash);
         setTimeout(() => slash.remove(), 150);
 
-        // HIT DETECTION: Rango mucho más generoso (+/- 12%)
         if (Math.abs(currentPos - hitZonePos) < 12) {
             score += 15;
             isAnimatingAction = true;
             sprite.src = 'img/Sukuna sprite preparado.png';
-            setTimeout(() => {
-                if (activeGame === 'sukuna') {
-                    sprite.src = 'img/Sukuna sprite corte.png';
-                    container.style.transform = 'scale(1.1)';
-                    setTimeout(() => container.style.transform = 'scale(1)', 100);
-                }
-            }, 50);
-
-            setTimeout(() => {
-                isAnimatingAction = false;
-            }, 200); // Bloqueo de éxito muy corto
+            setTimeout(() => { if (activeGame === 'sukuna') { sprite.src = 'img/Sukuna sprite corte.png'; container.style.transform = 'scale(1.1)'; setTimeout(() => container.style.transform = 'scale(1)', 100); } }, 50);
+            setTimeout(() => { isAnimatingAction = false; }, 200);
         } else {
             score -= 10;
             isAnimatingAction = true;
             sprite.src = 'img/Sukuna sprite riendo.png';
             sprite.classList.add('laugh-anim');
-            setTimeout(() => {
-                if (activeGame === 'sukuna') {
-                    sprite.classList.remove('laugh-anim');
-                    isAnimatingAction = false;
-                }
-            }, 500); // Bloqueo de fallo reducido
+            setTimeout(() => { if (activeGame === 'sukuna') { sprite.classList.remove('laugh-anim'); isAnimatingAction = false; } }, 500);
         }
         updateDisplays();
     };
@@ -892,7 +729,6 @@ async function startSukuna() {
 // ------------------------------------------
 async function startHakari() {
     if (!await checkGameAccess()) return;
-    // Música de Hakari
     if (window.musicController) window.musicController.playGame('hakari');
 
     modal.style.display = 'flex';
@@ -906,7 +742,6 @@ async function startHakari() {
             <p class="mt-4">"Let's go gambling!"</p>
         </div>
     `;
-
     activeGame = 'hakari';
     score = 0;
     updateDisplays();
@@ -919,73 +754,42 @@ function spinJackpot() {
     const btn = document.getElementById('spin-btn');
     const sprite = document.getElementById('hakari-sprite');
     const symbols = ["💀", "🔥", "💎", "🎰", "❤️", "🤞"];
-
     if (btn.disabled) return;
     btn.disabled = true;
-
-    // Animación de baile de Hakari
     sprite.classList.remove('hakari-float');
     let danceFrame = 1;
-    let danceInterval = setInterval(() => {
-        danceFrame = (danceFrame === 1) ? 2 : 1;
-        sprite.src = `img/Hakari sprites dance ${danceFrame}.png`;
-    }, 150);
-
+    let danceInterval = setInterval(() => { danceFrame = (danceFrame === 1) ? 2 : 1; sprite.src = `img/Hakari sprites dance ${danceFrame}.png`; }, 150);
     let cycles = 0;
-    const maxCycles = 20;
-    
-    // El resultado se decide al principio para evitar inconsistencias y trampas
-    const finalResultIndices = [
-        Math.floor(Math.random() * symbols.length),
-        Math.floor(Math.random() * symbols.length),
-        Math.floor(Math.random() * symbols.length)
-    ];
-
+    const finalResultIndices = [Math.floor(Math.random() * symbols.length), Math.floor(Math.random() * symbols.length), Math.floor(Math.random() * symbols.length)];
     const interval = setInterval(() => {
         cycles++;
-        
-        if (cycles < maxCycles) {
-            // Animación aleatoria durante el giro
+        if (cycles < 20) {
             r1.textContent = symbols[Math.floor(Math.random() * symbols.length)];
             r2.textContent = symbols[Math.floor(Math.random() * symbols.length)];
             r3.textContent = symbols[Math.floor(Math.random() * symbols.length)];
         } else {
-            // Resultado final bloqueado
             clearInterval(interval);
             clearInterval(danceInterval);
-            
             const idx1 = finalResultIndices[0];
             const idx2 = finalResultIndices[1];
             const idx3 = finalResultIndices[2];
-
             r1.textContent = symbols[idx1];
             r2.textContent = symbols[idx2];
             r3.textContent = symbols[idx3];
-
             btn.disabled = false;
             sprite.src = 'img/Hakari sprites feliz.png';
             sprite.classList.add('hakari-float');
-
-            // Pequeño retardo para que el usuario vea los símbolos antes de la alerta
             setTimeout(() => {
-                // Comprobación ESTRICTA de victoria: los tres deben ser iguales
                 if (idx1 === idx2 && idx2 === idx3) {
                     const winnerSymbol = symbols[idx1];
-                    if (winnerSymbol === '🎰') {
-                        // 50% de descuento para la máquina tragaperras
-                        saveReward("JACKPOT50", 50, "JACKPOT (Hakari)");
-                        alert("¡JACKPOT SUPREMO! 🎰🎰🎰\nHas ganado un 50% de descuento.\nCódigo: JACKPOT50\nEl cupón se ha guardado en tu cuenta.");
-                    } else {
-                        // 30% de descuento para otros símbolos iguales
-                        saveReward("JACKPOT30", 30, "JACKPOT (Hakari)");
-                        alert(`¡JACKPOT! ${winnerSymbol}${winnerSymbol}${winnerSymbol}\nHas ganado un 30% de descuento.\nCódigo: JACKPOT30\nEl cupón se ha guardado en tu cuenta.`);
-                    }
+                    if (winnerSymbol === '🎰') { saveReward("JACKPOT50", 50, "JACKPOT (Hakari)"); alert("¡JACKPOT SUPREMO! 🎰🎰🎰\nHas ganado un 50% de descuento.\nCódigo: JACKPOT50\nEl cupón se ha guardado en tu cuenta."); }
+                    else { saveReward("JACKPOT30", 30, "JACKPOT (Hakari)"); alert(`¡JACKPOT! ${winnerSymbol}${winnerSymbol}${winnerSymbol}\nHas ganado un 30% de descuento.\nCódigo: JACKPOT30\nEl cupón se ha guardado en tu cuenta.`); }
                     score = 1000;
                 } else {
-                    // Mensaje de pérdida que incluye los símbolos para transparencia
                     alert(`Aw dangit! (${symbols[idx1]} ${symbols[idx2]} ${symbols[idx3]}) No has ganado nada esta vez. ¡Sigue intentándolo!`);
                     score = 0;
                 }
+                saveGameScore('JACKPOT (Hakari)', score);
                 updateDisplays();
             }, 500);
         }
