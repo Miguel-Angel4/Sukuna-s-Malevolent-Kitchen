@@ -922,7 +922,7 @@ function spinJackpot() {
     if (btn.disabled) return;
     btn.disabled = true;
 
-    // Animación de baile
+    // Animación de baile de Hakari
     sprite.classList.remove('hakari-float');
     let danceFrame = 1;
     let danceInterval = setInterval(() => {
@@ -931,45 +931,56 @@ function spinJackpot() {
     }, 150);
 
     let cycles = 0;
-    let resultIndices = [0, 0, 0];
+    const maxCycles = 20;
     
-    const interval = setInterval(() => {
-        resultIndices = [
-            Math.floor(Math.random() * symbols.length),
-            Math.floor(Math.random() * symbols.length),
-            Math.floor(Math.random() * symbols.length)
-        ];
-        
-        r1.textContent = symbols[resultIndices[0]];
-        r2.textContent = symbols[resultIndices[1]];
-        r3.textContent = symbols[resultIndices[2]];
-        cycles++;
+    // El resultado se decide al principio para evitar inconsistencias
+    const finalResultIndices = [
+        Math.floor(Math.random() * symbols.length),
+        Math.floor(Math.random() * symbols.length),
+        Math.floor(Math.random() * symbols.length)
+    ];
 
-        if (cycles > 20) {
+    const interval = setInterval(() => {
+        cycles++;
+        
+        if (cycles < maxCycles) {
+            // Animación aleatoria durante el giro
+            r1.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            r2.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            r3.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        } else {
+            // Resultado final
             clearInterval(interval);
             clearInterval(danceInterval);
             
-            // Forzar los valores finales en el DOM para que coincidan con los índices
-            r1.textContent = symbols[resultIndices[0]];
-            r2.textContent = symbols[resultIndices[1]];
-            r3.textContent = symbols[resultIndices[2]];
+            r1.textContent = symbols[finalResultIndices[0]];
+            r2.textContent = symbols[finalResultIndices[1]];
+            r3.textContent = symbols[finalResultIndices[2]];
 
             btn.disabled = false;
             sprite.src = 'img/Hakari sprites feliz.png';
             sprite.classList.add('hakari-float');
 
-            if (resultIndices[0] === resultIndices[1] && resultIndices[1] === resultIndices[2]) {
-                const winnerSymbol = symbols[resultIndices[0]];
+            // Comprobación de victoria
+            const idx1 = finalResultIndices[0];
+            const idx2 = finalResultIndices[1];
+            const idx3 = finalResultIndices[2];
+
+            if (idx1 === idx2 && idx2 === idx3) {
+                const winnerSymbol = symbols[idx1];
                 if (winnerSymbol === '🎰') {
+                    // 50% de descuento para la máquina tragaperras
                     saveReward("JACKPOT50", 50, "JACKPOT (Hakari)");
-                    alert("¡JACKPOT SUPREMO! Has ganado un 50% de descuento. Código: JACKPOT50. QR disponible en tu cuenta.");
+                    alert("¡JACKPOT SUPREMO! 🎰🎰🎰\nHas ganado un 50% de descuento.\nCódigo: JACKPOT50\nEl cupón se ha guardado en tu cuenta.");
                 } else {
+                    // 30% de descuento para otros símbolos iguales
                     saveReward("JACKPOT30", 30, "JACKPOT (Hakari)");
-                    alert("¡JACKPOT! Has ganado un 30% de descuento. Código: JACKPOT30. QR disponible en tu cuenta.");
+                    alert(`¡JACKPOT! ${winnerSymbol}${winnerSymbol}${winnerSymbol}\nHas ganado un 30% de descuento.\nCódigo: JACKPOT30\nEl cupón se ha guardado en tu cuenta.`);
                 }
                 score = 1000;
             } else {
                 alert("Aw dangit! No has ganado nada esta vez. ¡Sigue intentándolo!");
+                score = 0;
             }
             updateDisplays();
         }
