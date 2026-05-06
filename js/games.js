@@ -1,6 +1,6 @@
 // ==========================================
 // Sukuna's Malevolent Kitchen - Game Logic
-// Rebuild Trigger: v1.0.3 - 1 Play per Week Limit
+// Rebuild Trigger: v1.0.4 - Server-Side Time Sync
 // ==========================================
 
 const modal = document.getElementById('game-modal');
@@ -23,6 +23,19 @@ function getGameScale() {
     return window.innerWidth <= 768 ? 0.3 : 1.0;
 }
 
+// Función para obtener la hora real (UTC) de una API externa para evitar trampas con el reloj del dispositivo
+async function getRealTime() {
+    try {
+        // Intentamos con una API de tiempo confiable
+        const response = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC', { cache: 'no-store' });
+        const data = await response.json();
+        return new Date(data.utc_datetime);
+    } catch (e) {
+        console.warn("⚠️ No se pudo conectar con la API de tiempo, usando hora local como respaldo.");
+        return new Date();
+    }
+}
+
 
 // Función para verificar si el usuario está logueado y si puede jugar esta semana
 async function checkGameAccess() {
@@ -35,38 +48,41 @@ async function checkGameAccess() {
         return false;
     }
 
-    // Verificar si ya ha jugado en los últimos 7 días
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
     try {
-        const { data, error } = await window.sb
+        // 1. Obtener la PARTIDA MÁS RECIENTE del usuario (sin importar cuándo fue)
+        const { data: lastPlays, error: scoreError } = await window.sb
             .from('game_scores')
             .select('created_at, game_name')
             .eq('user_id', session.user.id)
-            .gt('created_at', sevenDaysAgo.toISOString())
             .order('created_at', { ascending: false })
             .limit(1);
 
-        if (error) {
-            console.warn("⚠️ No se pudo verificar el límite semanal, permitiendo acceso por cortesía.");
+        if (scoreError) {
+            console.warn("⚠️ No se pudo verificar el historial, permitiendo acceso.");
             return true;
         }
 
-        if (data && data.length > 0) {
-            const lastPlay = new Date(data[0].created_at);
-            const nextPlay = new Date(lastPlay);
-            nextPlay.setDate(nextPlay.getDate() + 7);
+        if (lastPlays && lastPlays.length > 0) {
+            // 2. Obtener la HORA REAL (no la del dispositivo)
+            const now = await getRealTime();
+            const lastPlayAt = new Date(lastPlays[0].created_at);
             
-            const now = new Date();
-            const diff = nextPlay - now;
-            
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            // Calculamos la diferencia en milisegundos
+            const diffMs = now - lastPlayAt;
+            const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
 
-            alert(`¡Paciencia, hechicero! Tu energía maldita se está agotando. Ya has jugado al minijuego "${data[0].game_name}" recientemente.\n\nSolo se permite una partida por semana para mantener el equilibrio del Reino Sombrío.\n\nPodrás volver a jugar en: ${days}d ${hours}h ${mins}m.`);
-            return false;
+            if (diffMs < sevenDaysMs) {
+                // Aún no han pasado 7 días reales
+                const nextPlay = new Date(lastPlayAt.getTime() + sevenDaysMs);
+                const remaining = nextPlay - now;
+                
+                const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const mins = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+
+                alert(`¡Paciencia, hechicero! Tu energía maldita se está agotando. Ya has jugado al minijuego "${lastPlays[0].game_name}" recientemente.\n\nSolo se permite una partida cada 7 días reales por cuenta. No intentes engañar al tiempo, el Reino Sombrío lo ve todo.\n\nPodrás volver a jugar en: ${days}d ${hours}h ${mins}m.`);
+                return false;
+            }
         }
     } catch (e) {
         console.error("Error en checkGameAccess:", e);
@@ -92,7 +108,7 @@ const KOKUSEN_COMBOS = {
         ],
         attackFrame: 'img/Itadori sprite golpeando.png',
         flashFrame: 'img/Itadori sprite black flash pu\u00f1etazo.png',
-        frameDuration: 310, // <--- CAMBIA ESTE VALOR PARA AJUSTAR LA VELOCIDAD (Menor = Más rápido)
+        frameDuration: 310,
         circleOffset: { x: 135, y: 60 },
         effectOffset: { x: 165, y: 90 }
     },
@@ -103,7 +119,7 @@ const KOKUSEN_COMBOS = {
         ],
         attackFrame: 'img/Itadori sprite pateando.png',
         flashFrame: 'img/Itadori sprite black flash patada.png',
-        frameDuration: 310, // <--- CAMBIA ESTE VALOR PARA AJUSTAR LA VELOCIDAD
+        frameDuration: 310,
         circleOffset: { x: 135, y: 60 },
         effectOffset: { x: 165, y: 90 }
     }
@@ -244,8 +260,6 @@ function stopGame() {
     kokusenStreak = 0;
     todoClickCount = 0;
     todoCurrentSpeed = 300;
-
-    // Regresar a música principal
     if (window.musicController) window.musicController.playMain();
 }
 
@@ -293,8 +307,7 @@ async function startKokusen() {
     spawnKokusenCircle();
 }
 
-// ... spawnKokusenCircle y funciones auxiliares de Yuji omitidas por brevedad (se mantienen igual) ...
-
+// ... funciones auxiliares omitidas por brevedad ...
 function playKokusenSequence(sprite, combo, onComplete) {
     let frameIndex = 0;
     sprite.src = combo.prepFrames[frameIndex];
@@ -351,8 +364,7 @@ function createKokusenTarget(arena, yuji, combo) {
     circle.onclick = () => {
         if (activeGame !== 'kokusen' || circle.dataset.clicked) return;
         circle.dataset.clicked = "true";
-        const currentWidth = window.getComputedStyle(ring).width;
-        const currentSize = parseInt(currentWidth, 10);
+        const currentSize = parseInt(window.getComputedStyle(ring).width, 10);
         if (currentSize <= 66 && currentSize >= 54) {
             score += 10;
             kokusenStreak++;
@@ -513,7 +525,6 @@ async function startTodo() {
             if (score >= 251) { discount = 20; code = "BOOGIE20"; }
             else if (score >= 101) { discount = 16; code = "BOOGIE16"; }
             else if (score >= 50) { discount = 8; code = "BOOGIE8"; }
-
             if (discount > 0) {
                 saveReward(code, discount, "BOOGIE WOOGIE (Todo)");
                 alert(`¡Increíble Brother! Puntos: ${score}. Has conseguido un ${discount}% de descuento. Tu código QR: ${code} estará disponible en tu cuenta durante 30 días.`);
