@@ -1,6 +1,6 @@
 // ==========================================
 // Sukuna's Malevolent Kitchen - Game Logic
-// Rebuild Trigger: v1.0.1 - Fixed Hakari Win Condition
+// Rebuild Trigger: v1.0.2 - Fixed Leaderboards and Hakari
 // ==========================================
 
 const modal = document.getElementById('game-modal');
@@ -185,7 +185,8 @@ async function loadLeaderboards() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('tabla-kokusen')) {
+    // Intentar cargar leaderboards si hay alguna tabla presente
+    if (document.querySelector('[id^="tabla-"]')) {
         setTimeout(loadLeaderboards, 1000);
     }
 });
