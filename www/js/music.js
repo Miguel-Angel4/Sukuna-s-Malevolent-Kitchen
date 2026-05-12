@@ -1,7 +1,4 @@
-/**
- * Music Controller for Sukuna's Malevolent Kitchen
- * Version 7: Persistent playback + Aggressive Autoplay triggers.
- */
+/* Music Controller for S... */
 
 const musicConfig = {
     main: 'musica/SukunaMusica.mp3',
@@ -20,7 +17,7 @@ class MusicController {
         this.initialized = false;
         this.pendingGameTrack = null;
         
-        // Load saved state
+ // Load saved state
         const savedState = localStorage.getItem('sukuna_music_state');
         this.state = savedState ? JSON.parse(savedState) : {
             trackKey: 'main',
@@ -31,20 +28,20 @@ class MusicController {
 
         this.isMuted = this.state.isMuted;
 
-        // Multiple triggers for initialization
+ // Multiple triggers for ...
         const initTriggers = ['click', 'keydown', 'touchstart', 'mousedown', 'mousemove', 'scroll'];
         initTriggers.forEach(trigger => {
             document.addEventListener(trigger, () => this.init(), { once: true });
         });
 
-        // Inject control button
+ // Inject control button
         this.injectButton();
 
-        // Save state periodically and on unload
+ // Save state periodicall...
         setInterval(() => this.saveState(), 1000);
         window.addEventListener('beforeunload', () => this.saveState());
 
-        // Attempt early play
+ // Attempt early play
         window.addEventListener('load', () => {
             setTimeout(() => {
                 if (!this.initialized) this.init();
@@ -100,7 +97,7 @@ class MusicController {
 
             this.initialized = true;
 
-            // Restore track and time
+ // Restore track and time
             if (this.state.trackKey === 'main') {
                 this.currentAudio = this.mainAudio;
             } else {
@@ -111,7 +108,7 @@ class MusicController {
             this.currentAudio.currentTime = this.state.currentTime || 0;
             this.currentAudio.muted = this.isMuted;
 
-            // Update button
+ // Update button
             const btn = document.getElementById('music-toggle');
             if (btn) btn.innerHTML = this.isMuted ? '🔇' : '🔊';
 
@@ -226,5 +223,5 @@ class MusicController {
     }
 }
 
-// Global instance
+ // Global instance
 window.musicController = new MusicController();

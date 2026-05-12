@@ -1,14 +1,14 @@
-// ========================================
-// Sukuna's Malevolent Kitchen - Main JavaScript
-// ========================================
+ // 
+ // Main JS
+ // 
 
 const SUPABASE_URL = "https://wxbjrpqpomekvyuhlwdg.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_hshzjtEiSun_NwmqZgYkAw_ulq_v7aN";
 
-// EmailJS config (rellena con tus credenciales de emailjs.com)
-const EMAILJS_SERVICE_ID  = "service_sukuna";     // <-- cambia esto
-const EMAILJS_TEMPLATE_ID = "template_reserva";   // <-- cambia esto
-const EMAILJS_PUBLIC_KEY  = "TU_PUBLIC_KEY";      // <-- cambia esto
+ // EmailJS
+const EMAILJS_SERVICE_ID  = "service_sukuna"; // <-- cambia esto
+const EMAILJS_TEMPLATE_ID = "template_reserva"; // <-- cambia esto
+const EMAILJS_PUBLIC_KEY  = "TU_PUBLIC_KEY"; // <-- cambia esto
 
 let sb = null;
 try {
@@ -19,13 +19,13 @@ try {
     }
 } catch (e) { console.error("❌ Error Supabase:", e); }
 
-// updateTables en ámbito global para que todos los bloques puedan usarla
+ // Update Tables
 let updateTables = async (day) => {};
 
 document.addEventListener('DOMContentLoaded', async () => {
     console.log("🚀 DOM Cargado");
 
-    // --- 0. MENU MÓVIL ---
+ // Menu movil
     const menuToggle = document.getElementById('menuToggle');
     const menu = document.querySelector('.menu');
     if (menuToggle && menu) {
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.body.classList.toggle('menu-open');
         };
 
-        // Cerrar menú al hacer clic en un enlace
+ // Cerrar menú al hacer c...
         document.querySelectorAll('.nav-link').forEach(link => {
             link.onclick = () => {
                 menuToggle.classList.remove('active');
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // --- 1. NAVEGACIÓN ---
+ // Nav
     const navLoginBtn = document.getElementById('nav-login');
     if (navLoginBtn && sb) {
         const updateNav = (session) => {
@@ -58,15 +58,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         };
 
-        // 1. Check inicial (para que salga rápido al cargar)
+ // Check inicial
         const { data: { session } } = await sb.auth.getSession();
         updateNav(session);
 
-        // 2. Escuchar cambios (login/logout)
+ // Auth status
         sb.auth.onAuthStateChange((_event, session) => updateNav(session));
     }
 
-    // --- 2. GOOGLE LOGIN ---
+ // Google Login
     const googleBtn = document.getElementById('google-btn');
     if (googleBtn && sb) {
         googleBtn.onclick = async (e) => {
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
     }
 
-    // --- 3. LOGIN ---
+ // 3. LOGIN
     const authForm = document.getElementById('auth-form');
     if (authForm && sb) {
         authForm.onsubmit = async (e) => {
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // --- 4. REGISTRO ---
+ // Registro
     const regForm = document.getElementById('register-form');
     if (regForm && sb) {
         regForm.onsubmit = async (e) => {
@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
     }
 
-    // --- 5. CALENDARIO Y RESERVAS ---
+ // Reservas
     const calendarToggle  = document.getElementById('calendarToggle');
     const calendarWidget  = document.getElementById('calendarWidget');
     const calendarGrid    = document.getElementById('calendarGrid');
@@ -134,8 +134,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const widgetHour      = document.getElementById('widget-hour');
     const tablesContainer = document.getElementById('tablesContainer');
 
-    let currentViewDate = new Date(); // Fecha que se está viendo en el calendario
-    let selectedDate    = new Date(); // Fecha seleccionada para ver mesas
+    let currentViewDate = new Date(); // Fecha que se está vien...
+    let selectedDate    = new Date(); // Fecha seleccionada par...
 
     const renderCalendar = () => {
         if (!calendarGrid || !monthYearText) return;
@@ -150,10 +150,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const firstDay = new Date(year, month, 1).getDay(); 
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         
-        // Ajuste para que la semana empiece en Lunes (0:Lun, 6:Dom)
+ // Ajuste para que la sem...
         const startOffset = firstDay === 0 ? 6 : firstDay - 1;
 
-        // Días del mes anterior (vacíos)
+ // Días del mes anterior ...
         const prevMonthLastDay = new Date(year, month, 0).getDate();
         for (let i = startOffset; i > 0; i--) {
             const span = document.createElement('span');
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             calendarGrid.appendChild(span);
         }
 
-        // Días del mes actual
+ // Días del mes actual
         for (let i = 1; i <= daysInMonth; i++) {
             const span = document.createElement('span');
             span.className = 'calendar-day';
@@ -187,8 +187,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!tablesContainer || !sb || !dateObj) return;
         tablesContainer.innerHTML = '<span style="color:#aaa;font-size:0.8rem">Consultando dominio...</span>';
 
-        // Intentamos obtener todas las reservas. 
-        // Si hay RLS activo, esto devolverá solo las permitidas por la política.
+ // Intentamos obtener tod...
+ // Si hay RLS activo, est...
         const { data: reservations, error } = await sb.from('reservations').select('*');
         
         if (error) { 
@@ -214,21 +214,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const baseMesa = `mesa ${i}`;
                 const fullMesa = mesaNombre.trim().toLowerCase();
 
-                // Forzamos el parseo como tiempo local ignorando el offset de Supabase (+00)
-                // Si r.fecha_hora es "2026-05-31 15:00:00+00", tomamos solo los primeros 19 caracteres
+ // Forzamos el parseo com...
+ // Si r.fecha_hora es "20...
                 const localDateStr = r.fecha_hora.substring(0, 19).replace(' ', 'T');
                 const d = new Date(localDateStr);
                 
-                // Comparación de día exacta
+ // Comparación de día exacta
                 const dateMatch = d.getFullYear() === dateObj.getFullYear() && 
                                 d.getMonth() === dateObj.getMonth() && 
                                 d.getDate() === dateObj.getDate();
 
-                // Comparación de hora: Exactamente 1 hora desde el inicio
+ // Comparación de hora: E...
                 const resMin    = d.getHours() * 60 + d.getMinutes();
                 const targetMin = h * 60 + m;
                 
-                // La mesa está ocupada si la hora consultada está entre la hora de reserva y 60 min después
+ // La mesa está ocupada s...
                 const timeMatch = targetMin >= resMin && targetMin < (resMin + 60);
 
                 return dateMatch && timeMatch && (resMesa === baseMesa || resMesa === fullMesa);
@@ -261,7 +261,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateTables(selectedDate);
     }
 
-    // --- 6. FORMULARIO DE EMPLEO ---
+ // Empleo
     const cvForm = document.getElementById('form-empleo');
     const cvFormStatus = document.getElementById('cv-form-status');
     if (cvForm && cvFormStatus) {
@@ -383,7 +383,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // --- 7. FORMULARIO DE RESERVA ---
+ // Reserva
     const resForm = document.getElementById('form-reserva');
     if (resForm && sb) {
         resForm.onsubmit = async (e) => {
@@ -392,7 +392,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = Object.fromEntries(fd);
 
             try {
-                // 1. GUARDAR EN SUPABASE
+ // Supabase
                 const supabaseData = {
                     nombre:     data.nombre,
                     email:      data.email,
@@ -405,7 +405,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const { error: sbError } = await sb.from('reservations').insert([supabaseData]);
                 if (sbError) throw sbError;
 
-                // Enviar email usando el proxy de Vercel hacia Formsubmit (evita Cisco Umbrella)
+ // Enviar email usando el...
                 const emailData = {
                     ...supabaseData,
                     _subject: "¡Nueva Reserva en Sukuna's Kitchen!",
@@ -423,15 +423,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 .then(r => console.log("📧 Email enviado al proxy:", r.status))
                 .catch(e => console.warn("⚠️ Proxy no disponible:", e));
 
-                // 3. CONFIRMACIÓN
+ // Confirmación
                 alert(`🩸 RESERVA CONFIRMADA 🩸\n\nNombre: ${data.nombre}\nMesa: ${data.mesa}\nFecha: ${data.fecha_hora.replace('T', ' ')}\nPersonas: ${data.personas}`);
                 resForm.reset();
 
-                // 4. REFRESCAR CALENDARIO Y MOSTRAR FECHA ELEGIDA
+ // Refresh
                 const resDate = new Date(data.fecha_hora);
-                selectedDate = resDate; // Actualizamos la fecha seleccionada global
+                selectedDate = resDate; // Actualizamos la fecha ...
                 if (widgetHour && data.fecha_hora.includes('T')) {
-                    widgetHour.value = data.fecha_hora.split('T')[1]; // Actualizamos la hora del widget
+                    widgetHour.value = data.fecha_hora.split('T')[1]; // Actualizamos la hora d...
                 }
                 
                 if (typeof renderCalendar === 'function') renderCalendar();
@@ -444,7 +444,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
     }
 
-    // --- 8. CUENTA (cuenta.html) ---
+ // Cuenta
     const profileForm = document.getElementById('profile-form');
     if (profileForm && sb) {
         sb.auth.getUser().then(async ({ data: { user } }) => {
@@ -467,8 +467,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (img    && m?.avatar_url) img.src      = m.avatar_url;
             }
 
-            // --- ACTUALIZAR ESTADÍSTICAS EN TIEMPO REAL ---
-            // 1. Reservas Pendientes
+ // Stats
+ // Pendientes
             const now = new Date().toISOString();
             const { data: resData } = await sb
                 .from('reservations')
@@ -481,7 +481,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 pendingCountEl.textContent = resData.length;
             }
 
-            // 2. Descuentos Actuales
+ // Descuentos
             const { data: rewardData } = await sb
                 .from('rewards')
                 .select('id')
@@ -524,7 +524,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // --- 9. CARTA ---
+ // Carta
     const categoryCards = document.querySelectorAll('.card-comida');
     const menuDisplay   = document.getElementById('menu-display');
     if (categoryCards.length > 0 && menuDisplay) {
@@ -541,7 +541,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             };
         });
 
-        // Hacer que los enlaces de texto de la barra superior también funcionen
+ // Links
         const categoryLinks = document.querySelectorAll('.categoria-link');
         categoryLinks.forEach(link => {
             link.onclick = (e) => {
@@ -579,7 +579,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const close = document.querySelector('.close-modal');
         if (close && modal) close.onclick = () => modal.style.display = 'none';
     }
-    // --- 10. GESTIÓN DE COOKIES ---
+ // Cookies
     const initCookies = () => {
         const cookiePrefs = localStorage.getItem('cookie_prefs');
         if (!cookiePrefs) {

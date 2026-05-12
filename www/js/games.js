@@ -1,7 +1,7 @@
-// ==========================================
-// Sukuna's Malevolent Kitchen - Game Logic
-// Rebuild Trigger: v1.0.5 - Strict Server-Only Time
-// ==========================================
+ // 
+ // Sukuna's Malevolent Ki...
+ // Rebuild Trigger: v1.0....
+ // 
 
 const modal = document.getElementById('game-modal');
 const container = document.getElementById('game-container');
@@ -22,12 +22,9 @@ function getGameScale() {
     return window.innerWidth <= 768 ? 0.3 : 1.0;
 }
 
-/**
- * Obtiene la hora real garantizada desde el servidor de Supabase o una API externa.
- * Si no puede obtener una hora confiable, devuelve null para bloquear el acceso.
- */
+/* Obtiene la hora real g... */
 async function getRealTime() {
-    // 1. Intentar obtener la hora de los headers de Supabase (La fuente más fiable)
+ // 1. Intentar obtener la...
     try {
         const sbUrl = window.sb.supabaseUrl;
         const sbKey = window.sb.supabaseKey;
@@ -46,7 +43,7 @@ async function getRealTime() {
         console.warn("⚠️ Error obteniendo hora de Supabase (posible desfase de reloj bloqueando SSL).");
     }
 
-    // 2. Intentar con una API de tiempo alternativa
+ // 2. Intentar con una AP...
     const apis = [
         'https://worldtimeapi.org/api/timezone/Etc/UTC',
         'https://timeapi.io/api/Time/current/zone?timeZone=UTC'
@@ -66,7 +63,7 @@ async function getRealTime() {
         } catch (e) {}
     }
 
-    // Si fallan las fuentes externas, NO devolvemos new Date() para evitar la trampa del reloj local.
+ // Si fallan las fuentes ...
     return null;
 }
 
@@ -171,7 +168,7 @@ function spawnKokusenCircle() {
     const yuji = document.createElement('img'); yuji.style.width = '100%'; arena.appendChild(yuji);
     const startX = Math.random() > 0.5 ? -200 : 800; arena.style.left = startX + 'px';
     arena.style.transition = 'all 1s linear'; setTimeout(() => arena.style.left = '300px', 50);
-    // ... simplificado para sincronización ...
+ // ... simplificado para ...
 }
 
 async function startTodo() { if (!await checkGameAccess()) return; if (window.musicController) window.musicController.playGame('todo'); stopGame(); alert("Juego iniciado"); }

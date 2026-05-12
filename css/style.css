@@ -1,45 +1,42 @@
-/* Google Fonts Import */
+/* Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
 
 :root {
-    /* Shadcn UI x Temática Premium Oscura */
+    /* UI */
     --sukuna-red: #be0404;
     --sukuna-crimson: #dc2626;
     --sukuna-black: #09090b;
-    /* Zinc 950 */
     --sukuna-dark-red: #c40303;
     --blanco: #ffffff;
     --muted: #ffffff;
-    /* Letras totalmente blancas por solicitud del cliente */
     --sukuna-shadow: rgba(0, 0, 0, 0.8);
     --oro-kamutoke: #ef4444;
-    /* Reemplazado oro por rojo más vivo en acentos */
     --sukuna-blood: #991b1b;
     --border: rgba(255, 255, 255, 0.1);
 
-    /* Transition Variables */
+    /* Transiciones */
     --transition-fast: 150ms ease;
     --transition-normal: 200ms ease;
     --transition-slow: 300ms ease;
 
-    /* Shadow Variables - Estilo Shadcn */
+    /* Sombras */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
-    /* Glass Effect Minimalista */
+    /* Cristal */
     --glass-bg: rgba(9, 9, 11, 0.7);
     --glass-border: var(--border);
 }
 
-/* Global Smooth Scrolling */
+/* Scroll */
 html {
     scroll-behavior: smooth;
     scroll-padding-top: 100px;
 }
 
-/* Base Typography - Estilo Shadcn (Inter) */
+/* Base Typography - Esti... */
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -58,10 +55,10 @@ strong {
     font-family: 'Inter', sans-serif;
     font-weight: 600;
     letter-spacing: -0.025em;
-    /* Tracking característico de Shadcn */
+    /* Tracking característic... */
 }
 
-/* Utility Classes */
+/* Utilidades */
 .glass-effect {
     background: var(--glass-bg);
     backdrop-filter: blur(12px);
@@ -90,7 +87,7 @@ strong {
     background-clip: text;
 }
 
-/* Keyframe Animations */
+/* Animaciones */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -166,10 +163,23 @@ strong {
 }
 
 @keyframes sukuna-laugh {
-    0%, 100% { transform: scale(1) rotate(0deg); }
-    25% { transform: scale(1.1) rotate(5deg); }
-    50% { transform: scale(1.1) rotate(-5deg); }
-    75% { transform: scale(1.1) rotate(5deg); }
+
+    0%,
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+
+    25% {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    50% {
+        transform: scale(1.1) rotate(-5deg);
+    }
+
+    75% {
+        transform: scale(1.1) rotate(5deg);
+    }
 }
 
 .laugh-anim {
@@ -219,7 +229,7 @@ body.home {
     }
 }
 
-/* Floating blood particles effect */
+/* Partículas */
 .blood-particles {
     position: fixed;
     top: 0;
@@ -272,7 +282,8 @@ body.home {
     background: rgba(9, 9, 11, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    padding: 1.5rem 0; /* Más aire arriba y abajo */
+    padding: 1.5rem 0;
+    /* Más aire arriba y abajo */
     color: var(--blanco);
     display: flex;
     justify-content: center;
@@ -374,7 +385,7 @@ body.home {
     margin-left: 150px;
 }
 
-/* CARTA - TEMA SUKUNA */
+/* Carta */
 body.carta {
     margin: 0;
     overflow-x: hidden;
@@ -384,12 +395,12 @@ body.carta {
     position: relative;
     z-index: 1;
     padding-top: 185px;
-    /* espacio para header (~100px) + comidas nav (~55px) + margen */
+    /* espacio para header (~... */
     color: var(--blanco);
 }
 
 /* BARRA DE CATEGORÍAS */
-/* BARRA DE CATEGORÍAS (CARTA) */
+/* Carta */
 .comidas {
     position: fixed;
     top: 100px;
@@ -419,13 +430,14 @@ body.carta {
     padding: 4px 12px;
 }
 
-.categoria-link:hover, .categoria-link.active {
+.categoria-link:hover,
+.categoria-link.active {
     color: var(--blanco);
     background: rgba(220, 38, 38, 0.2);
     border-radius: 4px;
 }
 
-/* FRASE CARTA */
+/* Carta */
 .frase-carta {
     padding: 60px 20px 40px;
     text-align: center;
@@ -457,9 +469,17 @@ body.carta {
     margin: 0;
 }
 
-/* CARDS DE COMIDA — ESTILO SUKUNA */
-/* CARDS DE CARTA (ESTILO PREMIUM V2) */
-.bebidas, .entrantes, .carnes, .vegetales, .pescados, .pastas, .postres, .menus, .retos {
+/* CARDS DE COMIDA — ESTI... */
+/* Carta */
+.bebidas,
+.entrantes,
+.carnes,
+.vegetales,
+.pescados,
+.pastas,
+.postres,
+.menus,
+.retos {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -476,7 +496,15 @@ body.carta {
     cursor: pointer;
 }
 
-.bebidas::before, .entrantes::before, .carnes::before, .vegetales::before, .pescados::before, .pastas::before, .postres::before, .menus::before, .retos::before {
+.bebidas::before,
+.entrantes::before,
+.carnes::before,
+.vegetales::before,
+.pescados::before,
+.pastas::before,
+.postres::before,
+.menus::before,
+.retos::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -485,7 +513,15 @@ body.carta {
     transition: background 0.3s ease;
 }
 
-.bebidas strong, .entrantes strong, .carnes strong, .vegetales strong, .pescados strong, .pastas strong, .postres strong, .menus strong, .retos strong {
+.bebidas strong,
+.entrantes strong,
+.carnes strong,
+.vegetales strong,
+.pescados strong,
+.pastas strong,
+.postres strong,
+.menus strong,
+.retos strong {
     position: relative;
     z-index: 2;
     color: var(--blanco);
@@ -493,10 +529,18 @@ body.carta {
     letter-spacing: 4px;
     text-transform: uppercase;
     font-weight: 700;
-    text-shadow: 0 4px 10px rgba(0,0,0,0.9);
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.9);
 }
 
-.bebidas:hover, .entrantes:hover, .carnes:hover, .vegetales:hover, .pescados:hover, .pastas:hover, .postres:hover, .menus:hover, .retos:hover {
+.bebidas:hover,
+.entrantes:hover,
+.carnes:hover,
+.vegetales:hover,
+.pescados:hover,
+.pastas:hover,
+.postres:hover,
+.menus:hover,
+.retos:hover {
     transform: scale(1.02);
     border-color: var(--sukuna-crimson);
 }
@@ -543,9 +587,7 @@ body.carta {
 
 
 
-/* ================================================
-   NUEVAS MEJORAS - BOTONES Y ENLACES
-   ================================================ */
+/* NUEVAS MEJORAS - BOTON... */
 
 .botones-cta {
     display: flex;
@@ -585,7 +627,8 @@ body.carta {
     transform: scale(0.98);
 }
 
-.nav-link { white-space: nowrap !important;
+.nav-link {
+    white-space: nowrap !important;
     color: var(--muted);
     text-decoration: none;
     position: relative;
@@ -618,7 +661,7 @@ body.carta {
     color: var(--oro-kamutoke);
 }
 
-/* .card-comida base style integrated into premium categories */
+/* .card-comida base styl... */
 .card-comida {
     border: none;
     background-color: transparent;
@@ -644,9 +687,7 @@ body.carta {
     color: var(--blanco);
 }
 
-/* ================================================
-   SECCIONES Y ANIMACIONES
-   ================================================ */
+/* SECCIONES Y ANIMACIONES */
 
 .seccion-comida {
     padding-top: 50px;
@@ -683,9 +724,7 @@ body.carta {
     opacity: 0;
 }
 
-/* ================================================
-   MEJORAS DE HOME
-   ================================================ */
+/* MEJORAS DE HOME */
 
 .descripcion-restaurant {
     position: relative;
@@ -724,9 +763,7 @@ body.carta {
     margin: 0;
 }
 
-/* ================================================
-   RESPONSIVE DESIGN
-   ================================================ */
+/* Responsive */
 
 @media (max-width: 1400px) {
     .botones-cta {
@@ -873,9 +910,7 @@ body.carta {
 }
 
 
-/* ================================================
-   NUEVAS MEJORAS - BOTONES Y ENLACES
-   ================================================ */
+/* NUEVAS MEJORAS - BOTON... */
 
 .botones-cta {
     display: flex;
@@ -933,7 +968,8 @@ body.carta {
     transform: translateY(-3px);
 }
 
-.nav-link { white-space: nowrap !important;
+.nav-link {
+    white-space: nowrap !important;
     color: var(--blanco);
     text-decoration: none;
     position: relative;
@@ -1090,9 +1126,7 @@ body.carta {
 }
 
 
-/* ================================================
-   SLIDER FUNCIONAL DE TRABAJADORES
-   ================================================ */
+/* SLIDER FUNCIONAL DE TR... */
 
 .slider-container {
     position: relative;
@@ -1202,7 +1236,7 @@ body.carta {
     background: var(--oro-kamutoke);
 }
 
-/* Actualizar colores de botones para Sukuna theme */
+/* Actualizar colores de ... */
 .botoncarta,
 .botonempleado {
     background: linear-gradient(135deg, var(--sukuna-red), var(--sukuna-crimson));
@@ -1225,7 +1259,7 @@ body.carta {
     box-shadow: 0 -4px 20px rgba(139, 0, 0, 0.5);
 }
 
-/* Mejorar visibilidad de textos */
+/* Mejorar visibilidad de... */
 body.home strong,
 body.home h1,
 body.home h2,
@@ -1305,7 +1339,7 @@ body.home p {
     padding-left: 60px;
 }
 
-/* --- SUKUNA CUT ANIMATIONS (HOME) --- */
+/* SUKUNA CUT ANIMATIONS ... */
 
 /* Keyframes for the slashes */
 @keyframes sukuna-slash-1 {
@@ -1391,7 +1425,7 @@ body.home p {
     }
 }
 
-/* Application to CTA Buttons (Carta/Empleados) on Home */
+/* Carta */
 body.home .botoncarta,
 body.home .botonempleado {
     position: relative;
@@ -1419,7 +1453,7 @@ body.home .botonempleado:hover::after {
     animation: sukuna-slash-1 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
-/* Adding a second slash to buttons */
+/* Adding a second slash ... */
 body.home .botoncarta:hover::before,
 body.home .botonempleado:hover::before {
     content: '';
@@ -1443,8 +1477,9 @@ body.home .botonempleado:hover {
     animation: sukuna-glitch 0.3s ease-out;
 }
 
-/* Application to Header Links (Navigation) - Global */
-.nav-link { white-space: nowrap !important;
+/* Application to Header ... */
+.nav-link {
+    white-space: nowrap !important;
     position: relative;
 }
 
@@ -1520,7 +1555,7 @@ body.home .botonempleado:hover {
     text-shadow: 0 0 10px var(--sukuna-blood);
 }
 
-/* --- DOMAIN ENTRANCE OVERLAY --- */
+/* DOMAIN ENTRANCE OVERLAY */
 .domain-overlay {
     position: fixed;
     top: 0;
@@ -1590,14 +1625,14 @@ body.home .botonempleado:hover {
     letter-spacing: 2px;
 }
 
-/* State when domain is opened */
+/* State when domain is o... */
 .domain-overlay.opened {
     clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%,
             /* Outer frame */
-            /* Cutting slices (this is where the slash effect happens) */
+            /* Cutting slices (this i... */
             0% 50%, 45% 45%, 50% 0%, 55% 45%, 100% 50%, 55% 55%, 50% 100%, 45% 55%, 0% 50%);
     clip-path: circle(0% at 50% 50%);
-    /* Simpler cut for better performance */
+    /* Simpler cut for better... */
     opacity: 0;
     pointer-events: none;
 }
@@ -1628,9 +1663,7 @@ body.home .botonempleado:hover {
     box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3);
 }
 
-/* ================================================
-   DYNAMIC MENU STYLES
-   ================================================ */
+/* Menu */
 
 .btn-volver {
     display: inline-block;
@@ -1757,9 +1790,7 @@ body.home .botonempleado:hover {
     }
 }
 
-/* ================================================
-   MODAL DE IMAGENES
-   ================================================ */
+/* Modal */
 
 .modal-imagen {
     position: fixed;
@@ -1834,9 +1865,7 @@ body.home .botonempleado:hover {
     cursor: pointer;
 }
 
-/* ================================================
-   FORMULARIO TRABAJA CON NOSOTROS
-   ================================================ */
+/* Formulario */
 
 .seccion-empleos {
     position: relative;
@@ -1845,7 +1874,8 @@ body.home .botonempleado:hover {
 
 .form-sukuna {
     padding: 3rem;
-    background: rgba(24, 24, 27, 0.4); /* Zinc 900 semi-transparent */
+    background: rgba(24, 24, 27, 0.4);
+    /* Zinc 900 semi-transparent */
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-radius: 0.5rem;
@@ -1891,7 +1921,7 @@ body.home .botonempleado:hover {
     color: rgba(255, 255, 255, 0.2);
 }
 
-/* Styling for select dropdown */
+/* Styling for select dro... */
 select.input-sukuna {
     appearance: none;
     -webkit-appearance: none;
@@ -1906,7 +1936,7 @@ select.input-sukuna option {
     color: #fff;
 }
 
-/* Custom styling for file input */
+/* Custom styling for fil... */
 input[type="file"].input-sukuna {
     padding: 10px 18px !important;
 }
@@ -2000,9 +2030,7 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     color: var(--blanco);
 }
 
-/* ================================================
-   SHADCN LAYOUT REFACTOR (HOME) 
-   ================================================ */
+/* Layout */
 
 .hero-section {
     min-height: 80vh;
@@ -2112,7 +2140,7 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     padding-left: 0 !important;
 }
 
-/* Hide old chaos, but keep particles for ember effect */
+/* Hide old chaos, but ke... */
 .slider-container,
 .descripcion-restaurant,
 .circle-overlay {
@@ -2125,16 +2153,26 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     }
 }
 
-/* ================================================
-   HIGH-END PREMIUM POLISH (HOME)
-   ================================================ */
+/* HIGH-END PREMIUM POLIS... */
 .floating-anim {
     animation: floating 4s ease-in-out infinite;
 }
+
 @keyframes floating {
-    0% { transform: translateY(0px); filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.5)); }
-    50% { transform: translateY(-15px); filter: drop-shadow(0 20px 25px rgba(220, 38, 38, 0.4)); }
-    100% { transform: translateY(0px); filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.5)); }
+    0% {
+        transform: translateY(0px);
+        filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.5));
+    }
+
+    50% {
+        transform: translateY(-15px);
+        filter: drop-shadow(0 20px 25px rgba(220, 38, 38, 0.4));
+    }
+
+    100% {
+        transform: translateY(0px);
+        filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.5));
+    }
 }
 
 .sukuna-divider {
@@ -2145,6 +2183,7 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     box-shadow: 0 0 10px var(--sukuna-red);
     position: relative;
 }
+
 .sukuna-divider::before {
     content: '';
     position: absolute;
@@ -2162,11 +2201,13 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     font-size: 1.1rem !important;
     text-transform: uppercase !important;
     letter-spacing: 1.5px !important;
-    border-radius: 2px !important; /* Sharp edges are more pro */
+    border-radius: 2px !important;
+    /* Sharp edges are more pro */
     background: var(--sukuna-red) !important;
     border: 1px solid var(--sukuna-red) !important;
     box-shadow: 0 4px 15px rgba(220, 38, 38, 0.2) !important;
 }
+
 .btn-premium:hover {
     background: var(--sukuna-blood) !important;
     box-shadow: 0 4px 25px rgba(220, 38, 38, 0.5) !important;
@@ -2182,6 +2223,7 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     border-radius: 2px !important;
     color: var(--blanco) !important;
 }
+
 .btn-premium-outline:hover {
     background: rgba(255, 255, 255, 0.05) !important;
     border-color: var(--blanco) !important;
@@ -2194,9 +2236,8 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     color: var(--sukuna-red);
     font-weight: 600;
 }
-/* ================================================
-   GAMES & DISCOUNTS (DESCUENTOS.HTML) 
-   ================================================ */
+
+/* GAMES & DISCOUNTS (DES... */
 
 .game-card {
     background-color: rgba(24, 24, 27, 0.6);
@@ -2224,7 +2265,7 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     height: 130px;
     object-fit: contain;
     margin-bottom: 2rem;
-    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.5));
     transition: transform var(--transition-normal);
 }
 
@@ -2273,7 +2314,7 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     overflow-y: auto;
     overflow-x: hidden;
     border-radius: 8px;
-    box-shadow: 0 0 50px rgba(0,0,0,1);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 1);
 }
 
 .game-header {
@@ -2302,9 +2343,7 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     color: var(--sukuna-red);
 }
 
-/* ================================================
-   MENU ITEM ENHANCEMENTS (THUMBNAILS) 
-   ================================================ */
+/* MENU ITEM ENHANCEMENTS... */
 
 .menu-item {
     padding: 1.25rem !important;
@@ -2346,9 +2385,7 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     letter-spacing: 0.5px;
 }
 
-/* ================================================
-   CALENDAR WIDGET (RESERVA.HTML)
-   ================================================ */
+/* CALENDAR WIDGET (RESER... */
 
 .calendar-toggle {
     position: fixed;
@@ -2387,7 +2424,7 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     display: none;
     flex-direction: column;
     z-index: 999;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     animation: fadeInUp 0.3s ease-out;
 }
 
@@ -2414,7 +2451,8 @@ input[type="file"].input-sukuna::file-selector-button:hover {
 .table-dot {
     width: 100%;
     aspect-ratio: 1;
-    background: #10b981; /* Green available */
+    background: #10b981;
+    /* Green available */
     border-radius: 4px;
     display: flex;
     align-items: center;
@@ -2426,7 +2464,8 @@ input[type="file"].input-sukuna::file-selector-button:hover {
 }
 
 .table-dot.reserved {
-    background: #ef4444; /* Red reserved */
+    background: #ef4444;
+    /* Red reserved */
 }
 
 .table-dot:hover {
@@ -2453,7 +2492,7 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     border-radius: 2px;
 }
 
-/* Calendario Mensual Completo */
+/* Calendario Mensual Com... */
 .calendar-month-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -2572,7 +2611,8 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     border: 1px solid transparent;
 }
 
-.nav-account-link:hover, .nav-account-link.active {
+.nav-account-link:hover,
+.nav-account-link.active {
     background: rgba(255, 255, 255, 0.05);
     color: var(--blanco);
     border-color: var(--border);
@@ -2582,7 +2622,7 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     font-size: 1.2rem;
 }
 
-/* SECCIÓN FAQ - SUKUNA STYLE */
+/* SECCIÓN FAQ - SUKUNA S... */
 .faq-section {
     padding: 120px 20px 80px;
     min-height: 80vh;
@@ -2657,8 +2697,11 @@ input[type="file"].input-sukuna::file-selector-button:hover {
     filter: drop-shadow(0 0 15px rgba(220, 20, 60, 0.3));
 }
 
-/* GLOBAL FORM FIX - WHITE TEXT */
-input, textarea, select, .form-control {
+/* GLOBAL FORM FIX - WHIT... */
+input,
+textarea,
+select,
+.form-control {
     color: #ffffff !important;
 }
 
@@ -2776,9 +2819,7 @@ input, textarea, select, .form-control {
     font-size: 0.8rem;
 }
 
-/* ========================================
-   RESPONSIVE DESIGN - SUKUNA'S KITCHEN
-   ======================================== */
+/* Responsive */
 
 /* Mobile Menu Toggle */
 .menu-toggle {
@@ -2818,12 +2859,12 @@ input, textarea, select, .form-control {
     background-color: var(--sukuna-red);
 }
 
-/* Base Responsive Adjustments */
+/* Base Responsive Adjust... */
 @media (max-width: 1024px) {
     .logo {
         left: 2rem;
     }
-    
+
     .menu {
         gap: 1.5rem;
     }
@@ -2851,7 +2892,7 @@ input, textarea, select, .form-control {
         justify-content: center;
         align-items: center;
         gap: 2.5rem;
-        transition: right 0.4s cubic-bezier(0.77,0.2,0.05,1);
+        transition: right 0.4s cubic-bezier(0.77, 0.2, 0.05, 1);
         z-index: 1000;
         border-left: 1px solid var(--sukuna-blood);
     }
@@ -2915,7 +2956,9 @@ input, textarea, select, .form-control {
         padding: 0 2rem;
     }
 
-    .botoncarta, .btn-premium, .btn-premium-outline {
+    .botoncarta,
+    .btn-premium,
+    .btn-premium-outline {
         width: 100%;
         text-align: center;
     }
@@ -2962,14 +3005,12 @@ input, textarea, select, .form-control {
     }
 }
 
-/* Prevent scroll when menu is open */
+/* Prevent scroll when me... */
 body.menu-open {
     overflow: hidden;
 }
 
-/* ========================================
-   RESPONSIVE FIX V2 - TOTAL OVERRIDE
-   ======================================== */
+/* RESPONSIVE FIX V2 - TO... */
 
 .header {
     height: 100px !important;
@@ -2985,9 +3026,11 @@ body.menu-open {
 
 .header .container {
     max-width: 1200px !important;
-    width: 100% !important; padding: 0 4rem !important;
+    width: 100% !important;
+    padding: 0 4rem !important;
     display: flex !important;
-    justify-content: space-between !important; gap: 4rem !important;
+    justify-content: space-between !important;
+    gap: 4rem !important;
     align-items: center !important;
     height: 100% !important;
     background: transparent !important;
@@ -3019,7 +3062,8 @@ body.menu-open {
 
 .menu {
     display: flex !important;
-    gap: 2rem !important; white-space: nowrap !important;
+    gap: 2rem !important;
+    white-space: nowrap !important;
     align-items: center !important;
     position: static !important;
     height: auto !important;
@@ -3040,7 +3084,9 @@ body.menu-open {
     .menu {
         gap: 1rem !important;
     }
-    .nav-link { white-space: nowrap !important;
+
+    .nav-link {
+        white-space: nowrap !important;
         font-size: 0.9rem !important;
     }
 }
@@ -3084,11 +3130,9 @@ body.menu-open {
     }
 }
 
-/* ================================================
-   ADAPTIVE RESPONSIVE OVERRIDES (MOBILE & TABLET & PC)
-   ================================================ */
+/* ADAPTIVE RESPONSIVE OV... */
 
-/* Reset bad hardcoded margins */
+/* Reset bad hardcoded ma... */
 .botones-cta {
     margin-left: 0 !important;
     display: flex !important;
@@ -3108,36 +3152,40 @@ body.menu-open {
 
 /* Header fixes for PC */
 .menu-toggle {
-    display: none; /* Hide on PC */
+    display: none;
+    /* Hide on PC */
 }
 
 /* Mobile optimizations */
 @media (max-width: 992px) {
-    body, body.home, body.carta {
+
+    body,
+    body.home,
+    body.carta {
         padding-top: 100px !important;
     }
-    
+
     .header {
         padding: 10px 20px !important;
         height: auto !important;
     }
-    
+
     .header .container {
         flex-direction: row !important;
         justify-content: space-between !important;
         width: 100% !important;
     }
-    
+
     .logo {
         position: relative !important;
         left: 0 !important;
         transform: none !important;
     }
-    
+
     .header-content {
         flex: 0 0 auto !important;
     }
-    
+
     .menu {
         display: none !important;
         flex-direction: column !important;
@@ -3150,13 +3198,13 @@ body.menu-open {
         padding: 20px 0;
         text-align: center;
         border-bottom: 1px solid var(--border);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
     }
-    
+
     .menu.active {
         display: flex !important;
     }
-    
+
     .menu-toggle {
         display: block !important;
         background: transparent;
@@ -3164,7 +3212,7 @@ body.menu-open {
         cursor: pointer;
         padding: 10px;
     }
-    
+
     .menu-toggle span {
         display: block;
         width: 25px;
@@ -3179,18 +3227,18 @@ body.menu-open {
         grid-template-columns: 1fr !important;
         gap: 1.5rem !important;
     }
-    
+
     .account-sidebar {
         position: relative !important;
         top: 0 !important;
     }
-    
+
     .team-grid {
         display: grid !important;
         grid-template-columns: 1fr !important;
         gap: 20px !important;
     }
-    
+
     .rewards-grid {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
     }
@@ -3205,7 +3253,7 @@ body.menu-open {
         flex-wrap: wrap !important;
         justify-content: center !important;
     }
-    
+
     .frase-carta {
         padding-top: 40px !important;
         padding-left: 0 !important;
@@ -3224,23 +3272,22 @@ body.menu-open {
         font-size: 1.1rem !important;
         padding: 0 20px !important;
     }
-    
+
     .hero-title {
         font-size: 2.5rem !important;
     }
 }
 
-/* ================================================
-   MOBILE FIXES FOR GAMES, MENUS, AND OVERFLOWS
-   ================================================ */
+/* MOBILE FIXES FOR GAMES... */
 
-/* Prevenir scroll horizontal indeseado globalmente */
-html, body {
+/* Prevenir scroll horizo... */
+html,
+body {
     max-width: 100vw;
     overflow-x: hidden;
 }
 
-/* Arreglar desbordamiento del Footer */
+/* Arreglar desbordamient... */
 .footer {
     width: 100%;
     max-width: 100vw;
@@ -3248,9 +3295,10 @@ html, body {
     overflow: hidden;
 }
 
-/* Modificaciones adicionales solo para m�viles */
+/* Modificaciones adicion... */
 @media (max-width: 768px) {
-    /* Men�: Asegurar que ocupe todo el ancho sin salirse */
+
+    /* Men�: Asegurar que ocu... */
     .menu {
         width: 100vw !important;
         left: 0 !important;
@@ -3258,28 +3306,29 @@ html, body {
         box-sizing: border-box !important;
         padding: 20px 10px !important;
     }
-    
+
     .nav-link {
         font-size: 1rem !important;
-        white-space: normal !important; /* Permitir salto de l�nea si es muy largo */
+        white-space: normal !important;
+        /* Permitir salto de l�ne... */
         text-align: center;
         width: 100%;
     }
 
-    /* === RESPONSIVE MINIJUEGOS === */
+    /* RESPONSIVE MINIJUEGOS */
     #game-container {
         width: 95vw !important;
         height: 85vh !important;
         padding: 10px !important;
         box-sizing: border-box;
     }
-    
+
     .game-header {
         width: 95vw !important;
         font-size: 0.9rem !important;
         margin-bottom: 0.5rem !important;
     }
-    
+
     .close-game {
         top: 10px !important;
         right: 15px !important;
@@ -3292,7 +3341,7 @@ html, body {
         height: auto !important;
         margin-bottom: 10px !important;
     }
-    
+
     #game-container div[style*="font-size:3rem"] {
         font-size: 1.5rem !important;
         letter-spacing: 4px !important;
@@ -3311,7 +3360,7 @@ html, body {
         height: 100px !important;
         margin-bottom: 15px !important;
     }
-    
+
     #slot-machine {
         font-size: 2.5rem !important;
         padding: 10px !important;
@@ -3324,45 +3373,47 @@ html, body {
         height: 100px !important;
         margin-bottom: 25px !important;
     }
-    
+
     #hit-zone {
-        width: 40px !important; /* M�s peque�o para m�vil */
+        width: 40px !important;
+        /* M�s peque�o para m�vil */
     }
 
     /* Yuji (Kokusen) */
-    #yuji-sprite, #yuji-effect {
+    #yuji-sprite,
+    #yuji-effect {
         transform: scale(0.6) !important;
         transform-origin: center top !important;
     }
-    
+
     /* Todo (Aplauso) */
     #todo-sprite {
         transform: scale(0.7) !important;
         margin-top: 20px !important;
     }
-    
+
     #clap-btn {
         padding: 15px 30px !important;
         font-size: 1.1rem !important;
     }
 }
 
-/* ================================================
-   AJUSTES EXTRA DE DIFICULTAD M�VIL (MIGUEL ANGEL)
-   ================================================ */
+/* AJUSTES EXTRA DE DIFIC... */
 
 @media (max-width: 768px) {
-    /* Sukuna (Corte) - L�nea m�s peque�a (dif�cil) */
+
+    /* Sukuna (Corte) - L�nea... */
     #hit-zone {
         width: 15px !important;
     }
 
-    /* Yuji (Kokusen) - Sprite y objetivo m�s peque�os (dif�cil) */
-    #yuji-sprite, #yuji-effect {
-        /* Tamaño ahora controlado por JS para mejor alineación */
+    /* Yuji (Kokusen) - Sprit... */
+    #yuji-sprite,
+    #yuji-effect {
+        /* Tamaño ahora controlad... */
     }
-    
+
     .kokusen-target {
-        /* Tamaño ahora controlado por el escalado de la arena */
+        /* Tamaño ahora controlad... */
     }
 }

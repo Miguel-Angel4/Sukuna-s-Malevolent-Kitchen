@@ -1,7 +1,7 @@
-// ==========================================
-// Sukuna's Malevolent Kitchen - Game Logic
-// Rebuild Trigger: v1.0.5 - Strict Server-Only Time
-// ==========================================
+// 
+// Sukuna's Malevolent Ki...
+// Rebuild Trigger: v1.0....
+// 
 
 const modal = document.getElementById('game-modal');
 const container = document.getElementById('game-container');
@@ -22,20 +22,17 @@ function getGameScale() {
     return window.innerWidth <= 768 ? 0.3 : 1.0;
 }
 
-/**
- * Obtiene la hora real garantizada desde el servidor de Supabase o una API externa.
- * Si no puede obtener una hora confiable, devuelve null para bloquear el acceso.
- */
+/* Obtiene la hora real*/
 async function getRealTime() {
-    // 1. Intentar obtener la hora de los headers de Supabase (La fuente más fiable)
+
     try {
         const sbUrl = window.sb.supabaseUrl;
         const sbKey = window.sb.supabaseKey;
         if (sbUrl && sbKey) {
-            // Hacemos una petición HEAD a la API de Supabase. El header "date" es del servidor.
-            const response = await fetch(`${sbUrl}/rest/v1/`, { 
-                method: 'HEAD', 
-                headers: { 'apikey': sbKey } 
+
+            const response = await fetch(`${sbUrl}/rest/v1/`, {
+                method: 'HEAD',
+                headers: { 'apikey': sbKey }
             });
             const serverDate = response.headers.get('date');
             if (serverDate) {
@@ -47,8 +44,8 @@ async function getRealTime() {
         console.warn("⚠️ Error obteniendo hora de Supabase (posible desfase de reloj bloqueando SSL).");
     }
 
-    // 2. Intentar con una API de tiempo alternativa (usando HTTP para evitar bloqueos SSL si el reloj local está muy mal)
-    // Nota: Muchos navegadores bloquean HTTP, así que intentamos HTTPS primero.
+    // 2. Intentar con una APP
+
     const apis = [
         'https://worldtimeapi.org/api/timezone/Etc/UTC',
         'https://timeapi.io/api/Time/current/zone?timeZone=UTC'
@@ -65,19 +62,18 @@ async function getRealTime() {
                     return new Date(timeStr);
                 }
             }
-        } catch (e) {}
+        } catch (e) { }
     }
 
-    // 3. Si el reloj local está tan mal que falla el SSL (HTTPS) y no hay internet fiable
-    // NO devolvemos new Date() porque es lo que permite la trampa.
+
     return null;
 }
 
 
-// Función para verificar si el usuario está logueado y si puede jugar esta semana
+// Función para verificar...
 async function checkGameAccess() {
     if (!window.sb) return true;
-    
+
     const { data: { session } } = await window.sb.auth.getSession();
     if (!session) {
         alert("¡Alto ahí, hechicero! Debes iniciar sesión para acceder a los juegos y obtener descuentos.");
@@ -86,15 +82,15 @@ async function checkGameAccess() {
     }
 
     try {
-        // 1. Obtener la hora real (Blindado contra cambios en el dispositivo)
+        // 1. Obtener la hora rea...
         const now = await getRealTime();
-        
+
         if (!now) {
             alert("⚠️ Error de sincronización temporal.\n\nNo se pudo verificar la hora real del Reino Sombrío. Esto ocurre si tu conexión es inestable o si la fecha de tu dispositivo es muy incorrecta y bloquea la conexión segura.\n\nPor favor, ajusta tu reloj a 'Automático' e inténtalo de nuevo.");
             return false;
         }
 
-        // 2. Obtener la PARTIDA MÁS RECIENTE
+        // 2. Obtener la PARTIDA ...
         const { data: lastPlays, error: scoreError } = await window.sb
             .from('game_scores')
             .select('created_at, game_name')
@@ -115,7 +111,7 @@ async function checkGameAccess() {
             if (diffMs < sevenDaysMs) {
                 const nextPlay = new Date(lastPlayAt.getTime() + sevenDaysMs);
                 const remaining = nextPlay - now;
-                
+
                 const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const mins = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
@@ -185,7 +181,7 @@ async function saveReward(code, percentage, gameName) {
     if (!window.sb) return;
     const { data: { session } } = await window.sb.auth.getSession();
     if (!session) return;
-    const { error } = await window.sb.from('rewards').insert([{ 
+    const { error } = await window.sb.from('rewards').insert([{
         user_id: session.user.id,
         code: code,
         discount_percentage: percentage,
@@ -203,8 +199,8 @@ async function saveGameScore(gameName, scoreValue) {
         const { data: prof } = await window.sb.from('profiles').select('name').eq('id', session.user.id).single();
         if (prof && prof.name) userName = prof.name;
         else userName = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
-    } catch(e) {}
-    const { error } = await window.sb.from('game_scores').insert([{ 
+    } catch (e) { }
+    const { error } = await window.sb.from('game_scores').insert([{
         user_id: session.user.id,
         user_name: userName,
         game_name: gameName,
@@ -422,7 +418,7 @@ function guessLetter(l, btn) {
         for (let i = 0; i < palabraOculta.length; i++) if (palabraOculta[i] === l) palabraAdivinada[i] = l;
         if (!palabraAdivinada.includes("_")) {
             let disc = 30 - ((6 - intentos) * 5); saveReward(`GOJO${disc}`, disc, "AHORCADO (Gojo)");
-            saveGameScore('AHORCADO (Gojo)', parseFloat(((Date.now() - gojoStartTime)/1000).toFixed(1)));
+            saveGameScore('AHORCADO (Gojo)', parseFloat(((Date.now() - gojoStartTime) / 1000).toFixed(1)));
             alert(`¡Victoria! Descuento: ${disc}%`); stopGame();
         }
     } else { intentos--; if (intentos <= 0) { alert(`Perdiste. Era: ${palabraOculta}`); saveGameScore('AHORCADO (Gojo)', 0); stopGame(); } }
@@ -469,10 +465,10 @@ function spinJackpot() {
     const r1 = document.getElementById('reel1'), r2 = document.getElementById('reel2'), r3 = document.getElementById('reel3'), btn = document.getElementById('spin-btn'), sprite = document.getElementById('hakari-sprite');
     const symbols = ["💀", "🔥", "💎", "🎰", "❤️", "🤞"];
     if (btn.disabled) return; btn.disabled = true;
-    const finalIdx = [Math.floor(Math.random()*6), Math.floor(Math.random()*6), Math.floor(Math.random()*6)];
+    const finalIdx = [Math.floor(Math.random() * 6), Math.floor(Math.random() * 6), Math.floor(Math.random() * 6)];
     let cycles = 0;
     const interval = setInterval(() => {
-        cycles++; if (cycles < 20) { r1.textContent = symbols[Math.floor(Math.random()*6)]; r2.textContent = symbols[Math.floor(Math.random()*6)]; r3.textContent = symbols[Math.floor(Math.random()*6)]; }
+        cycles++; if (cycles < 20) { r1.textContent = symbols[Math.floor(Math.random() * 6)]; r2.textContent = symbols[Math.floor(Math.random() * 6)]; r3.textContent = symbols[Math.floor(Math.random() * 6)]; }
         else {
             clearInterval(interval); r1.textContent = symbols[finalIdx[0]]; r2.textContent = symbols[finalIdx[1]]; r3.textContent = symbols[finalIdx[2]];
             btn.disabled = false; if (finalIdx[0] === finalIdx[1] && finalIdx[1] === finalIdx[2]) {
